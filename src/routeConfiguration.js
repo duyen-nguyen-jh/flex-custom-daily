@@ -113,7 +113,7 @@ const routeConfiguration = () => {
       ),
     },
     {
-      path: '/le/new/equip',
+      path: '/le/new',
       name: 'NewEquipmentPage',
       auth: true,
       component: () => (

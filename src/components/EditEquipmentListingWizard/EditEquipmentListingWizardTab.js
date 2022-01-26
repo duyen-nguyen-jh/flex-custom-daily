@@ -22,7 +22,7 @@ import {
 import css from './EditEquipmentListingWizard.module.css';
 
 export const AVAILABILITY = 'availability';
-export const DESCRIPTION = 'description';
+export const DESCRIPTION = 'general';
 export const FEATURES = 'features';
 export const POLICY = 'policy';
 export const LOCATION = 'location';
