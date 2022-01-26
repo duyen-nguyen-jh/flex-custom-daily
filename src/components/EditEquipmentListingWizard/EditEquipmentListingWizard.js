@@ -21,8 +21,6 @@ import { StripeConnectAccountForm } from '../../forms';
 import EditEquipmentListingWizardTab, {
   AVAILABILITY,
   DESCRIPTION,
-  FEATURES,
-  POLICY,
   LOCATION,
   PRICING,
   PHOTOS,
@@ -54,10 +52,6 @@ const tabLabel = (intl, tab) => {
   let key = null;
   if (tab === DESCRIPTION) {
     key = 'EditEquipmentListingWizard.tabLabelDescription';
-  } else if (tab === FEATURES) {
-    key = 'EditEquipmentListingWizard.tabLabelFeatures';
-  } else if (tab === POLICY) {
-    key = 'EditEquipmentListingWizard.tabLabelPolicy';
   } else if (tab === LOCATION) {
     key = 'EditEquipmentListingWizard.tabLabelLocation';
   } else if (tab === PRICING) {
@@ -93,10 +87,6 @@ const tabCompleted = (tab, listing) => {
   switch (tab) {
     case DESCRIPTION:
       return !!(description && title);
-    case FEATURES:
-      return !!(publicData && publicData.amenities);
-    case POLICY:
-      return !!(publicData && typeof publicData.rules !== 'undefined');
     case LOCATION:
       return !!(geolocation && publicData && publicData.location && publicData.location.address);
     case PRICING:

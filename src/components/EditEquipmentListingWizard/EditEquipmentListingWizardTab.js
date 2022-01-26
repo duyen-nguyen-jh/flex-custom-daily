@@ -12,19 +12,15 @@ import { createResourceLocatorString } from '../../util/routes';
 import {
   EditListingAvailabilityPanel,
   EditListingDescriptionPanel,
-  EditListingFeaturesPanel,
   EditListingLocationPanel,
   EditListingPhotosPanel,
-  EditListingPoliciesPanel,
   EditListingPricingPanel,
 } from '../../components';
 
 import css from './EditEquipmentListingWizard.module.css';
 
 export const AVAILABILITY = 'availability';
-export const DESCRIPTION = 'general';
-export const FEATURES = 'features';
-export const POLICY = 'policy';
+export const DESCRIPTION = 'description';
 export const LOCATION = 'location';
 export const PRICING = 'pricing';
 export const PHOTOS = 'photos';
@@ -32,8 +28,6 @@ export const PHOTOS = 'photos';
 // EditEquipmentListingWizardTab component supports these tabs
 export const SUPPORTED_TABS = [
   DESCRIPTION,
-  FEATURES,
-  POLICY,
   LOCATION,
   PRICING,
   AVAILABILITY,

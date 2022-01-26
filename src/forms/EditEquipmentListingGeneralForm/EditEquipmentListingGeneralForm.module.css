@@ -39,6 +39,14 @@
 .category {
   composes: formMargins;
 }
+.manufactureYear, .maxUsingTime {
+  width: 45%;
+}
+
+.flexContainer {
+  display: flex;
+  justify-content: space-between;
+}
 
 .submitButton {
   margin-top: auto;

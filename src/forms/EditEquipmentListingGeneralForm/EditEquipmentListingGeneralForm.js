@@ -32,48 +32,65 @@ const EditEquipmentListingGeneralFormComponent = props => (
         fetchErrors,
       } = formRenderProps;
 
-      const titleMessage = intl.formatMessage({ id: 'EditListingDescriptionForm.title' });
+      const titleMessage = intl.formatMessage({ id: 'EditEquipmentListingDescriptionForm.title' });
       const titlePlaceholderMessage = intl.formatMessage({
-        id: 'EditListingDescriptionForm.titlePlaceholder',
+        id: 'EditEquipmentListingDescriptionForm.titlePlaceholder',
       });
       const titleRequiredMessage = intl.formatMessage({
-        id: 'EditListingDescriptionForm.titleRequired',
+        id: 'EditEquipmentListingDescriptionForm.titleRequired',
       });
       const maxLengthMessage = intl.formatMessage(
-        { id: 'EditListingDescriptionForm.maxLength' },
+        { id: 'EditEquipmentListingDescriptionForm.maxLength' },
         {
           maxLength: TITLE_MAX_LENGTH,
         }
       );
 
       const descriptionMessage = intl.formatMessage({
-        id: 'EditListingDescriptionForm.description',
+        id: 'EditEquipmentListingDescriptionForm.description',
       });
       const descriptionPlaceholderMessage = intl.formatMessage({
-        id: 'EditListingDescriptionForm.descriptionPlaceholder',
+        id: 'EditEquipmentListingDescriptionForm.descriptionPlaceholder',
       });
       const maxLength60Message = maxLength(maxLengthMessage, TITLE_MAX_LENGTH);
       const descriptionRequiredMessage = intl.formatMessage({
-        id: 'EditListingDescriptionForm.descriptionRequired',
+        id: 'EditEquipmentListingDescriptionForm.descriptionRequired',
       });
+
+      const manufactureYearMessage = intl.formatMessage({
+        id: 'EditEquipmentListingDescriptionForm.manufactureYear',
+      });
+      const manufactureYearPlaceholderMessage = intl.formatMessage({
+        id: 'EditEquipmentListingDescriptionForm.manufactureYearPlaceholder',
+      });
+
+      const maxUsingTimeMessage = intl.formatMessage({
+        id: 'EditEquipmentListingDescriptionForm.maxUsingTime',
+      });
+      const maxUsingTimePlaceholderMessage = intl.formatMessage({
+        id: 'EditEquipmentListingDescriptionForm.maxUsingTimePlaceholder',
+      });
+      const mustBeNumberMessage = intl.formatMessage({
+        id: 'EditEquipmentListingDescriptionForm.mustNumber',
+      })
 
       const { updateListingError, createListingDraftError, showListingsError } = fetchErrors || {};
       const errorMessageUpdateListing = updateListingError ? (
         <p className={css.error}>
-          <FormattedMessage id="EditListingDescriptionForm.updateFailed" />
+          <FormattedMessage id="EditEquipmentListingDescriptionForm.updateFailed" />
         </p>
       ) : null;
 
       // This error happens only on first tab (of EditListingWizard)
       const errorMessageCreateListingDraft = createListingDraftError ? (
         <p className={css.error}>
-          <FormattedMessage id="EditListingDescriptionForm.createListingDraftError" />
+          <FormattedMessage id="EditEquipmentListingDescriptionForm.createListingDraftError" />
         </p>
       ) : null;
 
       const errorMessageShowListing = showListingsError ? (
         <p className={css.error}>
-          <FormattedMessage id="EditListingDescriptionForm.showListingFailed" />
+          <FormattedMessage id="EditEquipmentListingDescriptionForm.showListingFailed" />
         </p>
       ) : null;
 
@@ -98,7 +115,6 @@ const EditEquipmentListingGeneralFormComponent = props => (
             validate={composeValidators(required(titleRequiredMessage), maxLength60Message)}
             autoFocus
           />
-
           <FieldTextInput
             id="description"
             name="description"
@@ -108,20 +124,32 @@ const EditEquipmentListingGeneralFormComponent = props => (
             placeholder={descriptionPlaceholderMessage}
             validate={composeValidators(required(descriptionRequiredMessage))}
           />
-
           <CustomCategorySelectFieldMaybe
             id="category"
             name="category"
             categories={categories}
             intl={intl}
           />
-
-          <CustomCategorySelectFieldMaybe
-            id="category"
-            name="category"
-            categories={categories}
-            intl={intl}
-          />
+          <div className={css.flexContainer}>
+            <FieldTextInput
+              id="manufactureYear"
+              name="manufactureYear"
+              className={css.manufactureYear}
+              type="number"
+              label={manufactureYearMessage}
+              placeholder={manufactureYearPlaceholderMessage}
+              validate={composeValidators(required(mustBeNumberMessage))}
+            />
+            <FieldTextInput
+              id="maxUsingTime"
+              name="maxUsingTime"
+              className={css.maxUsingTime}
+              type="number"
+              label={maxUsingTimeMessage}
+              placeholder={maxUsingTimePlaceholderMessage}
+              validate={composeValidators(required(mustBeNumberMessage))}
+            />
+          </div>
 
           <Button
             className={css.submitButton}
