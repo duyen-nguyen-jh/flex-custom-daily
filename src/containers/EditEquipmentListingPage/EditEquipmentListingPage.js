@@ -22,8 +22,8 @@ import {
   getStripeConnectAccountLink,
 } from '../../ducks/stripeConnectAccount.duck';
 
-import { EditListingWizard, NamedRedirect, Page } from '../../components';
-import { TopbarContainer } from '../../containers';
+import { EditEquipmentListingWizard, NamedRedirect, Page } from '../../components';
+import { TopbarContainer } from '..';
 
 import {
   requestFetchBookings,
@@ -38,9 +38,9 @@ import {
   removeListingImage,
   clearUpdatedTab,
   savePayoutDetails,
-} from './EditListingPage.duck';
+} from './EditEquipmentListingPage.duck';
 
-import css from './EditListingPage.module.css';
+import css from './EditEquipmentListingPage.module.css';
 
 const STRIPE_ONBOARDING_RETURN_URL_SUCCESS = 'success';
 const STRIPE_ONBOARDING_RETURN_URL_FAILURE = 'failure';
@@ -85,7 +85,6 @@ export const EditListingPageComponent = props => {
     stripeAccount,
     updateStripeAccountError,
   } = props;
-  console.log("pgae", page);
 
   const { id, type, returnURLType } = params;
   const isNewURI = type === LISTING_PAGE_PARAM_TYPE_NEW;
@@ -126,7 +125,6 @@ export const EditListingPageComponent = props => {
             slug: listingSlug,
           },
         };
-
     return <NamedRedirect {...redirectProps} />;
   } else if (showForm) {
     const {
@@ -166,8 +164,8 @@ export const EditListingPageComponent = props => {
     });
 
     const title = isNewListingFlow
-      ? intl.formatMessage({ id: 'EditListingPage.titleCreateListing' })
-      : intl.formatMessage({ id: 'EditListingPage.titleEditListing' });
+      ? intl.formatMessage({ id: 'EditEquipmentListingPage.titleCreateListing' })
+      : intl.formatMessage({ id: 'EditEquipmentListingPage.titleEditListing' });
 
     return (
       <Page title={title} scrollingDisabled={scrollingDisabled}>
@@ -177,8 +175,8 @@ export const EditListingPageComponent = props => {
           desktopClassName={css.desktopTopbar}
           mobileClassName={css.mobileTopbar}
         />
-        <EditListingWizard
-          id="EditListingWizard"
+        <EditEquipmentListingWizard
+          id="EditEquipmentListingWizard"
           className={css.wizard}
           params={params}
           disabled={disableForm}
@@ -226,7 +224,7 @@ export const EditListingPageComponent = props => {
     // If user has come to this page through a direct linkto edit existing listing,
     // we need to load it first.
     const loadingPageMsg = {
-      id: 'EditListingPage.loadingListingData',
+      id: 'EditEquipmentListingPage.loadingListingData',
     };
     return (
       <Page title={intl.formatMessage(loadingPageMsg)} scrollingDisabled={scrollingDisabled} />
@@ -359,7 +357,7 @@ const mapDispatchToProps = dispatch => ({
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const EditListingPage = compose(
+const EditEquipmentListingPage = compose(
   withRouter,
   connect(
     mapStateToProps,
@@ -367,4 +365,4 @@ const EditListingPage = compose(
   )
 )(injectIntl(EditListingPageComponent));
 
-export default EditListingPage;
+export default EditEquipmentListingPage;
