@@ -35,17 +35,23 @@
   composes: formMargins;
   flex-shrink: 0;
 }
-
+.equipCatLabel {
+  margin-bottom: 10px;
+}
 .category {
   composes: formMargins;
+  min-width: 150px;
 }
 .manufactureYear, .maxUsingTime {
   width: 45%;
+  min-width: 300px;
+  margin: 20px 0;
 }
 
 .flexContainer {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .submitButton {

@@ -197,7 +197,7 @@
   "EditEquipmentListingDescriptionForm.updateFailed": "Failed to update equipment. Please try again.",
   "EditEquipmentListingDescriptionForm.manufactureYear": "Manufacture Year",
   "EditEquipmentListingDescriptionForm.manufactureYearPlaceholder": "Year",
-  "EditEquipmentListingDescriptionForm.maxUsingTime": "Max Using Times",
+  "EditEquipmentListingDescriptionForm.maxUsingTime": "Max Using Times A Day",
   "EditEquipmentListingDescriptionForm.maxUsingTimePlaceholder": "Time(s)",
   "EditEquipmentListingDescriptionForm.mustNumber": "Must be a number",
   "EditListingDescriptionPanel.createListingTitle": "Add your sauna",

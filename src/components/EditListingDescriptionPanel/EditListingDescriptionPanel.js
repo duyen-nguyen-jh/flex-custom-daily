@@ -36,22 +36,30 @@ const EditListingDescriptionPanel = props => {
   const { description, title, publicData } = currentListing.attributes;
 
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
-  const renderMessageByListType = () => {
-    if (listType === LIST_TYPE.equipment) 
+  const renderMessageByListingType = () => {
+    if (listType === LIST_TYPE.equipment)
       return <FormattedMessage id="EditEquipmentListingDescriptionPanel.createListingTitle" />;
-    else 
-    return <FormattedMessage id="EditListingDescriptionPanel.createListingTitle" />
-  }
-  
+    else return <FormattedMessage id="EditListingDescriptionPanel.createListingTitle" />;
+  };
+
   const panelTitle = isPublished ? (
     <FormattedMessage
       id="EditListingDescriptionPanel.title"
       values={{ listingTitle: <ListingLink listing={listing} /> }}
     />
-  ) :  renderMessageByListType();
+  ) : (
+    renderMessageByListingType()
+  );
 
-  const categoryOptions = findOptionsForSelectFilter('category', config.custom.filters);
-  const renderFormByListType = () => {
+  const getCategoryOptions = () => {
+    if (listType === LIST_TYPE.equipment) {
+      return findOptionsForSelectFilter('equipmentType', config.custom.filters);
+    } else {
+      return findOptionsForSelectFilter('category', config.custom.filters);
+    }
+  };
+  
+  const renderFormByListingType = () => {
     if (listType === LIST_TYPE.equipment) {
       return (
         <EditEquipmentListingGeneralForm
@@ -74,7 +82,7 @@ const EditListingDescriptionPanel = props => {
           updated={panelUpdated}
           updateInProgress={updateInProgress}
           fetchErrors={errors}
-          categories={categoryOptions}
+          categories={getCategoryOptions()}
         />
       );
     } else {
@@ -99,7 +107,7 @@ const EditListingDescriptionPanel = props => {
           updated={panelUpdated}
           updateInProgress={updateInProgress}
           fetchErrors={errors}
-          categories={categoryOptions}
+          categories={getCategoryOptions()}
         />
       );
     }
@@ -107,7 +115,7 @@ const EditListingDescriptionPanel = props => {
   return (
     <div className={classes}>
       <h1 className={css.title}>{panelTitle}</h1>
-      {renderFormByListType()}
+      {renderFormByListingType()}
     </div>
   );
 };
