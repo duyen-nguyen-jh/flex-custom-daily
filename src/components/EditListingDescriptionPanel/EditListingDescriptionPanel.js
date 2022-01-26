@@ -6,7 +6,7 @@ import { ensureOwnListing } from '../../util/data';
 import { findOptionsForSelectFilter } from '../../util/search';
 import { LISTING_STATE_DRAFT } from '../../util/types';
 import { ListingLink } from '../../components';
-import { EditListingDescriptionForm } from '../../forms';
+import { EditEquipmentListingGeneralForm, EditListingDescriptionForm } from '../../forms';
 import config from '../../config';
 
 import css from './EditListingDescriptionPanel.module.css';
@@ -24,6 +24,7 @@ const EditListingDescriptionPanel = props => {
     panelUpdated,
     updateInProgress,
     errors,
+    listType,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -41,31 +42,63 @@ const EditListingDescriptionPanel = props => {
   );
 
   const categoryOptions = findOptionsForSelectFilter('category', config.custom.filters);
+  const renderFormByListType = () => {
+    if (listType === 'equipmentList') {
+      return (
+        <EditEquipmentListingGeneralForm
+          lassName={css.form}
+          initialValues={{ title, description, category: publicData.category }}
+          saveActionMsg={submitButtonText}
+          onSubmit={values => {
+            const { title, description, category } = values;
+            const updateValues = {
+              title: title.trim(),
+              description,
+              publicData: { category },
+            };
+
+            onSubmit(updateValues);
+          }}
+          onChange={onChange}
+          disabled={disabled}
+          ready={ready}
+          updated={panelUpdated}
+          updateInProgress={updateInProgress}
+          fetchErrors={errors}
+          categories={categoryOptions}
+        />
+      );
+    } else {
+      return (
+        <EditListingDescriptionForm
+          className={css.form}
+          initialValues={{ title, description, category: publicData.category }}
+          saveActionMsg={submitButtonText}
+          onSubmit={values => {
+            const { title, description, category } = values;
+            const updateValues = {
+              title: title.trim(),
+              description,
+              publicData: { category },
+            };
+
+            onSubmit(updateValues);
+          }}
+          onChange={onChange}
+          disabled={disabled}
+          ready={ready}
+          updated={panelUpdated}
+          updateInProgress={updateInProgress}
+          fetchErrors={errors}
+          categories={categoryOptions}
+        />
+      );
+    }
+  };
   return (
     <div className={classes}>
       <h1 className={css.title}>{panelTitle}</h1>
-      <EditListingDescriptionForm
-        className={css.form}
-        initialValues={{ title, description, category: publicData.category }}
-        saveActionMsg={submitButtonText}
-        onSubmit={values => {
-          const { title, description, category } = values;
-          const updateValues = {
-            title: title.trim(),
-            description,
-            publicData: { category },
-          };
-
-          onSubmit(updateValues);
-        }}
-        onChange={onChange}
-        disabled={disabled}
-        ready={ready}
-        updated={panelUpdated}
-        updateInProgress={updateInProgress}
-        fetchErrors={errors}
-        categories={categoryOptions}
-      />
+      {renderFormByListType()}
     </div>
   );
 };

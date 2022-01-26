@@ -159,8 +159,8 @@ const EditEquipmentListingWizardTab = props => {
   switch (tab) {
     case DESCRIPTION: {
       const submitButtonTranslationKey = isNewListingFlow
-        ? 'EditEquipmentListingWizard.saveNewDescription'
-        : 'EditEquipmentListingWizard.saveEditDescription';
+        ? 'EditEquipmentListingWizard.saveNewPolicies'
+        : 'EditEquipmentListingWizard.saveEditPolicies';
       return (
         <EditListingDescriptionPanel
           {...panelProps(DESCRIPTION)}
@@ -168,34 +168,7 @@ const EditEquipmentListingWizardTab = props => {
           onSubmit={values => {
             onCompleteEditEquipmentListingWizardTab(tab, values);
           }}
-        />
-      );
-    }
-    case FEATURES: {
-      const submitButtonTranslationKey = isNewListingFlow
-        ? 'EditEquipmentListingWizard.saveNewFeatures'
-        : 'EditEquipmentListingWizard.saveEditFeatures';
-      return (
-        <EditListingFeaturesPanel
-          {...panelProps(FEATURES)}
-          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
-          onSubmit={values => {
-            onCompleteEditEquipmentListingWizardTab(tab, values);
-          }}
-        />
-      );
-    }
-    case POLICY: {
-      const submitButtonTranslationKey = isNewListingFlow
-        ? 'EditEquipmentListingWizard.saveNewPolicies'
-        : 'EditEquipmentListingWizard.saveEditPolicies';
-      return (
-        <EditListingPoliciesPanel
-          {...panelProps(POLICY)}
-          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
-          onSubmit={values => {
-            onCompleteEditEquipmentListingWizardTab(tab, values);
-          }}
+          listType='equipmentList'
         />
       );
     }
