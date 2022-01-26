@@ -11,6 +11,10 @@ import config from '../../config';
 
 import css from './EditListingDescriptionPanel.module.css';
 
+const LIST_TYPE = {
+  equipment: 'equipmentList',
+};
+
 const EditListingDescriptionPanel = props => {
   const {
     className,
@@ -32,18 +36,23 @@ const EditListingDescriptionPanel = props => {
   const { description, title, publicData } = currentListing.attributes;
 
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
+  const renderMessageByListType = () => {
+    if (listType === LIST_TYPE.equipment) 
+      return <FormattedMessage id="EditEquipmentListingDescriptionPanel.createListingTitle" />;
+    else 
+    return <FormattedMessage id="EditListingDescriptionPanel.createListingTitle" />
+  }
+  
   const panelTitle = isPublished ? (
     <FormattedMessage
       id="EditListingDescriptionPanel.title"
       values={{ listingTitle: <ListingLink listing={listing} /> }}
     />
-  ) : (
-    <FormattedMessage id="EditListingDescriptionPanel.createListingTitle" />
-  );
+  ) :  renderMessageByListType();
 
   const categoryOptions = findOptionsForSelectFilter('category', config.custom.filters);
   const renderFormByListType = () => {
-    if (listType === 'equipmentList') {
+    if (listType === LIST_TYPE.equipment) {
       return (
         <EditEquipmentListingGeneralForm
           lassName={css.form}
