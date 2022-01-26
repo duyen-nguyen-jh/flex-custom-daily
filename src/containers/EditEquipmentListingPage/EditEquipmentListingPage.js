@@ -52,7 +52,7 @@ const STRIPE_ONBOARDING_RETURN_URL_TYPES = [
 const { UUID } = sdkTypes;
 
 // N.B. All the presentational content needs to be extracted to their own components
-export const EditListingPageComponent = props => {
+export const EditEquipmentListingPageComponent = props => {
   const {
     currentUser,
     createStripeAccountError,
@@ -232,7 +232,7 @@ export const EditListingPageComponent = props => {
   }
 };
 
-EditListingPageComponent.defaultProps = {
+EditEquipmentListingPageComponent.defaultProps = {
   createStripeAccountError: null,
   fetchStripeAccountError: null,
   getAccountLinkError: null,
@@ -247,7 +247,7 @@ EditListingPageComponent.defaultProps = {
   sendVerificationEmailError: null,
 };
 
-EditListingPageComponent.propTypes = {
+EditEquipmentListingPageComponent.propTypes = {
   createStripeAccountError: propTypes.error,
   fetchStripeAccountError: propTypes.error,
   getAccountLinkError: propTypes.error,
@@ -293,7 +293,7 @@ EditListingPageComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const page = state.EditListingPage;
+  const page = state.EditEquipmentListingPage;
   const {
     getAccountLinkInProgress,
     getAccountLinkError,
@@ -363,6 +363,6 @@ const EditEquipmentListingPage = compose(
     mapStateToProps,
     mapDispatchToProps
   )
-)(injectIntl(EditListingPageComponent));
+)(injectIntl(EditEquipmentListingPageComponent));
 
 export default EditEquipmentListingPage;
