@@ -157,7 +157,10 @@ export const getOwnListingsById = (state, listingIds) => {
     type: 'ownListing',
   }));
   const throwIfNotFound = false;
-  return denormalisedEntities(ownEntities, resources, throwIfNotFound);
+  const denormalisedListing = denormalisedEntities(ownEntities, resources, throwIfNotFound);
+  return denormalisedListing.filter(
+    entity => entity.attributes.publicData.listingType === `equipment`
+  );
 };
 
 // ================ Action creators ================ //
@@ -224,7 +227,6 @@ export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
 
   const { perPage, ...rest } = queryParams;
   const params = { ...rest, per_page: perPage };
-
   return sdk.ownListings
     .query(params)
     .then(response => {
@@ -268,9 +270,11 @@ export const openListing = listingId => (dispatch, getState, sdk) => {
 
 export const loadData = (params, search) => {
   const queryParams = parse(search);
+
   const page = queryParams.page || 1;
   return queryOwnListings({
     ...queryParams,
+    pub_category: 'wood',
     page,
     perPage: RESULT_PAGE_SIZE,
     include: ['images'],

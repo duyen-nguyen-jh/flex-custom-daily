@@ -18,7 +18,7 @@ import {
 } from '../../components';
 import { TopbarContainer } from '..';
 
-import { closeListing, openListing, getOwnListingsById } from './ManageEquipmentListingsPage.duck';
+import { closeListing, openListing, getOwnListingsById, loadData } from './ManageEquipmentListingsPage.duck';
 import css from './ManageEquipmentListingsPage.module.css';
 
 export class ManageEquipmentListingsPageComponent extends Component {
