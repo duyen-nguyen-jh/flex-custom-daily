@@ -12,7 +12,7 @@ import config from '../../config';
 import css from './EditListingDescriptionPanel.module.css';
 
 const LISTING_TYPE = {
-  equipment: 'equipmentList',
+  equipment: 'equipment',
 };
 
 const EditListingDescriptionPanel = props => {
@@ -78,9 +78,8 @@ const EditListingDescriptionPanel = props => {
             const updateValues = {
               title: title.trim(),
               description,
-              publicData: { category, manufactureYear, maxUsingTime },
+              publicData: { category, manufactureYear, maxUsingTime, listingType: 'equipment' },
             };
-
             onSubmit(updateValues);
           }}
           onChange={onChange}

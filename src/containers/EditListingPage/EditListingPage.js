@@ -294,8 +294,6 @@ EditListingPageComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
-  console.log("debug state1",state.EditListingPage);
-
   const page = state.EditListingPage;
   const {
     getAccountLinkInProgress,

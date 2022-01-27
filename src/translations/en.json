@@ -478,6 +478,7 @@
   "ManageListingsPage.title": "Manage listings",
   "ManageListingsPage.youHaveListings": "You have {count} {count, plural, one {listing} other {listings}}",
   "ManageListingsPage.yourListings": "Your listings",
+  "ManageEquipmentListingsPage.yourListings": "Your equipments",
   "MapPriceMarker.unsupportedPrice": "({currency})",
   "Modal.close": "CLOSE",
   "Modal.closeModal": "Close modal",
