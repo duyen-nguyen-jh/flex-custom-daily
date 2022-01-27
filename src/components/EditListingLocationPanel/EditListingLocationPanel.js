@@ -8,7 +8,9 @@ import { ListingLink } from '../../components';
 import { EditListingLocationForm } from '../../forms';
 
 import css from './EditListingLocationPanel.module.css';
-
+const LISTING_TYPE = {
+  equipment: 'equipment'
+}
 class EditListingLocationPanel extends Component {
   constructor(props) {
     super(props);
@@ -56,6 +58,7 @@ class EditListingLocationPanel extends Component {
       panelUpdated,
       updateInProgress,
       errors,
+      listingType,
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className);
@@ -65,11 +68,21 @@ class EditListingLocationPanel extends Component {
       currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
     const panelTitle = isPublished ? (
       <FormattedMessage
-        id="EditListingLocationPanel.title"
+        id={`${
+          listingType === LISTING_TYPE.equipment
+            ? 'EditEquipmentListingLocationPanel.title'
+            : 'EditListingLocationPanel.title'
+        }`}
         values={{ listingTitle: <ListingLink listing={listing} /> }}
       />
     ) : (
-      <FormattedMessage id="EditListingLocationPanel.createListingTitle" />
+      <FormattedMessage
+        id={`${
+          listingType === LISTING_TYPE.equipment
+            ? 'EditEquipmentListingLocationPanel.createEquipmentTitle'
+            : 'EditListingLocationPanel.createListingTitle'
+        }`}
+      />
     );
 
     return (

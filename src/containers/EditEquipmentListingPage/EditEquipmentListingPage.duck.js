@@ -104,21 +104,21 @@ const errorAction = actionType => error => ({ type: actionType, payload: error, 
 export const MARK_TAB_UPDATED = 'app/EditEquipmentListingPage/MARK_TAB_UPDATED';
 export const CLEAR_UPDATED_TAB = 'app/EditEquipmentListingPage/CLEAR_UPDATED_TAB';
 
-export const CREATE_LISTING_DRAFT_REQUEST = 'app/EditEquipmentListingPage/CREATE_LISTING_DRAFT_REQUEST';
-export const CREATE_LISTING_DRAFT_SUCCESS = 'app/EditEquipmentListingPage/CREATE_LISTING_DRAFT_SUCCESS';
-export const CREATE_LISTING_DRAFT_ERROR = 'app/EditEquipmentListingPage/CREATE_LISTING_DRAFT_ERROR';
+export const CREATE_EQUIPMENT_DRAFT_REQUEST = 'app/EditEquipmentListingPage/CREATE_EQUIPMENT_DRAFT_REQUEST';
+export const CREATE_EQUIPMENT_DRAFT_SUCCESS = 'app/EditEquipmentListingPage/CREATE_EQUIPMENT_DRAFT_SUCCESS';
+export const CREATE_EQUIPMENT_DRAFT_ERROR = 'app/EditEquipmentListingPage/CREATE_EQUIPMENT_DRAFT_ERROR';
 
-export const PUBLISH_LISTING_REQUEST = 'app/EditEquipmentListingPage/PUBLISH_LISTING_REQUEST';
-export const PUBLISH_LISTING_SUCCESS = 'app/EditEquipmentListingPage/PUBLISH_LISTING_SUCCESS';
-export const PUBLISH_LISTING_ERROR = 'app/EditEquipmentListingPage/PUBLISH_LISTING_ERROR';
+export const PUBLISH_EQUIPMENT_REQUEST = 'app/EditEquipmentListingPage/PUBLISH_EQUIPMENT_REQUEST';
+export const PUBLISH_EQUIPMENT_SUCCESS = 'app/EditEquipmentListingPage/PUBLISH_EQUIPMENT_SUCCESS';
+export const PUBLISH_EQUIPMENT_ERROR = 'app/EditEquipmentListingPage/PUBLISH_EQUIPMENT_ERROR';
 
-export const UPDATE_LISTING_REQUEST = 'app/EditEquipmentListingPage/UPDATE_LISTING_REQUEST';
-export const UPDATE_LISTING_SUCCESS = 'app/EditEquipmentListingPage/UPDATE_LISTING_SUCCESS';
-export const UPDATE_LISTING_ERROR = 'app/EditEquipmentListingPage/UPDATE_LISTING_ERROR';
+export const UPDATE_EQUIPMENT_REQUEST = 'app/EditEquipmentListingPage/UPDATE_EQUIPMENT_REQUEST';
+export const UPDATE_EQUIPMENT_SUCCESS = 'app/EditEquipmentListingPage/UPDATE_EQUIPMENT_SUCCESS';
+export const UPDATE_EQUIPMENT_ERROR = 'app/EditEquipmentListingPage/UPDATE_EQUIPMENT_ERROR';
 
-export const SHOW_LISTINGS_REQUEST = 'app/EditEquipmentListingPage/SHOW_LISTINGS_REQUEST';
-export const SHOW_LISTINGS_SUCCESS = 'app/EditEquipmentListingPage/SHOW_LISTINGS_SUCCESS';
-export const SHOW_LISTINGS_ERROR = 'app/EditEquipmentListingPage/SHOW_LISTINGS_ERROR';
+export const SHOW_EQUIPMENTS_REQUEST = 'app/EditEquipmentListingPage/SHOW_EQUIPMENTS_REQUEST';
+export const SHOW_EQUIPMENTS_SUCCESS = 'app/EditEquipmentListingPage/SHOW_EQUIPMENTS_SUCCESS';
+export const SHOW_EQUIPMENTS_ERROR = 'app/EditEquipmentListingPage/SHOW_EQUIPMENTS_ERROR';
 
 export const FETCH_BOOKINGS_REQUEST = 'app/EditEquipmentListingPage/FETCH_BOOKINGS_REQUEST';
 export const FETCH_BOOKINGS_SUCCESS = 'app/EditEquipmentListingPage/FETCH_BOOKINGS_SUCCESS';
@@ -142,7 +142,7 @@ export const UPLOAD_IMAGE_ERROR = 'app/EditEquipmentListingPage/UPLOAD_IMAGE_ERR
 
 export const UPDATE_IMAGE_ORDER = 'app/EditEquipmentListingPage/UPDATE_IMAGE_ORDER';
 
-export const REMOVE_LISTING_IMAGE = 'app/EditEquipmentListingPage/REMOVE_LISTING_IMAGE';
+export const REMOVE_EQUIPMENT_IMAGE = 'app/EditEquipmentListingPage/REMOVE_EQUIPMENT_IMAGE';
 
 export const SAVE_PAYOUT_DETAILS_REQUEST = 'app/EditEquipmentListingPage/SAVE_PAYOUT_DETAILS_REQUEST';
 export const SAVE_PAYOUT_DETAILS_SUCCESS = 'app/EditEquipmentListingPage/SAVE_PAYOUT_DETAILS_SUCCESS';
@@ -189,7 +189,7 @@ export default function reducer(state = initialState, action = {}) {
     case CLEAR_UPDATED_TAB:
       return { ...state, updatedTab: null, updateListingError: null };
 
-    case CREATE_LISTING_DRAFT_REQUEST:
+    case CREATE_EQUIPMENT_DRAFT_REQUEST:
       return {
         ...state,
         createListingDraftInProgress: true,
@@ -198,27 +198,27 @@ export default function reducer(state = initialState, action = {}) {
         listingDraft: null,
       };
 
-    case CREATE_LISTING_DRAFT_SUCCESS:
+    case CREATE_EQUIPMENT_DRAFT_SUCCESS:
       return {
         ...state,
         createListingDraftInProgress: false,
         submittedListingId: payload.data.id,
         listingDraft: payload.data,
       };
-    case CREATE_LISTING_DRAFT_ERROR:
+    case CREATE_EQUIPMENT_DRAFT_ERROR:
       return {
         ...state,
         createListingDraftInProgress: false,
         createListingDraftError: payload,
       };
 
-    case PUBLISH_LISTING_REQUEST:
+    case PUBLISH_EQUIPMENT_REQUEST:
       return {
         ...state,
         publishingListing: payload.listingId,
         publishListingError: null,
       };
-    case PUBLISH_LISTING_SUCCESS:
+    case PUBLISH_EQUIPMENT_SUCCESS:
       return {
         ...state,
         redirectToListing: true,
@@ -230,7 +230,7 @@ export default function reducer(state = initialState, action = {}) {
         createListingDraftInProgress: false,
         updateInProgress: false,
       };
-    case PUBLISH_LISTING_ERROR: {
+    case PUBLISH_EQUIPMENT_ERROR: {
       // eslint-disable-next-line no-console
       console.error(payload);
       return {
@@ -243,19 +243,19 @@ export default function reducer(state = initialState, action = {}) {
       };
     }
 
-    case UPDATE_LISTING_REQUEST:
+    case UPDATE_EQUIPMENT_REQUEST:
       return { ...state, updateInProgress: true, updateListingError: null };
-    case UPDATE_LISTING_SUCCESS:
+    case UPDATE_EQUIPMENT_SUCCESS:
       return { ...state, updateInProgress: false };
-    case UPDATE_LISTING_ERROR:
+    case UPDATE_EQUIPMENT_ERROR:
       return { ...state, updateInProgress: false, updateListingError: payload };
 
-    case SHOW_LISTINGS_REQUEST:
+    case SHOW_EQUIPMENTS_REQUEST:
       return { ...state, showListingsError: null };
-    case SHOW_LISTINGS_SUCCESS:
+    case SHOW_EQUIPMENTS_SUCCESS:
       return { ...initialState, availabilityCalendar: { ...state.availabilityCalendar } };
 
-    case SHOW_LISTINGS_ERROR:
+    case SHOW_EQUIPMENTS_ERROR:
       // eslint-disable-next-line no-console
       console.error(payload);
       return { ...state, showListingsError: payload, redirectToListing: false };
@@ -369,7 +369,7 @@ export default function reducer(state = initialState, action = {}) {
     case UPDATE_IMAGE_ORDER:
       return { ...state, imageOrder: payload.imageOrder };
 
-    case REMOVE_LISTING_IMAGE: {
+    case REMOVE_EQUIPMENT_IMAGE: {
       const id = payload.imageId;
 
       // Only mark the image removed if it hasn't been added to the
@@ -417,7 +417,7 @@ export const updateImageOrder = imageOrder => ({
 });
 
 export const removeListingImage = imageId => ({
-  type: REMOVE_LISTING_IMAGE,
+  type: REMOVE_EQUIPMENT_IMAGE,
   payload: { imageId },
 });
 
@@ -426,24 +426,24 @@ export const removeListingImage = imageId => ({
 // expects.
 
 // SDK method: ownListings.create
-export const createListingDraft = requestAction(CREATE_LISTING_DRAFT_REQUEST);
-export const createListingDraftSuccess = successAction(CREATE_LISTING_DRAFT_SUCCESS);
-export const createListingDraftError = errorAction(CREATE_LISTING_DRAFT_ERROR);
+export const createListingDraft = requestAction(CREATE_EQUIPMENT_DRAFT_REQUEST);
+export const createListingDraftSuccess = successAction(CREATE_EQUIPMENT_DRAFT_SUCCESS);
+export const createListingDraftError = errorAction(CREATE_EQUIPMENT_DRAFT_ERROR);
 
 // SDK method: ownListings.publish
-export const publishListing = requestAction(PUBLISH_LISTING_REQUEST);
-export const publishListingSuccess = successAction(PUBLISH_LISTING_SUCCESS);
-export const publishListingError = errorAction(PUBLISH_LISTING_ERROR);
+export const publishListing = requestAction(PUBLISH_EQUIPMENT_REQUEST);
+export const publishListingSuccess = successAction(PUBLISH_EQUIPMENT_SUCCESS);
+export const publishListingError = errorAction(PUBLISH_EQUIPMENT_ERROR);
 
 // SDK method: ownListings.update
-export const updateListing = requestAction(UPDATE_LISTING_REQUEST);
-export const updateListingSuccess = successAction(UPDATE_LISTING_SUCCESS);
-export const updateListingError = errorAction(UPDATE_LISTING_ERROR);
+export const updateListing = requestAction(UPDATE_EQUIPMENT_REQUEST);
+export const updateListingSuccess = successAction(UPDATE_EQUIPMENT_SUCCESS);
+export const updateListingError = errorAction(UPDATE_EQUIPMENT_ERROR);
 
 // SDK method: ownListings.show
-export const showListings = requestAction(SHOW_LISTINGS_REQUEST);
-export const showListingsSuccess = successAction(SHOW_LISTINGS_SUCCESS);
-export const showListingsError = errorAction(SHOW_LISTINGS_ERROR);
+export const showListings = requestAction(SHOW_EQUIPMENTS_REQUEST);
+export const showListingsSuccess = successAction(SHOW_EQUIPMENTS_SUCCESS);
+export const showListingsError = errorAction(SHOW_EQUIPMENTS_ERROR);
 
 // SDK method: images.upload
 export const uploadImage = requestAction(UPLOAD_IMAGE_REQUEST);

@@ -86,6 +86,7 @@ export const EditEquipmentListingPageComponent = props => {
     updateStripeAccountError,
   } = props;
 
+  console.log("debug", page);
   const { id, type, returnURLType } = params;
   const isNewURI = type === LISTING_PAGE_PARAM_TYPE_NEW;
   const isDraftURI = type === LISTING_PAGE_PARAM_TYPE_DRAFT;
@@ -293,6 +294,7 @@ EditEquipmentListingPageComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
+  console.log("debug state",state);
   const page = state.EditEquipmentListingPage;
   const {
     getAccountLinkInProgress,
