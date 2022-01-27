@@ -21,9 +21,10 @@ const CustomCategorySelectFieldMaybe = props => {
       <div className={css.flexContainer}>
         {categories.map(c => (
           <FieldCheckbox
+            key={c.key}
             className={css.category}
             id={c.key}
-            name="checkbox-group"
+            name={name}
             label={c.label}
             value={c.key}
           />

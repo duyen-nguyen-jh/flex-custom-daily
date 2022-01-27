@@ -34,6 +34,7 @@ const EditListingDescriptionPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
   const { description, title, publicData } = currentListing.attributes;
+  const { manufactureYear, maxUsingTime, category } = publicData;
 
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
   const renderMessageByListingType = () => {
@@ -58,20 +59,26 @@ const EditListingDescriptionPanel = props => {
       return findOptionsForSelectFilter('category', config.custom.filters);
     }
   };
-  
+
   const renderFormByListingType = () => {
     if (listType === LIST_TYPE.equipment) {
       return (
         <EditEquipmentListingGeneralForm
-          lassName={css.form}
-          initialValues={{ title, description, category: publicData.category }}
+          className={css.form}
+          initialValues={{
+            title,
+            description,
+            category,
+            manufactureYear,
+            maxUsingTime,
+          }}
           saveActionMsg={submitButtonText}
           onSubmit={values => {
-            const { title, description, category } = values;
+            const { title, description, category, manufactureYear, maxUsingTime } = values;
             const updateValues = {
               title: title.trim(),
               description,
-              publicData: { category },
+              publicData: { category, manufactureYear, maxUsingTime },
             };
 
             onSubmit(updateValues);

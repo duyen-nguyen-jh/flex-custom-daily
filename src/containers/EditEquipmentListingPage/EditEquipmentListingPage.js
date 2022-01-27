@@ -329,7 +329,7 @@ const mapStateToProps = state => {
     scrollingDisabled: isScrollingDisabled(state),
   };
 };
-
+// when init this component has no props (so many props as above), this func map all the dispatcher to a property that use inside component
 const mapDispatchToProps = dispatch => ({
   onUpdateListing: (tab, values) => dispatch(requestUpdateListing(tab, values)),
   onFetchBookings: params => dispatch(requestFetchBookings(params)),
