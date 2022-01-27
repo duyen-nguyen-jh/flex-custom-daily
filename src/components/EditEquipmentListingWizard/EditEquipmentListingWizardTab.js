@@ -161,7 +161,7 @@ const EditEquipmentListingWizardTab = props => {
           onSubmit={values => {
             onCompleteEditEquipmentListingWizardTab(tab, values);
           }}
-          listType='equipmentList'
+          listingType='equipment'
         />
       );
     }
@@ -191,6 +191,7 @@ const EditEquipmentListingWizardTab = props => {
           onSubmit={values => {
             onCompleteEditEquipmentListingWizardTab(tab, values);
           }}
+          listingType='equipment'
         />
       );
     }

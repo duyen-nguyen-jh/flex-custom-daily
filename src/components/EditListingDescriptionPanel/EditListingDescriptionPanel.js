@@ -11,7 +11,7 @@ import config from '../../config';
 
 import css from './EditListingDescriptionPanel.module.css';
 
-const LIST_TYPE = {
+const LISTING_TYPE = {
   equipment: 'equipmentList',
 };
 
@@ -28,7 +28,7 @@ const EditListingDescriptionPanel = props => {
     panelUpdated,
     updateInProgress,
     errors,
-    listType,
+    listingType,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -38,7 +38,7 @@ const EditListingDescriptionPanel = props => {
 
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
   const renderMessageByListingType = () => {
-    if (listType === LIST_TYPE.equipment)
+    if (listingType === LISTING_TYPE.equipment)
       return <FormattedMessage id="EditEquipmentListingDescriptionPanel.createListingTitle" />;
     else return <FormattedMessage id="EditListingDescriptionPanel.createListingTitle" />;
   };
@@ -53,7 +53,7 @@ const EditListingDescriptionPanel = props => {
   );
 
   const getCategoryOptions = () => {
-    if (listType === LIST_TYPE.equipment) {
+    if (listingType === LISTING_TYPE.equipment) {
       return findOptionsForSelectFilter('equipmentType', config.custom.filters);
     } else {
       return findOptionsForSelectFilter('category', config.custom.filters);
@@ -61,7 +61,7 @@ const EditListingDescriptionPanel = props => {
   };
 
   const renderFormByListingType = () => {
-    if (listType === LIST_TYPE.equipment) {
+    if (listingType === LISTING_TYPE.equipment) {
       return (
         <EditEquipmentListingGeneralForm
           className={css.form}
