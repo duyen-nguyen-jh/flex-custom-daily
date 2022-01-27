@@ -145,10 +145,10 @@ export const filters = [
   },
   {
     id: 'equipmentType',
-    label: 'EquipmentType',
+    label: 'Equipment Type',
     type: 'SelectMultipleFilter',
     group: 'secondary',
-    queryParamNames: ['equipment_categories'],
+    queryParamNames: ['pub_equipment_type'],
     config: {
       // Optional modes: 'has_all', 'has_any'
       // https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
@@ -177,6 +177,19 @@ export const filters = [
         },
       ],
     },
+  },
+  {
+    id: 'listingType',
+    label: 'ListingType',
+    type: 'ListingTypeFilter',
+    group: 'secondary',
+    // Note: KeywordFilter is fixed filter,
+    // you can't change "queryParamNames: ['keywords'],"
+    queryParamNames: ['pub_listingType'],
+    // NOTE: If you are ordering search results by distance
+    // the keyword search can't be used at the same time.
+    // You can turn on/off ordering by distance from config.js file.
+    config: {},
   },
 ];
 

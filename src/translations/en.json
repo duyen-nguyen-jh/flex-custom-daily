@@ -415,6 +415,7 @@
   "ListingPage.closedListing": "This listing has been closed and can't be booked.",
   "ListingPage.contactUser": "Contact",
   "ListingPage.descriptionTitle": "About this sauna",
+  "EquipmentListingPage.descriptionTitle": "About this equipment",
   "ListingPage.editListing": "Edit listing",
   "ListingPage.editProfileLink": "Edit profile",
   "ListingPage.errorLoadingListingMessage": "Could not load listing. Please try again.",

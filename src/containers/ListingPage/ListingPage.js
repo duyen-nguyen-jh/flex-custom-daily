@@ -241,7 +241,7 @@ export class ListingPageComponent extends Component {
       title = '',
       publicData,
     } = currentListing.attributes;
-
+    const equipmentListingType = publicData.listingType;
     const richTitle = (
       <span>
         {richText(title, {
@@ -386,6 +386,17 @@ export class ListingPageComponent extends Component {
         </span>
       ) : null;
 
+    const renderSectionByListingType = () => {
+      if (equipmentListingType === 'equipment')
+        return null;
+      else 
+        return <>
+                  <SectionFeaturesMaybe 
+                    options={amenityOptions} 
+                    publicData={publicData} />
+                  <SectionRulesMaybe publicData={publicData} />
+              </>;
+    }
     return (
       <Page
         title={schemaTitle}
@@ -434,9 +445,11 @@ export class ListingPageComponent extends Component {
                     showContactUser={showContactUser}
                     onContactUser={this.onContactUser}
                   />
-                  <SectionDescriptionMaybe description={description} />
-                  <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
-                  <SectionRulesMaybe publicData={publicData} />
+                  <SectionDescriptionMaybe 
+                    description={description} 
+                    listingType={equipmentListingType} 
+                  />
+                  {renderSectionByListingType()}
                   <SectionMapMaybe
                     geolocation={geolocation}
                     publicData={publicData}

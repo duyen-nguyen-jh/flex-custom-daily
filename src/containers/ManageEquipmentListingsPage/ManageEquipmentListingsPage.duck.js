@@ -274,7 +274,7 @@ export const loadData = (params, search) => {
   const page = queryParams.page || 1;
   return queryOwnListings({
     ...queryParams,
-    pub_category: 'wood',
+    pub_listingType: 'equipment',
     page,
     perPage: RESULT_PAGE_SIZE,
     include: ['images'],
