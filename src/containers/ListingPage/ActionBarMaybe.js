@@ -38,7 +38,7 @@ export const ActionBarMaybe = props => {
     });
 
     const getNamePageByListingType = () => {
-      if (publicData.listingType === 'equipment') {
+      if (publicData?.listingType === 'equipment') {
         return 'EditEquipmentListingPage';
       } else return 'EditListingPage';
     };

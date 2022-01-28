@@ -18,7 +18,9 @@ import {
 } from '../../components';
 
 import css from './EditEquipmentListingWizard.module.css';
-
+const LISTING_TYPE = {
+  equipment: 'equipment'
+}
 export const AVAILABILITY = 'availability';
 export const DESCRIPTION = 'description';
 export const LOCATION = 'location';
@@ -161,7 +163,7 @@ const EditEquipmentListingWizardTab = props => {
           onSubmit={values => {
             onCompleteEditEquipmentListingWizardTab(tab, values);
           }}
-          listingType='equipment'
+          listingType={LISTING_TYPE.equipment}
         />
       );
     }
@@ -176,7 +178,7 @@ const EditEquipmentListingWizardTab = props => {
           onSubmit={values => {
             onCompleteEditEquipmentListingWizardTab(tab, values);
           }}
-          listingType='equipment'
+          listingType={LISTING_TYPE.equipment}
         />
       );
     }
@@ -191,7 +193,7 @@ const EditEquipmentListingWizardTab = props => {
           onSubmit={values => {
             onCompleteEditEquipmentListingWizardTab(tab, values);
           }}
-          listingType='equipment'
+          listingType={LISTING_TYPE.equipment}
         />
       );
     }
@@ -207,7 +209,7 @@ const EditEquipmentListingWizardTab = props => {
           onSubmit={values => {
             onCompleteEditEquipmentListingWizardTab(tab, values);
           }}
-          listingType='equipment'
+          listingType={LISTING_TYPE.equipment}
         />
       );
     }
@@ -227,6 +229,7 @@ const EditEquipmentListingWizardTab = props => {
             onCompleteEditEquipmentListingWizardTab(tab, values);
           }}
           onUpdateImageOrder={onUpdateImageOrder}
+          listingType={LISTING_TYPE.equipment}
         />
       );
     }

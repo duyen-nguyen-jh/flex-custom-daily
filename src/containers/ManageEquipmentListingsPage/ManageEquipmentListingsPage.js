@@ -209,9 +209,6 @@ const mapStateToProps = state => {
     closingListingError,
   } = state.ManageEquipmentListingsPage;
   const listings = getOwnListingsById(state, currentPageResultIds);
-
-  // const { listingType } = listings[0]?.attributes?.publicData;
-  console.log('debug main', listings[0]);
   return {
     currentPageResultIds,
     listings,
