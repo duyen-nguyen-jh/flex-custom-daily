@@ -12,11 +12,11 @@ import { propTypes } from '../../util/types';
 import { Form, IconSpinner, PrimaryButton, FieldDateRangeInput } from '../../components';
 import EstimatedBreakdownMaybe from './EstimatedBreakdownMaybe';
 
-import css from './BookingDatesForm.module.css';
+import css from './BookingDatesTimesForm.module.css';
 
 const identity = v => v;
 
-export class BookingDatesFormComponent extends Component {
+export class BookingDatesTimesFormComponent extends Component {
   constructor(props) {
     super(props);
     this.state = { focusedInput: null };
@@ -75,7 +75,7 @@ export class BookingDatesFormComponent extends Component {
       return (
         <div className={classes}>
           <p className={css.error}>
-            <FormattedMessage id="BookingDatesForm.listingPriceMissing" />
+            <FormattedMessage id="BookingDatesTimesForm.listingPriceMissing" />
           </p>
         </div>
       );
@@ -84,7 +84,7 @@ export class BookingDatesFormComponent extends Component {
       return (
         <div className={classes}>
           <p className={css.error}>
-            <FormattedMessage id="BookingDatesForm.listingCurrencyInvalid" />
+            <FormattedMessage id="BookingDatesTimesForm.listingCurrencyInvalid" />
           </p>
         </div>
       );
@@ -115,13 +115,13 @@ export class BookingDatesFormComponent extends Component {
           const { startDate, endDate } = values && values.bookingDates ? values.bookingDates : {};
 
           const bookingStartLabel = intl.formatMessage({
-            id: 'BookingDatesForm.bookingStartTitle',
+            id: 'BookingDatesTimesForm.bookingStartTitle',
           });
           const bookingEndLabel = intl.formatMessage({
-            id: 'BookingDatesForm.bookingEndTitle',
+            id: 'BookingDatesTimesForm.bookingEndTitle',
           });
           const requiredMessage = intl.formatMessage({
-            id: 'BookingDatesForm.requiredDate',
+            id: 'BookingDatesTimesForm.requiredDate',
           });
           const startDateErrorMessage = intl.formatMessage({
             id: 'FieldDateRangeInput.invalidStartDate',
@@ -131,7 +131,7 @@ export class BookingDatesFormComponent extends Component {
           });
           const timeSlotsError = fetchTimeSlotsError ? (
             <p className={css.sideBarError}>
-              <FormattedMessage id="BookingDatesForm.timeSlotsError" />
+              <FormattedMessage id="BookingDatesTimesForm.timeSlotsError" />
             </p>
           ) : null;
 
@@ -155,7 +155,7 @@ export class BookingDatesFormComponent extends Component {
           const bookingInfoMaybe = showEstimatedBreakdown ? (
             <div className={css.priceBreakdownContainer}>
               <h3 className={css.priceBreakdownTitle}>
-                <FormattedMessage id="BookingDatesForm.priceBreakdownTitle" />
+                <FormattedMessage id="BookingDatesTimesForm.priceBreakdownTitle" />
               </h3>
               <EstimatedBreakdownMaybe bookingData={bookingData} lineItems={lineItems} />
             </div>
@@ -167,7 +167,7 @@ export class BookingDatesFormComponent extends Component {
 
           const bookingInfoErrorMaybe = fetchLineItemsError ? (
             <span className={css.sideBarError}>
-              <FormattedMessage id="BookingDatesForm.fetchLineItemsError" />
+              <FormattedMessage id="BookingDatesTimesForm.fetchLineItemsError" />
             </span>
           ) : null;
 
@@ -230,14 +230,14 @@ export class BookingDatesFormComponent extends Component {
                 <FormattedMessage
                   id={
                     isOwnListing
-                      ? 'BookingDatesForm.ownListing'
-                      : 'BookingDatesForm.youWontBeChargedInfo'
+                      ? 'BookingDatesTimesForm.ownListing'
+                      : 'BookingDatesTimesForm.youWontBeChargedInfo'
                   }
                 />
               </p>
               <div className={submitButtonClasses}>
                 <PrimaryButton type="submit">
-                  <FormattedMessage id="BookingDatesForm.requestToBook" />
+                  <FormattedMessage id="BookingDatesTimesForm.requestToBook" />
                 </PrimaryButton>
               </div>
             </Form>
@@ -248,7 +248,7 @@ export class BookingDatesFormComponent extends Component {
   }
 }
 
-BookingDatesFormComponent.defaultProps = {
+BookingDatesTimesFormComponent.defaultProps = {
   rootClassName: null,
   className: null,
   submitButtonWrapperClassName: null,
@@ -261,7 +261,7 @@ BookingDatesFormComponent.defaultProps = {
   fetchLineItemsError: null,
 };
 
-BookingDatesFormComponent.propTypes = {
+BookingDatesTimesFormComponent.propTypes = {
   rootClassName: string,
   className: string,
   submitButtonWrapperClassName: string,
@@ -284,7 +284,7 @@ BookingDatesFormComponent.propTypes = {
   endDatePlaceholder: string,
 };
 
-const BookingDatesForm = compose(injectIntl)(BookingDatesFormComponent);
-BookingDatesForm.displayName = 'BookingDatesForm';
+const BookingDatesTimesForm = compose(injectIntl)(BookingDatesTimesFormComponent);
+BookingDatesTimesForm.displayName = 'BookingDatesTimesForm';
 
-export default BookingDatesForm;
+export default BookingDatesTimesForm;

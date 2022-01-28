@@ -34,7 +34,7 @@ const EditListingDescriptionPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
   const { description, title, publicData } = currentListing.attributes;
-  const { manufactureYear, maxUsingTime, category } = publicData;
+  const { manufactureYear, maxUsingTime, equipmentType } = publicData;
 
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
   const renderMessageByListingType = () => {
@@ -68,17 +68,22 @@ const EditListingDescriptionPanel = props => {
           initialValues={{
             title,
             description,
-            category,
+            equipmentType,
             manufactureYear,
             maxUsingTime,
           }}
           saveActionMsg={submitButtonText}
           onSubmit={values => {
-            const { title, description, category, manufactureYear, maxUsingTime } = values;
+            const { title, description, equipmentType, manufactureYear, maxUsingTime } = values;
             const updateValues = {
               title: title.trim(),
               description,
-              publicData: { category, manufactureYear, maxUsingTime, listingType: 'equipment' },
+              publicData: {
+                equipmentType,
+                manufactureYear,
+                maxUsingTime,
+                listingType: 'equipment',
+              },
             };
             onSubmit(updateValues);
           }}

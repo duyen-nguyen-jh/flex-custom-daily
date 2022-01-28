@@ -125,8 +125,8 @@ const EditEquipmentListingGeneralFormComponent = props => (
             validate={composeValidators(required(descriptionRequiredMessage))}
           />
           <CustomCategorySelectFieldMaybe
-            id="category"
-            name="category"
+            id="equipmentType"
+            name="equipmentType"
             categories={categories}
             intl={intl}
           />

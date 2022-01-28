@@ -11,7 +11,7 @@
  * else than simply daily or nightly bookings, the estimation will
  * most likely need some changes.
  *
- * To customize the estimation, first change the BookingDatesForm to
+ * To customize the estimation, first change the BookingDatesTimesForm to
  * collect all booking information from the user (in addition to the
  * default date pickers), and provide that data to the
  * EstimatedBreakdownMaybe components. You can then make customization
@@ -36,7 +36,7 @@ import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../u
 import config from '../../config';
 import { BookingBreakdown } from '../../components';
 
-import css from './BookingDatesForm.module.css';
+import css from './BookingDatesTimesForm.module.css';
 
 const { Money, UUID } = sdkTypes;
 
