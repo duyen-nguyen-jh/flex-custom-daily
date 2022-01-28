@@ -241,7 +241,7 @@ export class ListingPageComponent extends Component {
       title = '',
       publicData,
     } = currentListing.attributes;
-    const equipmentListingType = publicData.listingType;
+    const equipmentListingType = publicData?.listingType;
     const richTitle = (
       <span>
         {richText(title, {

@@ -18,9 +18,11 @@ import {
 } from '../../components';
 import { TopbarContainer } from '..';
 
-import { closeListing, openListing, getOwnListingsById, loadData } from './ManageEquipmentListingsPage.duck';
+import { closeListing, openListing, getOwnListingsById } from './ManageEquipmentListingsPage.duck';
 import css from './ManageEquipmentListingsPage.module.css';
-
+const LISTING_TYPE = {
+  equipment: 'equipment'
+};
 export class ManageEquipmentListingsPageComponent extends Component {
   constructor(props) {
     super(props);
@@ -52,6 +54,13 @@ export class ManageEquipmentListingsPageComponent extends Component {
 
     const hasPaginationInfo = !!pagination && pagination.totalItems != null;
     const listingsAreLoaded = !queryInProgress && hasPaginationInfo;
+    const getTotalListingByListingType = () => {
+      if (listingsAreLoaded) {
+        const { listingType } = listings[0].attributes.publicData;
+        if (listingType === LISTING_TYPE.equipment) return listings.length;
+        else return pagination.totalItems;
+      }
+    };
 
     const loadingResults = (
       <h2>
@@ -66,18 +75,18 @@ export class ManageEquipmentListingsPageComponent extends Component {
     );
 
     const noResults =
-      listingsAreLoaded && pagination.totalItems === 0 ? (
+      listingsAreLoaded && getTotalListingByListingType() === 0 ? (
         <h1 className={css.title}>
           <FormattedMessage id="ManageEquipmentListingsPage.noResults" />
         </h1>
       ) : null;
 
     const heading =
-      listingsAreLoaded && pagination.totalItems > 0 ? (
+      listingsAreLoaded && getTotalListingByListingType() > 0 ? (
         <h1 className={css.title}>
           <FormattedMessage
             id="ManageEquipmentListingsPage.youHaveListings"
-            values={{ count: pagination.totalItems }}
+            values={{ count: getTotalListingByListingType() }}
           />
         </h1>
       ) : (
@@ -200,6 +209,9 @@ const mapStateToProps = state => {
     closingListingError,
   } = state.ManageEquipmentListingsPage;
   const listings = getOwnListingsById(state, currentPageResultIds);
+
+  // const { listingType } = listings[0]?.attributes?.publicData;
+  console.log('debug main', listings[0]);
   return {
     currentPageResultIds,
     listings,
