@@ -152,7 +152,6 @@ export const EditEquipmentListingPageComponent = props => {
     // Images are passed to EditListingForm so that it can generate thumbnails out of them
     const currentListingImages =
       currentListing && currentListing.images ? currentListing.images : [];
-    console.log("debug", currentListing);
     // Images not yet connected to the listing
     const imageOrder = page.imageOrder || [];
     const unattachedImages = imageOrder.map(i => page.images[i]);

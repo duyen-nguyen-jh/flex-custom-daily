@@ -7,6 +7,7 @@ export { default as EditEquipmentListingGeneralForm } from './EditEquipmentListi
 export { default as EditListingFeaturesForm } from './EditListingFeaturesForm/EditListingFeaturesForm';
 export { default as EditListingLocationForm } from './EditListingLocationForm/EditListingLocationForm';
 export { default as EditListingPhotosForm } from './EditListingPhotosForm/EditListingPhotosForm';
+export { default as EditEquipmentListingPhotosForm } from './EditEquipmentListingPhotosForm/EditEquipmentListingPhotosForm';
 export { default as EditListingPoliciesForm } from './EditListingPoliciesForm/EditListingPoliciesForm';
 export { default as EditListingPricingForm } from './EditListingPricingForm/EditListingPricingForm';
 export { default as EmailVerificationForm } from './EmailVerificationForm/EmailVerificationForm';

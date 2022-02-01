@@ -241,6 +241,7 @@
   "EditEquipmentListingPage.titleEditListing": "Edit equipment listing",
   "EditListingPhotosForm.addImagesTip": "Tip: Choose the top 2-3 photos of your sauna from different angles in a good light that really show the space.",
   "EditEquipmentListingPhotosForm.addImagesTip": "Tip: Choose the top 2-3 photos from different angles in a good light that really show the equipment.",
+  "EditEquipmentListingPhotosForm.addMainImage": "Choose your main photo",
   "EditListingPhotosForm.bankAccountNumberRequired": "You need to add a bank account number.",
   "EditListingPhotosForm.chooseImage": "+ Choose an image…",
   "EditListingPhotosForm.imageRequired": "You need to add at least one image.",

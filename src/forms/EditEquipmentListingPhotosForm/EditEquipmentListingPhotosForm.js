@@ -10,13 +10,11 @@ import { nonEmptyArray, composeValidators } from '../../util/validators';
 import { isUploadImageOverLimitError } from '../../util/errors';
 import { AddImages, Button, Form, ValidationError } from '../../components';
 
-import css from './EditListingPhotosForm.module.css';
-const LISTING_TYPE = {
-  equipment: 'equipment',
-};
+import css from './EditEquipmentListingPhotosForm.module.css';
+
 const ACCEPT_IMAGES = 'image/*';
 
-export class EditListingPhotosFormComponent extends Component {
+export class EditEquipmentListingPhotosFormComponent extends Component {
   constructor(props) {
     super(props);
     this.state = { imageUploadRequested: false };
@@ -128,6 +126,7 @@ export class EditListingPhotosFormComponent extends Component {
             invalid || disabled || submitInProgress || imageUploadRequested || ready;
 
           const classes = classNames(css.root, className);
+          const [ mainPhoto, ...otherPhotos ] = images;
           return (
             <Form
               className={classes}
@@ -141,67 +140,133 @@ export class EditListingPhotosFormComponent extends Component {
                   <FormattedMessage id="EditListingPhotosForm.updateFailed" />
                 </p>
               ) : null}
-              <AddImages
-                className={css.imagesField}
-                images={images}
-                thumbnailClassName={css.thumbnail}
-                savedImageAltText={intl.formatMessage({
-                  id: 'EditListingPhotosForm.savedImageAltText',
-                })}
-                onRemoveImage={onRemoveImage}
-              >
-                <Field
-                  id="addImage"
-                  name="addImage"
-                  accept={ACCEPT_IMAGES}
-                  form={null}
-                  label={chooseImageText}
-                  type="file"
-                  disabled={imageUploadRequested}
+              <div className={css.mainPhotoWrapper}>
+                <AddImages
+                  className={css.imagesField}
+                  images={[mainPhoto]}
+                  thumbnailClassName={css.thumbnail}
+                  savedImageAltText={intl.formatMessage({
+                    id: 'EditListingPhotosForm.savedImageAltText',
+                  })}
+                  onRemoveImage={onRemoveImage}
                 >
-                  {fieldprops => {
-                    const { accept, input, label, disabled: fieldDisabled } = fieldprops;
-                    const { name, type } = input;
-                    const onChange = e => {
-                      const file = e.target.files[0];
-                      form.change(`addImage`, file);
-                      form.blur(`addImage`);
-                      onImageUploadHandler(file);
-                    };
-                    const inputProps = { accept, id: name, name, onChange, type };
-                    return (
-                      <div className={css.addImageWrapper}>
-                        <div className={css.aspectRatioWrapper}>
-                          {fieldDisabled ? null : (
-                            <input {...inputProps} className={css.addImageInput} />
-                          )}
-                          <label htmlFor={name} className={css.addImage}>
-                            {label}
-                          </label>
+                  <Field
+                    id="addMainImage"
+                    name="addMainImage"
+                    accept={ACCEPT_IMAGES}
+                    form={null}
+                    label={chooseImageText}
+                    type="file"
+                    disabled={imageUploadRequested}
+                  >
+                    {fieldprops => {
+                      const { accept, input, label, disabled: fieldDisabled } = fieldprops;
+                      const { name, type } = input;
+                      const onChange = e => {
+                        const file = e.target.files[0];
+                        form.change(`addMainImage`, file);
+                        form.blur(`addMainImage`);
+                        onImageUploadHandler(file);
+                      };
+                      const inputProps = { accept, id: name, name, onChange, type };
+                      return (
+                        <div className={css.addImageWrapper}>
+                          <div className={css.aspectRatioWrapper}>
+                            {fieldDisabled ? null : (
+                              <input {...inputProps} className={css.addImageInput} />
+                            )}
+                            <label htmlFor={name} className={css.addImage}>
+                              {label}
+                            </label>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  }}
-                </Field>
-                <Field
-                  component={props => {
-                    const { input, meta } = props;
-                    return (
-                      <div className={css.imageRequiredWrapper}>
-                        <input {...input} />
-                        <ValidationError fieldMeta={meta} />
-                      </div>
-                    );
-                  }}
-                  name="images"
-                  type="hidden"
-                  validate={composeValidators(nonEmptyArray(imageRequiredMessage))}
-                />
-              </AddImages>
-              {uploadImageFailed}
-              <p className={css.tip}>
-                <FormattedMessage id='EditListingPhotosForm.addImagesTip' />
-              </p>
+                      );
+                    }}
+                  </Field>
+                  <Field
+                    component={props => {
+                      const { input, meta } = props;
+                      return (
+                        <div className={css.imageRequiredWrapper}>
+                          <input {...input} />
+                          <ValidationError fieldMeta={meta} />
+                        </div>
+                      );
+                    }}
+                    name="mainImg"
+                    type="hidden"
+                    validate={composeValidators(nonEmptyArray(imageRequiredMessage))}
+                  />
+                </AddImages>
+                {uploadImageFailed}
+                <p className={css.tip}>
+                  <FormattedMessage id="EditEquipmentListingPhotosForm.addMainImage" />
+                </p>
+              </div>
+              <div className={css.otherImgWrapper}>
+                <AddImages
+                  className={css.imagesField}
+                  images={otherPhotos}
+                  thumbnailClassName={css.thumbnail}
+                  savedImageAltText={intl.formatMessage({
+                    id: 'EditListingPhotosForm.savedImageAltText',
+                  })}
+                  onRemoveImage={onRemoveImage}
+                >
+                  <Field
+                    id="addImage"
+                    name="addImage"
+                    accept={ACCEPT_IMAGES}
+                    form={null}
+                    label={chooseImageText}
+                    type="file"
+                    disabled={imageUploadRequested}
+                  >
+                    {fieldprops => {
+                      const { accept, input, label, disabled: fieldDisabled } = fieldprops;
+                      const { name, type } = input;
+                      const onChange = e => {
+                        const file = e.target.files[0];
+                        form.change(`addImage`, file);
+                        form.blur(`addImage`);
+                        onImageUploadHandler(file);
+                      };
+                      const inputProps = { accept, id: name, name, onChange, type };
+                      return (
+                        <div className={css.addImageWrapper}>
+                          <div className={css.aspectRatioWrapper}>
+                            {fieldDisabled ? null : (
+                              <input {...inputProps} className={css.addImageInput} />
+                            )}
+                            <label htmlFor={name} className={css.addImage}>
+                              {label}
+                            </label>
+                          </div>
+                        </div>
+                      );
+                    }}
+                  </Field>
+                  <Field
+                    component={props => {
+                      const { input, meta } = props;
+                      return (
+                        <div className={css.imageRequiredWrapper}>
+                          <input {...input} />
+                          <ValidationError fieldMeta={meta} />
+                        </div>
+                      );
+                    }}
+                    name="images"
+                    type="hidden"
+                    validate={composeValidators(nonEmptyArray(imageRequiredMessage))}
+                  />
+                </AddImages>
+                {uploadImageFailed}
+                <p className={css.tip}>
+                  <FormattedMessage id="EditEquipmentListingPhotosForm.addImagesTip" />
+                </p>
+              </div>
+
               {publishListingFailed}
               {showListingFailed}
 
@@ -222,9 +287,9 @@ export class EditListingPhotosFormComponent extends Component {
   }
 }
 
-EditListingPhotosFormComponent.defaultProps = { fetchErrors: null, images: [] };
+EditEquipmentListingPhotosFormComponent.defaultProps = { fetchErrors: null, images: [] };
 
-EditListingPhotosFormComponent.propTypes = {
+EditEquipmentListingPhotosFormComponent.propTypes = {
   fetchErrors: shape({
     publishListingError: propTypes.error,
     showListingsError: propTypes.error,
@@ -244,4 +309,4 @@ EditListingPhotosFormComponent.propTypes = {
   onRemoveImage: func.isRequired,
 };
 
-export default compose(injectIntl)(EditListingPhotosFormComponent);
+export default compose(injectIntl)(EditEquipmentListingPhotosFormComponent);
