@@ -143,6 +143,41 @@ export const filters = [
       ],
     },
   },
+  {
+    id: 'equipmentType',
+    label: 'Equipment Type',
+    type: 'SelectMultipleFilter',
+    group: 'secondary',
+    queryParamNames: ['pub_equipmentType'],
+    config: {
+      // Optional modes: 'has_all', 'has_any'
+      // https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
+      searchMode: 'has_all',
+
+      // "key" is the option you see in Flex Console.
+      // "label" is set here for this web app's UI only.
+      // Note: label is not added through the translation files
+      // to make filter customizations a bit easier.
+      options: [
+        {
+          key: 'math',
+          label: 'Math',
+        },
+        {
+          key: 'physics',
+          label: 'Physics',
+        },
+        {
+          key: 'chemistry',
+          label: 'Chemistry',
+        },
+        {
+          key: 'biology',
+          label: 'Biology equipment',
+        },
+      ],
+    },
+  },
 ];
 
 export const sortConfig = {
@@ -165,6 +200,9 @@ export const sortConfig = {
     { key: '-createdAt', label: 'Oldest' },
     { key: '-price', label: 'Lowest price' },
     { key: 'price', label: 'Highest price' },
+    { key: 'pub_manufactureYear', label: 'Manufacture year newest' },
+    { key: '-pub_manufactureYear', label: 'Manufacture year oldest' },
+    { key: 'pub_maxUsingTime', label: 'Max using times' },
 
     // The relevance is only used for keyword search, but the
     // parameter isn't sent to the Marketplace API. The key is purely

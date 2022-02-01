@@ -15,11 +15,13 @@ const AuthenticationPage = loadable(() => import(/* webpackChunkName: "Authentic
 const CheckoutPage = loadable(() => import(/* webpackChunkName: "CheckoutPage" */ './containers/CheckoutPage/CheckoutPage'));
 const ContactDetailsPage = loadable(() => import(/* webpackChunkName: "ContactDetailsPage" */ './containers/ContactDetailsPage/ContactDetailsPage'));
 const EditListingPage = loadable(() => import(/* webpackChunkName: "EditListingPage" */ './containers/EditListingPage/EditListingPage'));
+const EditEquipmentListingPage = loadable(() => import(/* webpackChunkName: "EditEquipmentListingPage" */ './containers/EditEquipmentListingPage/EditEquipmentListingPage'));
 const EmailVerificationPage = loadable(() => import(/* webpackChunkName: "EmailVerificationPage" */ './containers/EmailVerificationPage/EmailVerificationPage'));
 const InboxPage = loadable(() => import(/* webpackChunkName: "InboxPage" */ './containers/InboxPage/InboxPage'));
 const LandingPage = loadable(() => import(/* webpackChunkName: "LandingPage" */ './containers/LandingPage/LandingPage'));
 const ListingPage = loadable(() => import(/* webpackChunkName: "ListingPage" */ /* webpackPrefetch: true */ './containers/ListingPage/ListingPage'));
 const ManageListingsPage = loadable(() => import(/* webpackChunkName: "ManageListingsPage" */ './containers/ManageListingsPage/ManageListingsPage'));
+const ManageEquipmentListingsPage = loadable(() => import(/* webpackChunkName: "ManageListingsPage" */ './containers/ManageEquipmentListingsPage/ManageEquipmentListingsPage'));
 const PasswordChangePage = loadable(() => import(/* webpackChunkName: "PasswordChangePage" */ './containers/PasswordChangePage/PasswordChangePage'));
 const PasswordRecoveryPage = loadable(() => import(/* webpackChunkName: "PasswordRecoveryPage" */ './containers/PasswordRecoveryPage/PasswordRecoveryPage'));
 const PasswordResetPage = loadable(() => import(/* webpackChunkName: "PasswordResetPage" */ './containers/PasswordResetPage/PasswordResetPage'));
@@ -112,11 +114,29 @@ const routeConfiguration = () => {
       ),
     },
     {
+      path: '/le/new',
+      name: 'NewEquipmentPage',
+      auth: true,
+      component: () => (
+        <NamedRedirect
+          name="EditEquipmentListingPage"
+          params={{ slug: draftSlug, id: draftId, type: 'new', tab: 'description' }}
+        />
+      ),
+    },
+    {
       path: '/l/:slug/:id/:type/:tab',
       name: 'EditListingPage',
       auth: true,
       component: EditListingPage,
-      loadData: pageDataLoadingAPI.EditListingPage.loadData,
+      loadData: pageDataLoadingAPI.EditEquipmentListingPageLoader.loadData,
+    },
+    {
+      path: '/le/:slug/:id/:type/:tab',
+      name: 'EditEquipmentListingPage',
+      auth: true,
+      component: EditEquipmentListingPage,
+      loadData: pageDataLoadingAPI.EditEquipmentListingPageLoader.loadData,
     },
     {
       path: '/l/:slug/:id/:type/:tab/:returnURLType',
@@ -125,7 +145,13 @@ const routeConfiguration = () => {
       component: EditListingPage,
       loadData: pageDataLoadingAPI.EditListingPage.loadData,
     },
-
+    {
+      path: '/le/:slug/:id/:type/:tab/:returnURLType',
+      name: 'EditEquipmentListingStripeOnboardingPage',
+      auth: true,
+      component: EditEquipmentListingPage,
+      loadData: pageDataLoadingAPI.EditEquipmentListingPageLoader.loadData,
+    },
     // Canonical path should be after the `/l/new` path since they
     // conflict and `new` is not a valid listing UUID.
     {
@@ -236,6 +262,14 @@ const routeConfiguration = () => {
       authPage: 'LoginPage',
       component: ManageListingsPage,
       loadData: pageDataLoadingAPI.ManageListingsPage.loadData,
+    },
+    {
+      path: '/equipments',
+      name: 'ManageEquipmentListingsPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: ManageEquipmentListingsPage,
+      loadData: pageDataLoadingAPI.ManageEquipmentListingsPage.loadData,
     },
     {
       path: '/account',

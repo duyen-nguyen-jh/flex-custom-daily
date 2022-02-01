@@ -13,7 +13,10 @@ import { ModalInMobile, Button } from '../../components';
 import { BookingDatesForm } from '../../forms';
 
 import css from './BookingPanel.module.css';
-
+import BookingDatesTimesForm from '../../forms/BookingDatesTimesForm/BookingDatesTimesForm';
+const LISTING_TYPE = {
+  equipment: 'equipment',
+};
 // This defines when ModalInMobile shows content as Modal
 const MODAL_BREAKPOINT = 1023;
 
@@ -53,6 +56,7 @@ const BookingPanel = props => {
     className,
     titleClassName,
     listing,
+    equipmentListingType,
     isOwnListing,
     unitType,
     onSubmit,
@@ -97,6 +101,46 @@ const BookingPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.bookingTitle);
 
+  const renderBookingFormByListingType = () => {
+    if (equipmentListingType === LISTING_TYPE.equipment)
+      return (
+        <BookingDatesTimesForm
+          className={css.bookingForm}
+          formId="BookingPanel"
+          submitButtonWrapperClassName={css.bookingDatesSubmitButtonWrapper}
+          unitType={unitType}
+          onSubmit={onSubmit}
+          price={price}
+          listingId={listing.id}
+          isOwnListing={isOwnListing}
+          timeSlots={timeSlots}
+          fetchTimeSlotsError={fetchTimeSlotsError}
+          onFetchTransactionLineItems={onFetchTransactionLineItems}
+          lineItems={lineItems}
+          fetchLineItemsInProgress={fetchLineItemsInProgress}
+          fetchLineItemsError={fetchLineItemsError}
+        />
+      );
+    else
+      return (
+        <BookingDatesForm
+          className={css.bookingForm}
+          formId="BookingPanel"
+          submitButtonWrapperClassName={css.bookingDatesSubmitButtonWrapper}
+          unitType={unitType}
+          onSubmit={onSubmit}
+          price={price}
+          listingId={listing.id}
+          isOwnListing={isOwnListing}
+          timeSlots={timeSlots}
+          fetchTimeSlotsError={fetchTimeSlotsError}
+          onFetchTransactionLineItems={onFetchTransactionLineItems}
+          lineItems={lineItems}
+          fetchLineItemsInProgress={fetchLineItemsInProgress}
+          fetchLineItemsError={fetchLineItemsError}
+        />
+      );
+  };
   return (
     <div className={classes}>
       <ModalInMobile
@@ -118,24 +162,7 @@ const BookingPanel = props => {
           <h2 className={titleClasses}>{title}</h2>
           {subTitleText ? <div className={css.bookingHelp}>{subTitleText}</div> : null}
         </div>
-        {showBookingDatesForm ? (
-          <BookingDatesForm
-            className={css.bookingForm}
-            formId="BookingPanel"
-            submitButtonWrapperClassName={css.bookingDatesSubmitButtonWrapper}
-            unitType={unitType}
-            onSubmit={onSubmit}
-            price={price}
-            listingId={listing.id}
-            isOwnListing={isOwnListing}
-            timeSlots={timeSlots}
-            fetchTimeSlotsError={fetchTimeSlotsError}
-            onFetchTransactionLineItems={onFetchTransactionLineItems}
-            lineItems={lineItems}
-            fetchLineItemsInProgress={fetchLineItemsInProgress}
-            fetchLineItemsError={fetchLineItemsError}
-          />
-        ) : null}
+        {showBookingDatesForm ? renderBookingFormByListingType() : null}
       </ModalInMobile>
       <div className={css.openBookingForm}>
         <div className={css.priceContainer}>
