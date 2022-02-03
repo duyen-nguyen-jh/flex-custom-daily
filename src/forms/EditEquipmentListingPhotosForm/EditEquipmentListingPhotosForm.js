@@ -17,18 +17,26 @@ const ACCEPT_IMAGES = 'image/*';
 export class EditEquipmentListingPhotosFormComponent extends Component {
   constructor(props) {
     super(props);
-    this.state = { imageUploadRequested: false };
+    const { images } = props;
+    const [firstImage] = images;
+    this.state = { imageUploadRequested: false, mainImage: firstImage ? [firstImage] : [] };
     this.onImageUploadHandler = this.onImageUploadHandler.bind(this);
     this.submittedImages = [];
   }
 
-  onImageUploadHandler(file) {
+  onImageUploadHandler(file, isUploadMainImages) {
     if (file) {
       this.setState({ imageUploadRequested: true });
       this.props
         .onImageUpload({ id: `${file.name}_${Date.now()}`, file })
         .then(() => {
-          this.setState({ imageUploadRequested: false });
+          if (isUploadMainImages) {
+            const { images } = this.props;
+            this.setState({ imageUploadRequested: false, mainImage: [images[images.length - 1]] });
+            this.props.onRemoveImage(this.state.mainImage[0].id);
+          } else {
+            this.setState({ imageUploadRequested: false });
+          }
         })
         .catch(() => {
           this.setState({ imageUploadRequested: false });
@@ -42,6 +50,7 @@ export class EditEquipmentListingPhotosFormComponent extends Component {
         {...this.props}
         onImageUploadHandler={this.onImageUploadHandler}
         imageUploadRequested={this.state.imageUploadRequested}
+        mainImage={this.state.mainImage}
         initialValues={{ images: this.props.images }}
         render={formRenderProps => {
           const {
@@ -51,6 +60,7 @@ export class EditEquipmentListingPhotosFormComponent extends Component {
             handleSubmit,
             images,
             imageUploadRequested,
+            mainImage,
             intl,
             invalid,
             onImageUploadHandler,
@@ -124,9 +134,8 @@ export class EditEquipmentListingPhotosFormComponent extends Component {
           const submitInProgress = updateInProgress;
           const submitDisabled =
             invalid || disabled || submitInProgress || imageUploadRequested || ready;
-
           const classes = classNames(css.root, className);
-          const [ mainPhoto, ...otherPhotos ] = images;
+          const [, ...otherPhotos] = images;
           return (
             <Form
               className={classes}
@@ -143,7 +152,7 @@ export class EditEquipmentListingPhotosFormComponent extends Component {
               <div className={css.mainPhotoWrapper}>
                 <AddImages
                   className={css.imagesField}
-                  images={[mainPhoto]}
+                  images={mainImage}
                   thumbnailClassName={css.thumbnail}
                   savedImageAltText={intl.formatMessage({
                     id: 'EditListingPhotosForm.savedImageAltText',
@@ -166,7 +175,7 @@ export class EditEquipmentListingPhotosFormComponent extends Component {
                         const file = e.target.files[0];
                         form.change(`addMainImage`, file);
                         form.blur(`addMainImage`);
-                        onImageUploadHandler(file);
+                        onImageUploadHandler(file, true);
                       };
                       const inputProps = { accept, id: name, name, onChange, type };
                       return (
@@ -183,20 +192,6 @@ export class EditEquipmentListingPhotosFormComponent extends Component {
                       );
                     }}
                   </Field>
-                  <Field
-                    component={props => {
-                      const { input, meta } = props;
-                      return (
-                        <div className={css.imageRequiredWrapper}>
-                          <input {...input} />
-                          <ValidationError fieldMeta={meta} />
-                        </div>
-                      );
-                    }}
-                    name="mainImg"
-                    type="hidden"
-                    validate={composeValidators(nonEmptyArray(imageRequiredMessage))}
-                  />
                 </AddImages>
                 {uploadImageFailed}
                 <p className={css.tip}>
