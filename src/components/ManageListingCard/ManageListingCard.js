@@ -124,6 +124,7 @@ export const ManageListingCardComponent = props => {
     onToggleMenu,
     renderSizes,
     availabilityEnabled,
+    listingType,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
@@ -258,7 +259,7 @@ export const ManageListingCardComponent = props => {
             >
               <NamedLink
                 className={css.finishListingDraftLink}
-                name="EditListingPage"
+                name={listingType === 'equipment' ? 'EditEquipmentListingPage' : 'EditListingPage'}
                 params={{ id, slug, type: LISTING_PAGE_PARAM_TYPE_DRAFT, tab: 'photos' }}
               >
                 <FormattedMessage id="ManageListingCard.finishListingDraft" />

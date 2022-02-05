@@ -144,6 +144,7 @@ export class ManageEquipmentListingsPageComponent extends Component {
                     hasOpeningError={openingErrorListingId.uuid === l.id.uuid}
                     hasClosingError={closingErrorListingId.uuid === l.id.uuid}
                     renderSizes={renderSizes}
+                    listingType="equipment"
                   />
                 ))}
               </div>
