@@ -116,7 +116,7 @@ const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
 const maps = {
   mapboxAccessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN,
   googleMapsAPIKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-
+  mapProvider: 'GOOGLE_MAPS',
   // The location search input can be configured to show default
   // searches when the user focuses on the input and hasn't yet typed
   // anything. This reduces typing and avoids too many Geolocation API
@@ -139,7 +139,7 @@ const maps = {
     // Limit location autocomplete to a one or more countries
     // using ISO 3166 alpha 2 country codes separated by commas.
     // If you want to limit the autocomplete, uncomment this value:
-    // countryLimit: ['AU'],
+    countryLimit: ['VN', 'SG'],
   },
 
   // When fuzzy locations are enabled, coordinates on maps are

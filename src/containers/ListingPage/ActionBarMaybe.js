@@ -15,7 +15,7 @@ import css from './ListingPage.module.css';
 
 export const ActionBarMaybe = props => {
   const { isOwnListing, listing, editParams } = props;
-  const state = listing.attributes.state;
+  const { state, publicData } = listing.attributes;
   const isPendingApproval = state === LISTING_STATE_PENDING_APPROVAL;
   const isClosed = state === LISTING_STATE_CLOSED;
   const isDraft = state === LISTING_STATE_DRAFT;
@@ -37,12 +37,21 @@ export const ActionBarMaybe = props => {
       [css.ownListingTextPendingApproval]: isPendingApproval,
     });
 
+    const getNamePageByListingType = () => {
+      if (publicData?.listingType === 'equipment') {
+        return 'EditEquipmentListingPage';
+      } else return 'EditListingPage';
+    };
     return (
       <div className={css.actionBar}>
         <p className={ownListingTextClasses}>
           <FormattedMessage id={ownListingTextTranslationId} />
         </p>
-        <NamedLink className={css.editListingLink} name="EditListingPage" params={editParams}>
+        <NamedLink
+          className={css.editListingLink}
+          name={getNamePageByListingType()}
+          params={editParams}
+        >
           <EditIcon className={css.editIcon} />
           <FormattedMessage id={message} />
         </NamedLink>

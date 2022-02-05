@@ -11,7 +11,9 @@ import { isUploadImageOverLimitError } from '../../util/errors';
 import { AddImages, Button, Form, ValidationError } from '../../components';
 
 import css from './EditListingPhotosForm.module.css';
-
+const LISTING_TYPE = {
+  equipment: 'equipment',
+};
 const ACCEPT_IMAGES = 'image/*';
 
 export class EditListingPhotosFormComponent extends Component {
@@ -126,7 +128,6 @@ export class EditListingPhotosFormComponent extends Component {
             invalid || disabled || submitInProgress || imageUploadRequested || ready;
 
           const classes = classNames(css.root, className);
-
           return (
             <Form
               className={classes}
@@ -182,7 +183,6 @@ export class EditListingPhotosFormComponent extends Component {
                     );
                   }}
                 </Field>
-
                 <Field
                   component={props => {
                     const { input, meta } = props;
@@ -199,9 +199,8 @@ export class EditListingPhotosFormComponent extends Component {
                 />
               </AddImages>
               {uploadImageFailed}
-
               <p className={css.tip}>
-                <FormattedMessage id="EditListingPhotosForm.addImagesTip" />
+                <FormattedMessage id='EditListingPhotosForm.addImagesTip' />
               </p>
               {publishListingFailed}
               {showListingFailed}

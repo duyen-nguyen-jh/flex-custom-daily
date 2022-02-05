@@ -8,6 +8,9 @@ import { ListingLink } from '../../components';
 import { EditListingAvailabilityForm } from '../../forms';
 
 import css from './EditListingAvailabilityPanel.module.css';
+const LISTING_TYPE = {
+  equipment: 'equipment',
+};
 
 const EditListingAvailabilityPanel = props => {
   const {
@@ -23,23 +26,38 @@ const EditListingAvailabilityPanel = props => {
     panelUpdated,
     updateInProgress,
     errors,
+    listingType,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
-  const defaultAvailabilityPlan = {
-    type: 'availability-plan/day',
-    entries: [
-      { dayOfWeek: 'mon', seats: 1 },
-      { dayOfWeek: 'tue', seats: 1 },
-      { dayOfWeek: 'wed', seats: 1 },
-      { dayOfWeek: 'thu', seats: 1 },
-      { dayOfWeek: 'fri', seats: 1 },
-      { dayOfWeek: 'sat', seats: 1 },
-      { dayOfWeek: 'sun', seats: 1 },
-    ],
-  };
+  const defaultAvailabilityPlan =
+    listingType === LISTING_TYPE.equipment
+      ? {
+          type: 'availability-plan/day',
+          entries: [
+            { dayOfWeek: 'mon', seats: 0 },
+            { dayOfWeek: 'tue', seats: 0 },
+            { dayOfWeek: 'wed', seats: 0 },
+            { dayOfWeek: 'thu', seats: 0 },
+            { dayOfWeek: 'fri', seats: 0 },
+            { dayOfWeek: 'sat', seats: 0 },
+            { dayOfWeek: 'sun', seats: 0 },
+          ],
+        }
+      : {
+          type: 'availability-plan/day',
+          entries: [
+            { dayOfWeek: 'mon', seats: 1 },
+            { dayOfWeek: 'tue', seats: 1 },
+            { dayOfWeek: 'wed', seats: 1 },
+            { dayOfWeek: 'thu', seats: 1 },
+            { dayOfWeek: 'fri', seats: 1 },
+            { dayOfWeek: 'sat', seats: 1 },
+            { dayOfWeek: 'sun', seats: 1 },
+          ],
+        };
   const availabilityPlan = currentListing.attributes.availabilityPlan || defaultAvailabilityPlan;
 
   return (

@@ -56,7 +56,9 @@ import css from './ListingPage.module.css';
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
 const { UUID } = sdkTypes;
-
+const LISTING_TYPE = {
+  equipment: 'equipment',
+};
 const priceData = (price, intl) => {
   if (price && price.currency === config.currency) {
     const formattedPrice = formatMoney(intl, price);
@@ -241,7 +243,7 @@ export class ListingPageComponent extends Component {
       title = '',
       publicData,
     } = currentListing.attributes;
-
+    const equipmentListingType = publicData?.listingType;
     const richTitle = (
       <span>
         {richText(title, {
@@ -378,14 +380,31 @@ export class ListingPageComponent extends Component {
 
     const amenityOptions = findOptionsForSelectFilter('amenities', filterConfig);
     const categoryOptions = findOptionsForSelectFilter('category', filterConfig);
-    const category =
-      publicData && publicData.category ? (
-        <span>
-          {categoryLabel(categoryOptions, publicData.category)}
-          <span className={css.separator}>•</span>
-        </span>
-      ) : null;
+    const equipmentOptions = findOptionsForSelectFilter('equipmentType', filterConfig);
+    const category = publicData?.category ? (
+      <span>
+        {categoryLabel(categoryOptions, publicData.category)}
+        <span className={css.separator}>•</span>
+      </span>
+    ) : null;
 
+    const renderSectionByListingType = () => {
+      if (equipmentListingType === LISTING_TYPE.equipment)
+        return (
+          <SectionFeaturesMaybe
+            options={equipmentOptions}
+            publicData={publicData}
+            listingType={equipmentListingType}
+          />
+        );
+      else
+        return (
+          <>
+            <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
+            <SectionRulesMaybe publicData={publicData} />
+          </>
+        );
+    };
     return (
       <Page
         title={schemaTitle}
@@ -434,9 +453,11 @@ export class ListingPageComponent extends Component {
                     showContactUser={showContactUser}
                     onContactUser={this.onContactUser}
                   />
-                  <SectionDescriptionMaybe description={description} />
-                  <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
-                  <SectionRulesMaybe publicData={publicData} />
+                  <SectionDescriptionMaybe
+                    description={description}
+                    listingType={equipmentListingType}
+                  />
+                  {renderSectionByListingType()}
                   <SectionMapMaybe
                     geolocation={geolocation}
                     publicData={publicData}
@@ -460,6 +481,7 @@ export class ListingPageComponent extends Component {
                 <BookingPanel
                   className={css.bookingPanel}
                   listing={currentListing}
+                  equipmentListingType={equipmentListingType}
                   isOwnListing={isOwnListing}
                   unitType={unitType}
                   onSubmit={handleBookingSubmit}

@@ -6,10 +6,14 @@ import { ensureOwnListing } from '../../util/data';
 import { findOptionsForSelectFilter } from '../../util/search';
 import { LISTING_STATE_DRAFT } from '../../util/types';
 import { ListingLink } from '../../components';
-import { EditListingDescriptionForm } from '../../forms';
+import { EditEquipmentListingGeneralForm, EditListingDescriptionForm } from '../../forms';
 import config from '../../config';
 
 import css from './EditListingDescriptionPanel.module.css';
+
+const LISTING_TYPE = {
+  equipment: 'equipment',
+};
 
 const EditListingDescriptionPanel = props => {
   const {
@@ -24,48 +28,105 @@ const EditListingDescriptionPanel = props => {
     panelUpdated,
     updateInProgress,
     errors,
+    listingType,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
   const { description, title, publicData } = currentListing.attributes;
+  const { manufactureYear, maxUsingTime, equipmentType } = publicData;
 
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
+  const renderMessageByListingType = () => {
+    if (listingType === LISTING_TYPE.equipment)
+      return <FormattedMessage id="EditEquipmentListingDescriptionPanel.createListingTitle" />;
+    else return <FormattedMessage id="EditListingDescriptionPanel.createListingTitle" />;
+  };
+
   const panelTitle = isPublished ? (
     <FormattedMessage
       id="EditListingDescriptionPanel.title"
       values={{ listingTitle: <ListingLink listing={listing} /> }}
     />
   ) : (
-    <FormattedMessage id="EditListingDescriptionPanel.createListingTitle" />
+    renderMessageByListingType()
   );
 
-  const categoryOptions = findOptionsForSelectFilter('category', config.custom.filters);
+  const getCategoryOptions = () => {
+    if (listingType === LISTING_TYPE.equipment) {
+      return findOptionsForSelectFilter('equipmentType', config.custom.filters);
+    } else {
+      return findOptionsForSelectFilter('category', config.custom.filters);
+    }
+  };
+
+  const renderFormByListingType = () => {
+    if (listingType === LISTING_TYPE.equipment) {
+      return (
+        <EditEquipmentListingGeneralForm
+          className={css.form}
+          initialValues={{
+            title,
+            description,
+            equipmentType,
+            manufactureYear,
+            maxUsingTime,
+          }}
+          saveActionMsg={submitButtonText}
+          onSubmit={values => {
+            const { title, description, equipmentType, manufactureYear, maxUsingTime } = values;
+            const updateValues = {
+              title: title.trim(),
+              description,
+              publicData: {
+                equipmentType,
+                manufactureYear,
+                maxUsingTime,
+                listingType: 'equipment',
+              },
+            };
+            onSubmit(updateValues);
+          }}
+          onChange={onChange}
+          disabled={disabled}
+          ready={ready}
+          updated={panelUpdated}
+          updateInProgress={updateInProgress}
+          fetchErrors={errors}
+          categories={getCategoryOptions()}
+        />
+      );
+    } else {
+      return (
+        <EditListingDescriptionForm
+          className={css.form}
+          initialValues={{ title, description, category: publicData.category }}
+          saveActionMsg={submitButtonText}
+          onSubmit={values => {
+            const { title, description, category } = values;
+            const updateValues = {
+              title: title.trim(),
+              description,
+              publicData: { category },
+            };
+
+            onSubmit(updateValues);
+          }}
+          onChange={onChange}
+          disabled={disabled}
+          ready={ready}
+          updated={panelUpdated}
+          updateInProgress={updateInProgress}
+          fetchErrors={errors}
+          categories={getCategoryOptions()}
+        />
+      );
+    }
+  };
   return (
     <div className={classes}>
       <h1 className={css.title}>{panelTitle}</h1>
-      <EditListingDescriptionForm
-        className={css.form}
-        initialValues={{ title, description, category: publicData.category }}
-        saveActionMsg={submitButtonText}
-        onSubmit={values => {
-          const { title, description, category } = values;
-          const updateValues = {
-            title: title.trim(),
-            description,
-            publicData: { category },
-          };
-
-          onSubmit(updateValues);
-        }}
-        onChange={onChange}
-        disabled={disabled}
-        ready={ready}
-        updated={panelUpdated}
-        updateInProgress={updateInProgress}
-        fetchErrors={errors}
-        categories={categoryOptions}
-      />
+      {renderFormByListingType()}
     </div>
   );
 };
