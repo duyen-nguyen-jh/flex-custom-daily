@@ -9,7 +9,7 @@ import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { required, bookingDatesRequired, composeValidators } from '../../util/validators';
 import { START_DATE, END_DATE } from '../../util/dates';
 import { propTypes } from '../../util/types';
-import { Form, IconSpinner, PrimaryButton, FieldDateRangeInput } from '../../components';
+import { Form, IconSpinner, PrimaryButton, FieldDateTimeRangeInput } from '../../components';
 import EstimatedBreakdownMaybe from './EstimatedBreakdownMaybe';
 
 import css from './BookingDatesTimesForm.module.css';
@@ -114,11 +114,17 @@ export class BookingDatesTimesFormComponent extends Component {
           } = fieldRenderProps;
           const { startDate, endDate } = values && values.bookingDates ? values.bookingDates : {};
 
-          const bookingStartLabel = intl.formatMessage({
-            id: 'BookingDatesTimesForm.bookingStartTitle',
+          const pickupDateTitle = intl.formatMessage({
+            id: 'BookingDatesTimesForm.pickupDateTitle',
           });
-          const bookingEndLabel = intl.formatMessage({
-            id: 'BookingDatesTimesForm.bookingEndTitle',
+          const pickupTimeTitle = intl.formatMessage({
+            id: 'BookingDatesTimesForm.pickupTimeTitle',
+          });
+          const dropoffDateTitle = intl.formatMessage({
+            id: 'BookingDatesTimesForm.dropoffDateTitle',
+          });
+          const dropoffTimeTitle = intl.formatMessage({
+            id: 'BookingDatesTimesForm.dropoffTimeTitle',
           });
           const requiredMessage = intl.formatMessage({
             id: 'BookingDatesTimesForm.requiredDate',
@@ -183,10 +189,12 @@ export class BookingDatesTimesFormComponent extends Component {
             .startOf('day')
             .add(1, 'days')
             .toDate();
-          const startDatePlaceholderText =
+          const pickupDatePlaceholderText =
             startDatePlaceholder || intl.formatDate(today, dateFormatOptions);
-          const endDatePlaceholderText =
+          const dropoffDatePlaceholderText =
             endDatePlaceholder || intl.formatDate(tomorrow, dateFormatOptions);
+          const timePlaceHolderText = intl.formatTime(Date.now());
+
           const submitButtonClasses = classNames(
             submitButtonWrapperClassName || css.submitButtonWrapper
           );
@@ -200,16 +208,37 @@ export class BookingDatesTimesFormComponent extends Component {
                   this.handleOnChange(values);
                 }}
               />
-              <FieldDateRangeInput
+              <FieldDateTimeRangeInput
                 className={css.bookingDates}
-                name="bookingDates"
+                name="pickup"
                 unitType={unitType}
-                startDateId={`${formId}.bookingStartDate`}
-                startDateLabel={bookingStartLabel}
-                startDatePlaceholderText={startDatePlaceholderText}
-                endDateId={`${formId}.bookingEndDate`}
-                endDateLabel={bookingEndLabel}
-                endDatePlaceholderText={endDatePlaceholderText}
+                dateId={`${formId}.pickupDate`}
+                dateLabel={pickupDateTitle}
+                datePlaceholderText={pickupDatePlaceholderText}
+                timeId={`${formId}.pickupTime`}
+                timeLabel={pickupTimeTitle}
+                timePlaceholderText={timePlaceHolderText}
+                focusedInput={this.state.focusedInput}
+                onFocusedInputChange={this.onFocusedInputChange}
+                format={identity}
+                timeSlots={timeSlots}
+                useMobileMargins
+                validate={composeValidators(
+                  required(requiredMessage),
+                  bookingDatesRequired(startDateErrorMessage, endDateErrorMessage)
+                )}
+                disabled={fetchLineItemsInProgress}
+              />
+              <FieldDateTimeRangeInput
+                className={css.bookingDates}
+                name="dropoff"
+                unitType={unitType}
+                dateId={`${formId}.dropoffDate`}
+                dateLabel={dropoffDateTitle}
+                datePlaceholderText={dropoffDatePlaceholderText}
+                timeId={`${formId}.dropoffTime`}
+                timeLabel={dropoffTimeTitle}
+                timePlaceholderText={timePlaceHolderText}
                 focusedInput={this.state.focusedInput}
                 onFocusedInputChange={this.onFocusedInputChange}
                 format={identity}
