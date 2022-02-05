@@ -10,10 +10,9 @@ import { formatMoney } from '../../util/currency';
 import { parse, stringify } from '../../util/urlHelpers';
 import config from '../../config';
 import { ModalInMobile, Button } from '../../components';
-import { BookingDatesForm } from '../../forms';
+import { BookingDatesForm, BookingDatesTimesForm } from '../../forms';
 
 import css from './BookingPanel.module.css';
-import BookingDatesTimesForm from '../../forms/BookingDatesTimesForm/BookingDatesTimesForm';
 const LISTING_TYPE = {
   equipment: 'equipment',
 };
