@@ -11,7 +11,7 @@ import { Field } from 'react-final-form';
 import classNames from 'classnames';
 import { START_DATE, END_DATE } from '../../util/dates';
 import { propTypes } from '../../util/types';
-import { FieldDateInput } from '..';
+import { FieldDateInput, FieldSelect } from '..';
 
 import css from './FieldDateTimeRangeInput.module.css';
 
@@ -64,6 +64,7 @@ class FieldDateTimeRangeInputComponent extends Component {
       input,
       meta,
       useMobileMargins,
+      validate,
       // Extract focusedInput and onFocusedInputChange so that
       // the same values will not be passed on to subcomponents.
       focusedInput,
@@ -95,18 +96,6 @@ class FieldDateTimeRangeInputComponent extends Component {
       [css.labelSuccess]: false, //endDateIsValid,
     });
 
-    const label =
-      dateLabel && timeLabel ? (
-        <div className={classNames(css.labels, { [css.mobileMargins]: useMobileMargins })}>
-          <label className={dateLabelClasses} htmlFor={dateId}>
-            {dateLabel}
-          </label>
-          <label className={timeLabelClasses} htmlFor={timeId}>
-            {timeLabel}
-          </label>
-        </div>
-      ) : null;
-
     // eslint-disable-next-line no-unused-vars
     const { onBlur, onFocus, type, checked, ...restOfInput } = input;
     const inputPropsDate = {
@@ -117,12 +106,11 @@ class FieldDateTimeRangeInputComponent extends Component {
       onBlur: this.handleBlur,
       onFocus: this.handleFocus,
       useMobileMargins,
+      validate,
       readOnly: typeof window !== 'undefined' && window.innerWidth < MAX_MOBILE_SCREEN_WIDTH,
       ...restOfInput,
       ...rest,
       focusedInput: this.state.focusedInput,
-      dateId,
-      timeId,
     };
     const inputPropsTime = {
       label: timeLabel,
@@ -131,20 +119,26 @@ class FieldDateTimeRangeInputComponent extends Component {
       unitType,
       onBlur: this.handleBlur,
       onFocus: this.handleFocus,
+      validate,
       useMobileMargins,
       readOnly: typeof window !== 'undefined' && window.innerWidth < MAX_MOBILE_SCREEN_WIDTH,
       ...restOfInput,
       ...rest,
       focusedInput: this.state.focusedInput,
-      dateId,
-      timeId,
     };
     const classes = classNames(rootClassName || css.fieldRoot, className);
 
     return (
       <div className={classes}>
-        <FieldDateInput {...inputPropsDate} />
-        <FieldDateInput {...inputPropsTime} />
+        <div className={css.formRow}>
+          <FieldDateInput {...inputPropsDate} className={css.fieldDateInput} />
+          <FieldSelect
+            {...inputPropsTime}
+            className={css.selectRoot}
+          >
+            <option>{timePlaceholderText}</option>
+          </FieldSelect>
+        </div>
       </div>
     );
   }

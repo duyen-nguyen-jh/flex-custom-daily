@@ -127,13 +127,13 @@ export class BookingDatesTimesFormComponent extends Component {
             id: 'BookingDatesTimesForm.dropoffTimeTitle',
           });
           const requiredMessage = intl.formatMessage({
-            id: 'BookingDatesTimesForm.requiredDate',
+            id: 'BookingDatesTimesForm.required',
           });
-          const startDateErrorMessage = intl.formatMessage({
-            id: 'FieldDateRangeInput.invalidStartDate',
+          const dateErrorMessage = intl.formatMessage({
+            id: 'FieldDateInput.invalidDate',
           });
-          const endDateErrorMessage = intl.formatMessage({
-            id: 'FieldDateRangeInput.invalidEndDate',
+          const timeErrorMessage = intl.formatMessage({
+            id: 'FieldTimeInput.invalidTime',
           });
           const timeSlotsError = fetchTimeSlotsError ? (
             <p className={css.sideBarError}>
@@ -225,7 +225,7 @@ export class BookingDatesTimesFormComponent extends Component {
                 useMobileMargins
                 validate={composeValidators(
                   required(requiredMessage),
-                  bookingDatesRequired(startDateErrorMessage, endDateErrorMessage)
+                  bookingDatesRequired(dateErrorMessage, timeErrorMessage)
                 )}
                 disabled={fetchLineItemsInProgress}
               />
@@ -246,7 +246,7 @@ export class BookingDatesTimesFormComponent extends Component {
                 useMobileMargins
                 validate={composeValidators(
                   required(requiredMessage),
-                  bookingDatesRequired(startDateErrorMessage, endDateErrorMessage)
+                  bookingDatesRequired(dateErrorMessage, timeErrorMessage)
                 )}
                 disabled={fetchLineItemsInProgress}
               />

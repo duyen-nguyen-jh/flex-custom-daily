@@ -5,6 +5,18 @@
   gap: 20px;
 }
 
+.formRow {
+  display: flex;
+  gap: 20px;
+}
+.selectRoot {
+  width: calc(50% - 10px);
+}
+.selectRoot select {
+  padding: 6.3px 0;
+  border-bottom-width: 3px;
+}
+
 .labels {
   width: 100%;
   display: flex;
