@@ -6,7 +6,6 @@ import classNames from 'classnames';
 import moment from 'moment';
 import config from '../../config';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
-import { required, bookingDatesRequired, composeValidators } from '../../util/validators';
 import { START_DATE, END_DATE } from '../../util/dates';
 import { propTypes } from '../../util/types';
 import { Form, IconSpinner, PrimaryButton, FieldDateTimeRangeInput } from '../../components';
@@ -14,23 +13,13 @@ import EstimatedBreakdownMaybe from './EstimatedBreakdownMaybe';
 
 import css from './BookingDatesTimesForm.module.css';
 
-const identity = v => v;
-
 export class BookingDatesTimesFormComponent extends Component {
   constructor(props) {
     super(props);
-    this.state = { focusedInput: null };
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
-    this.onFocusedInputChange = this.onFocusedInputChange.bind(this);
     this.handleOnChange = this.handleOnChange.bind(this);
   }
 
-  // Function that can be passed to nested components
-  // so that they can notify this component when the
-  // focused input changes.
-  onFocusedInputChange(focusedInput) {
-    this.setState({ focusedInput });
-  }
 
   // In case start or end date for the booking is missing
   // focus on that input, otherwise continue with the
@@ -39,10 +28,8 @@ export class BookingDatesTimesFormComponent extends Component {
     const { startDate, endDate } = e.bookingDates || {};
     if (!startDate) {
       e.preventDefault();
-      this.setState({ focusedInput: START_DATE });
     } else if (!endDate) {
       e.preventDefault();
-      this.setState({ focusedInput: END_DATE });
     } else {
       this.props.onSubmit(e);
     }
@@ -53,6 +40,7 @@ export class BookingDatesTimesFormComponent extends Component {
   // In case you add more fields to the form, make sure you add
   // the values here to the bookingData object.
   handleOnChange(formValues) {
+    console.log("debug", formValues);
     const { startDate, endDate } =
       formValues.values && formValues.values.bookingDates ? formValues.values.bookingDates : {};
     const listingId = this.props.listingId;
@@ -106,7 +94,7 @@ export class BookingDatesTimesFormComponent extends Component {
             submitButtonWrapperClassName,
             unitType,
             values,
-            timeSlots,
+            form,
             fetchTimeSlotsError,
             lineItems,
             fetchLineItemsInProgress,
@@ -125,15 +113,6 @@ export class BookingDatesTimesFormComponent extends Component {
           });
           const dropoffTimeTitle = intl.formatMessage({
             id: 'BookingDatesTimesForm.dropoffTimeTitle',
-          });
-          const requiredMessage = intl.formatMessage({
-            id: 'BookingDatesTimesForm.required',
-          });
-          const dateErrorMessage = intl.formatMessage({
-            id: 'FieldDateInput.invalidDate',
-          });
-          const timeErrorMessage = intl.formatMessage({
-            id: 'FieldTimeInput.invalidTime',
           });
           const timeSlotsError = fetchTimeSlotsError ? (
             <p className={css.sideBarError}>
@@ -198,7 +177,6 @@ export class BookingDatesTimesFormComponent extends Component {
           const submitButtonClasses = classNames(
             submitButtonWrapperClassName || css.submitButtonWrapper
           );
-
           return (
             <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
               {timeSlotsError}
@@ -210,45 +188,31 @@ export class BookingDatesTimesFormComponent extends Component {
               />
               <FieldDateTimeRangeInput
                 className={css.bookingDates}
-                name="pickup"
-                unitType={unitType}
+                dateName="pickupDate"
+                timeName="pickupTime"
                 dateId={`${formId}.pickupDate`}
                 dateLabel={pickupDateTitle}
                 datePlaceholderText={pickupDatePlaceholderText}
                 timeId={`${formId}.pickupTime`}
                 timeLabel={pickupTimeTitle}
                 timePlaceholderText={timePlaceHolderText}
-                focusedInput={this.state.focusedInput}
-                onFocusedInputChange={this.onFocusedInputChange}
-                format={identity}
-                timeSlots={timeSlots}
-                useMobileMargins
-                validate={composeValidators(
-                  required(requiredMessage),
-                  bookingDatesRequired(dateErrorMessage, timeErrorMessage)
-                )}
-                disabled={fetchLineItemsInProgress}
+                values={values}
+                form={form}
+                dropoffForm={false}
               />
               <FieldDateTimeRangeInput
                 className={css.bookingDates}
-                name="dropoff"
-                unitType={unitType}
+                dateName="dropoffDate"
+                timeName="dropoffTime"
                 dateId={`${formId}.dropoffDate`}
                 dateLabel={dropoffDateTitle}
                 datePlaceholderText={dropoffDatePlaceholderText}
                 timeId={`${formId}.dropoffTime`}
                 timeLabel={dropoffTimeTitle}
                 timePlaceholderText={timePlaceHolderText}
-                focusedInput={this.state.focusedInput}
-                onFocusedInputChange={this.onFocusedInputChange}
-                format={identity}
-                timeSlots={timeSlots}
-                useMobileMargins
-                validate={composeValidators(
-                  required(requiredMessage),
-                  bookingDatesRequired(dateErrorMessage, timeErrorMessage)
-                )}
-                disabled={fetchLineItemsInProgress}
+                values={values}
+                form={form}
+                dropoffForm={true}
               />
 
               {bookingInfoMaybe}

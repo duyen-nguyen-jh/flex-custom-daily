@@ -9,10 +9,17 @@
   display: flex;
   gap: 20px;
 }
-.selectRoot {
+.selectRoot, .selectActive {
   width: calc(50% - 10px);
 }
 .selectRoot select {
+  padding: 6.3px 0;
+  border-bottom-width: 3px;
+  color: lightgray;
+}
+
+.selectActive select {
+  color: var(--matterColor);
   padding: 6.3px 0;
   border-bottom-width: 3px;
 }
