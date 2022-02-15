@@ -42,16 +42,19 @@ export class BookingDatesTimesFormComponent extends Component {
     const { pickupDate, pickupTime, dropoffDate, dropoffTime } = formValues.values
       ? formValues.values
       : {};
+    const pickupDateWithTime = moment(pickupDate?.date).set({ hour: 10, minute: 0 }).toDate();
+    const dropoffDateWithTime = moment(dropoffDate?.date).set({ hour: 4, minute: 0 }).toDate();
+
     const listingId = this.props.listingId;
     const isOwnListing = this.props.isOwnListing;
 
     if (pickupDate && dropoffDate && !this.props.fetchLineItemsInProgress) {
       this.props.onFetchTransactionLineItems({
-        bookingData: { 
-          startDate: pickupDate.date, 
-          endDate: dropoffDate.date, 
-          pickupTime, 
-          dropoffTime 
+        bookingData: {
+          startDate: pickupDateWithTime,
+          endDate: dropoffDateWithTime,
+          pickupTime,
+          dropoffTime,
         },
         listingId,
         isOwnListing,
@@ -104,8 +107,9 @@ export class BookingDatesTimesFormComponent extends Component {
             fetchLineItemsInProgress,
             fetchLineItemsError,
           } = fieldRenderProps;
-          console.log('lineline', lineItems);
           const { pickupDate, pickupTime, dropoffDate, dropoffTime } = values ? values : {};
+          const pickupDateWithTime = moment(pickupDate?.date).set({ hour: 10, minute: 0 }).toDate();
+          const dropoffDateWithTime = moment(dropoffDate?.date).set({ hour: 4, minute: 0 }).toDate();
 
           const pickupDateTitle = intl.formatMessage({
             id: 'BookingDatesTimesForm.pickupDateTitle',
@@ -134,9 +138,9 @@ export class BookingDatesTimesFormComponent extends Component {
             pickupDate && dropoffDate
               ? {
                   unitType,
-                  startDate: pickupDate.date,
+                  startDate: pickupDateWithTime,
                   pickupTime,
-                  endDate: dropoffDate.date,
+                  endDate: dropoffDateWithTime,
                   dropoffTime,
                 }
               : null;
