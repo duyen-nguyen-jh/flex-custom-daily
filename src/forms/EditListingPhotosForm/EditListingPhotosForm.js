@@ -11,9 +11,7 @@ import { isUploadImageOverLimitError } from '../../util/errors';
 import { AddImages, Button, Form, ValidationError } from '../../components';
 
 import css from './EditListingPhotosForm.module.css';
-const LISTING_TYPE = {
-  equipment: 'equipment',
-};
+
 const ACCEPT_IMAGES = 'image/*';
 
 export class EditListingPhotosFormComponent extends Component {

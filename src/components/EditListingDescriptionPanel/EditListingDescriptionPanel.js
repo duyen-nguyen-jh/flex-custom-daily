@@ -1,19 +1,14 @@
-import React from 'react';
-import { bool, func, object, string } from 'prop-types';
 import classNames from 'classnames';
-import { FormattedMessage } from '../../util/reactIntl';
-import { ensureOwnListing } from '../../util/data';
-import { findOptionsForSelectFilter } from '../../util/search';
-import { LISTING_STATE_DRAFT } from '../../util/types';
+import { bool, func, object, string } from 'prop-types';
+import React from 'react';
 import { ListingLink } from '../../components';
-import { EditEquipmentListingGeneralForm, EditListingDescriptionForm } from '../../forms';
 import config from '../../config';
-
+import { EditEquipmentListingGeneralForm, EditListingDescriptionForm } from '../../forms';
+import { ensureOwnListing } from '../../util/data';
+import { FormattedMessage } from '../../util/reactIntl';
+import { findOptionsForSelectFilter } from '../../util/search';
+import { LISTING_STATE_DRAFT, LISTING_TYPE_EQUIPMENT } from '../../util/types';
 import css from './EditListingDescriptionPanel.module.css';
-
-const LISTING_TYPE = {
-  equipment: 'equipment',
-};
 
 const EditListingDescriptionPanel = props => {
   const {
@@ -38,7 +33,7 @@ const EditListingDescriptionPanel = props => {
 
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
   const renderMessageByListingType = () => {
-    if (listingType === LISTING_TYPE.equipment)
+    if (listingType === LISTING_TYPE_EQUIPMENT)
       return <FormattedMessage id="EditEquipmentListingDescriptionPanel.createListingTitle" />;
     else return <FormattedMessage id="EditListingDescriptionPanel.createListingTitle" />;
   };
@@ -53,7 +48,7 @@ const EditListingDescriptionPanel = props => {
   );
 
   const getCategoryOptions = () => {
-    if (listingType === LISTING_TYPE.equipment) {
+    if (listingType === LISTING_TYPE_EQUIPMENT) {
       return findOptionsForSelectFilter('equipmentType', config.custom.filters);
     } else {
       return findOptionsForSelectFilter('category', config.custom.filters);
@@ -61,7 +56,7 @@ const EditListingDescriptionPanel = props => {
   };
 
   const renderFormByListingType = () => {
-    if (listingType === LISTING_TYPE.equipment) {
+    if (listingType === LISTING_TYPE_EQUIPMENT) {
       return (
         <EditEquipmentListingGeneralForm
           className={css.form}

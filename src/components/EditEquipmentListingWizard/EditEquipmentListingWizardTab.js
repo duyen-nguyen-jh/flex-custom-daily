@@ -18,9 +18,8 @@ import {
 } from '../../components';
 
 import css from './EditEquipmentListingWizard.module.css';
-const LISTING_TYPE = {
-  equipment: 'equipment'
-}
+import { LISTING_TYPE_EQUIPMENT } from '../../util/types';
+
 export const AVAILABILITY = 'availability';
 export const DESCRIPTION = 'description';
 export const LOCATION = 'location';
@@ -163,7 +162,7 @@ const EditEquipmentListingWizardTab = props => {
           onSubmit={values => {
             onCompleteEditEquipmentListingWizardTab(tab, values);
           }}
-          listingType={LISTING_TYPE.equipment}
+          listingType={LISTING_TYPE_EQUIPMENT}
         />
       );
     }
@@ -178,7 +177,7 @@ const EditEquipmentListingWizardTab = props => {
           onSubmit={values => {
             onCompleteEditEquipmentListingWizardTab(tab, values);
           }}
-          listingType={LISTING_TYPE.equipment}
+          listingType={LISTING_TYPE_EQUIPMENT}
         />
       );
     }
@@ -193,7 +192,7 @@ const EditEquipmentListingWizardTab = props => {
           onSubmit={values => {
             onCompleteEditEquipmentListingWizardTab(tab, values);
           }}
-          listingType={LISTING_TYPE.equipment}
+          listingType={LISTING_TYPE_EQUIPMENT}
         />
       );
     }
@@ -209,7 +208,7 @@ const EditEquipmentListingWizardTab = props => {
           onSubmit={values => {
             onCompleteEditEquipmentListingWizardTab(tab, values);
           }}
-          listingType={LISTING_TYPE.equipment}
+          listingType={LISTING_TYPE_EQUIPMENT}
         />
       );
     }
@@ -229,7 +228,7 @@ const EditEquipmentListingWizardTab = props => {
             onCompleteEditEquipmentListingWizardTab(tab, values);
           }}
           onUpdateImageOrder={onUpdateImageOrder}
-          listingType={LISTING_TYPE.equipment}
+          listingType={LISTING_TYPE_EQUIPMENT}
         />
       );
     }

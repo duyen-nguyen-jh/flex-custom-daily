@@ -1,18 +1,17 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
 import { richText } from '../../util/richText';
+import { LISTING_TYPE_EQUIPMENT } from '../../util/types';
 
 import css from './ListingPage.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_DESCRIPTION = 20;
-const LISTING_TYPE = {
-  equipment: 'equipment',
-};
+
 
 const SectionDescriptionMaybe = props => {
   const { description, listingType } = props;
   const renderTitleByListingType = () => {
-    if (listingType === LISTING_TYPE.equipment) 
+    if (listingType === LISTING_TYPE_EQUIPMENT) 
       return 'EquipmentListingPage.descriptionTitle';
     else return 'ListingPage.descriptionTitle';
   };

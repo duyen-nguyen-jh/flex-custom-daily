@@ -2,15 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { FormattedMessage } from '../../util/reactIntl';
-import { LISTING_STATE_DRAFT } from '../../util/types';
+import { LISTING_STATE_DRAFT, LISTING_TYPE_EQUIPMENT } from '../../util/types';
 import { ensureOwnListing } from '../../util/data';
 import { ListingLink } from '../../components';
 import { EditListingLocationForm } from '../../forms';
 
 import css from './EditListingLocationPanel.module.css';
-const LISTING_TYPE = {
-  equipment: 'equipment'
-}
+
 class EditListingLocationPanel extends Component {
   constructor(props) {
     super(props);
@@ -69,7 +67,7 @@ class EditListingLocationPanel extends Component {
     const panelTitle = isPublished ? (
       <FormattedMessage
         id={`${
-          listingType === LISTING_TYPE.equipment
+          listingType === LISTING_TYPE_EQUIPMENT
             ? 'EditEquipmentListingLocationPanel.title'
             : 'EditListingLocationPanel.title'
         }`}
@@ -78,7 +76,7 @@ class EditListingLocationPanel extends Component {
     ) : (
       <FormattedMessage
         id={`${
-          listingType === LISTING_TYPE.equipment
+          listingType === LISTING_TYPE_EQUIPMENT
             ? 'EditEquipmentListingLocationPanel.createEquipmentTitle'
             : 'EditListingLocationPanel.createListingTitle'
         }`}

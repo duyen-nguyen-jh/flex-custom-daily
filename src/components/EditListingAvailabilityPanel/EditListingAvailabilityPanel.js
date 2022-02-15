@@ -3,14 +3,11 @@ import { bool, func, object, shape, string } from 'prop-types';
 import classNames from 'classnames';
 import { FormattedMessage } from '../../util/reactIntl';
 import { ensureOwnListing } from '../../util/data';
-import { LISTING_STATE_DRAFT } from '../../util/types';
+import { LISTING_STATE_DRAFT, LISTING_TYPE_EQUIPMENT } from '../../util/types';
 import { ListingLink } from '../../components';
 import { EditListingAvailabilityForm } from '../../forms';
 
 import css from './EditListingAvailabilityPanel.module.css';
-const LISTING_TYPE = {
-  equipment: 'equipment',
-};
 
 const EditListingAvailabilityPanel = props => {
   const {
@@ -33,7 +30,7 @@ const EditListingAvailabilityPanel = props => {
   const currentListing = ensureOwnListing(listing);
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
   const defaultAvailabilityPlan =
-    listingType === LISTING_TYPE.equipment
+    listingType === LISTING_TYPE_EQUIPMENT
       ? {
           type: 'availability-plan/day',
           entries: [

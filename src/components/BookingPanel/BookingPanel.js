@@ -5,7 +5,7 @@ import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
 import { arrayOf, array, bool, func, node, oneOfType, shape, string } from 'prop-types';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
-import { propTypes, LISTING_STATE_CLOSED, LINE_ITEM_NIGHT, LINE_ITEM_DAY } from '../../util/types';
+import { propTypes, LISTING_STATE_CLOSED, LINE_ITEM_NIGHT, LINE_ITEM_DAY, LISTING_TYPE_EQUIPMENT } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { parse, stringify } from '../../util/urlHelpers';
 import config from '../../config';
@@ -13,9 +13,7 @@ import { ModalInMobile, Button } from '../../components';
 import { BookingDatesForm, BookingDatesTimesForm } from '../../forms';
 
 import css from './BookingPanel.module.css';
-const LISTING_TYPE = {
-  equipment: 'equipment',
-};
+
 // This defines when ModalInMobile shows content as Modal
 const MODAL_BREAKPOINT = 1023;
 
@@ -100,46 +98,42 @@ const BookingPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.bookingTitle);
 
-  const renderBookingFormByListingType = () => {
-    if (equipmentListingType === LISTING_TYPE.equipment)
-      return (
-        <BookingDatesTimesForm
-          className={css.bookingForm}
-          formId="BookingPanel"
-          submitButtonWrapperClassName={css.bookingDatesSubmitButtonWrapper}
-          unitType={unitType}
-          onSubmit={onSubmit}
-          price={price}
-          listingId={listing.id}
-          isOwnListing={isOwnListing}
-          timeSlots={timeSlots}
-          fetchTimeSlotsError={fetchTimeSlotsError}
-          onFetchTransactionLineItems={onFetchTransactionLineItems}
-          lineItems={lineItems}
-          fetchLineItemsInProgress={fetchLineItemsInProgress}
-          fetchLineItemsError={fetchLineItemsError}
-        />
-      );
-    else
-      return (
-        <BookingDatesForm
-          className={css.bookingForm}
-          formId="BookingPanel"
-          submitButtonWrapperClassName={css.bookingDatesSubmitButtonWrapper}
-          unitType={unitType}
-          onSubmit={onSubmit}
-          price={price}
-          listingId={listing.id}
-          isOwnListing={isOwnListing}
-          timeSlots={timeSlots}
-          fetchTimeSlotsError={fetchTimeSlotsError}
-          onFetchTransactionLineItems={onFetchTransactionLineItems}
-          lineItems={lineItems}
-          fetchLineItemsInProgress={fetchLineItemsInProgress}
-          fetchLineItemsError={fetchLineItemsError}
-        />
-      );
-  };
+  const renderBookingFormByListingType = () =>
+    equipmentListingType === LISTING_TYPE_EQUIPMENT ? (
+      <BookingDatesTimesForm
+        className={css.bookingForm}
+        formId="BookingPanel"
+        submitButtonWrapperClassName={css.bookingDatesSubmitButtonWrapper}
+        unitType={unitType}
+        onSubmit={onSubmit}
+        price={price}
+        listingId={listing.id}
+        isOwnListing={isOwnListing}
+        timeSlots={timeSlots}
+        fetchTimeSlotsError={fetchTimeSlotsError}
+        onFetchTransactionLineItems={onFetchTransactionLineItems}
+        lineItems={lineItems}
+        fetchLineItemsInProgress={fetchLineItemsInProgress}
+        fetchLineItemsError={fetchLineItemsError}
+      />
+    ) : (
+      <BookingDatesForm
+        className={css.bookingForm}
+        formId="BookingPanel"
+        submitButtonWrapperClassName={css.bookingDatesSubmitButtonWrapper}
+        unitType={unitType}
+        onSubmit={onSubmit}
+        price={price}
+        listingId={listing.id}
+        isOwnListing={isOwnListing}
+        timeSlots={timeSlots}
+        fetchTimeSlotsError={fetchTimeSlotsError}
+        onFetchTransactionLineItems={onFetchTransactionLineItems}
+        lineItems={lineItems}
+        fetchLineItemsInProgress={fetchLineItemsInProgress}
+        fetchLineItemsError={fetchLineItemsError}
+      />
+    );
   return (
     <div className={classes}>
       <ModalInMobile

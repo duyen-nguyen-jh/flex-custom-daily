@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import config from '../../config';
 import routeConfiguration from '../../routeConfiguration';
 import { findOptionsForSelectFilter } from '../../util/search';
-import { LISTING_STATE_PENDING_APPROVAL, LISTING_STATE_CLOSED, propTypes } from '../../util/types';
+import { LISTING_STATE_PENDING_APPROVAL, LISTING_STATE_CLOSED, propTypes, LISTING_TYPE_EQUIPMENT } from '../../util/types';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
@@ -56,9 +56,7 @@ import css from './ListingPage.module.css';
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
 const { UUID } = sdkTypes;
-const LISTING_TYPE = {
-  equipment: 'equipment',
-};
+
 const priceData = (price, intl) => {
   if (price && price.currency === config.currency) {
     const formattedPrice = formatMoney(intl, price);
@@ -389,7 +387,7 @@ export class ListingPageComponent extends Component {
     ) : null;
 
     const renderSectionByListingType = () => {
-      if (equipmentListingType === LISTING_TYPE.equipment)
+      if (equipmentListingType === LISTING_TYPE_EQUIPMENT)
         return (
           <SectionFeaturesMaybe
             options={equipmentOptions}

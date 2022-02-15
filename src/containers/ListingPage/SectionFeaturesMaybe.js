@@ -3,9 +3,8 @@ import { FormattedMessage } from '../../util/reactIntl';
 import { PropertyGroup } from '../../components';
 
 import css from './ListingPage.module.css';
-const LISTING_TYPE = {
-  equipment: 'equipment',
-};
+import { LISTING_TYPE_EQUIPMENT } from '../../util/types';
+
 const SectionFeaturesMaybe = props => {
   const { options, publicData, listingType } = props;
   if (!publicData) {
@@ -13,14 +12,14 @@ const SectionFeaturesMaybe = props => {
   }
 
   const getSelectedOptionsByListingType = () => {
-    if (listingType === LISTING_TYPE.equipment)
+    if (listingType === LISTING_TYPE_EQUIPMENT)
       return publicData?.equipmentType ? publicData.equipmentType : [];
     else return publicData?.amenities ? publicData.amenities : [];
   };
 
   const selectedOptions = getSelectedOptionsByListingType();
   const getTitleByListingType = () => {
-    if (listingType === LISTING_TYPE.equipment)
+    if (listingType === LISTING_TYPE_EQUIPMENT)
       return "EquipmentListingPage.options";
     else return "ListingPage.amenities";
   };

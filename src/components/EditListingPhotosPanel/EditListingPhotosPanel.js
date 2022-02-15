@@ -2,15 +2,13 @@ import React, { Component } from 'react';
 import { array, bool, func, object, string } from 'prop-types';
 import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { LISTING_STATE_DRAFT } from '../../util/types';
+import { LISTING_STATE_DRAFT, LISTING_TYPE_EQUIPMENT } from '../../util/types';
 import { EditEquipmentListingPhotosForm, EditListingPhotosForm } from '../../forms';
 import { ensureOwnListing } from '../../util/data';
 import { ListingLink } from '../../components';
 
 import css from './EditListingPhotosPanel.module.css';
-const LISTING_TYPE = {
-  equipment: 'equipment',
-};
+
 class EditListingPhotosPanel extends Component {
   render() {
     const {
@@ -48,7 +46,7 @@ class EditListingPhotosPanel extends Component {
     );
 
     const renderFormByListingType = () => {
-      if (listingType === LISTING_TYPE.equipment)
+      if (listingType === LISTING_TYPE_EQUIPMENT)
         return (
           <EditEquipmentListingPhotosForm
             className={css.form}

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import { propTypes } from '../../util/types';
+import { LISTING_TYPE_EQUIPMENT, propTypes } from '../../util/types';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 import {
   ManageListingCard,
@@ -20,9 +20,7 @@ import { TopbarContainer } from '..';
 
 import { closeListing, openListing, getOwnListingsById } from './ManageEquipmentListingsPage.duck';
 import css from './ManageEquipmentListingsPage.module.css';
-const LISTING_TYPE = {
-  equipment: 'equipment'
-};
+
 export class ManageEquipmentListingsPageComponent extends Component {
   constructor(props) {
     super(props);
@@ -57,7 +55,7 @@ export class ManageEquipmentListingsPageComponent extends Component {
     const getTotalListingByListingType = () => {
       if (listingsAreLoaded) {
         const { listingType } = listings[0].attributes.publicData;
-        if (listingType === LISTING_TYPE.equipment) return listings.length;
+        if (listingType === LISTING_TYPE_EQUIPMENT) return listings.length;
         else return pagination.totalItems;
       }
     };
