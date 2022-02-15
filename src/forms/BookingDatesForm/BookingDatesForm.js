@@ -151,6 +151,7 @@ export class BookingDatesFormComponent extends Component {
 
           const showEstimatedBreakdown =
             bookingData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
+            console.log("lineline", lineItems);
 
           const bookingInfoMaybe = showEstimatedBreakdown ? (
             <div className={css.priceBreakdownContainer}>

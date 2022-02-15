@@ -20,15 +20,14 @@ export class BookingDatesTimesFormComponent extends Component {
     this.handleOnChange = this.handleOnChange.bind(this);
   }
 
-
   // In case start or end date for the booking is missing
   // focus on that input, otherwise continue with the
   // default handleSubmit function.
   handleFormSubmit(e) {
-    const { startDate, endDate } = e.bookingDates || {};
-    if (!startDate) {
+    const { pickupDate, pickupTime, dropoffDate, dropoffTime } = e ? e : {};
+    if (!pickupDate) {
       e.preventDefault();
-    } else if (!endDate) {
+    } else if (!dropoffDate) {
       e.preventDefault();
     } else {
       this.props.onSubmit(e);
@@ -40,15 +39,20 @@ export class BookingDatesTimesFormComponent extends Component {
   // In case you add more fields to the form, make sure you add
   // the values here to the bookingData object.
   handleOnChange(formValues) {
-    console.log("debug", formValues);
-    const { startDate, endDate } =
-      formValues.values && formValues.values.bookingDates ? formValues.values.bookingDates : {};
+    const { pickupDate, pickupTime, dropoffDate, dropoffTime } = formValues.values
+      ? formValues.values
+      : {};
     const listingId = this.props.listingId;
     const isOwnListing = this.props.isOwnListing;
 
-    if (startDate && endDate && !this.props.fetchLineItemsInProgress) {
+    if (pickupDate && dropoffDate && !this.props.fetchLineItemsInProgress) {
       this.props.onFetchTransactionLineItems({
-        bookingData: { startDate, endDate },
+        bookingData: { 
+          startDate: pickupDate.date, 
+          endDate: dropoffDate.date, 
+          pickupTime, 
+          dropoffTime 
+        },
         listingId,
         isOwnListing,
       });
@@ -100,7 +104,8 @@ export class BookingDatesTimesFormComponent extends Component {
             fetchLineItemsInProgress,
             fetchLineItemsError,
           } = fieldRenderProps;
-          const { startDate, endDate } = values && values.bookingDates ? values.bookingDates : {};
+          console.log('lineline', lineItems);
+          const { pickupDate, pickupTime, dropoffDate, dropoffTime } = values ? values : {};
 
           const pickupDateTitle = intl.formatMessage({
             id: 'BookingDatesTimesForm.pickupDateTitle',
@@ -126,11 +131,13 @@ export class BookingDatesTimesFormComponent extends Component {
           // If you have added new fields to the form that will affect to pricing,
           // you need to add the values to handleOnChange function
           const bookingData =
-            startDate && endDate
+            pickupDate && dropoffDate
               ? {
                   unitType,
-                  startDate,
-                  endDate,
+                  startDate: pickupDate.date,
+                  pickupTime,
+                  endDate: dropoffDate.date,
+                  dropoffTime,
                 }
               : null;
 
