@@ -7,7 +7,12 @@ import { withRouter } from 'react-router-dom';
 import config from '../../config';
 import routeConfiguration from '../../routeConfiguration';
 import { findOptionsForSelectFilter } from '../../util/search';
-import { LISTING_STATE_PENDING_APPROVAL, LISTING_STATE_CLOSED, propTypes, LISTING_TYPE_EQUIPMENT } from '../../util/types';
+import {
+  LISTING_STATE_PENDING_APPROVAL,
+  LISTING_STATE_CLOSED,
+  propTypes,
+  LISTING_TYPE_EQUIPMENT,
+} from '../../util/types';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
@@ -386,23 +391,20 @@ export class ListingPageComponent extends Component {
       </span>
     ) : null;
 
-    const renderSectionByListingType = () => {
-      if (equipmentListingType === LISTING_TYPE_EQUIPMENT)
-        return (
-          <SectionFeaturesMaybe
-            options={equipmentOptions}
-            publicData={publicData}
-            listingType={equipmentListingType}
-          />
-        );
-      else
-        return (
-          <>
-            <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
-            <SectionRulesMaybe publicData={publicData} />
-          </>
-        );
-    };
+    const renderSectionByListingType = () =>
+      equipmentListingType === LISTING_TYPE_EQUIPMENT ? (
+        <SectionFeaturesMaybe
+          options={equipmentOptions}
+          publicData={publicData}
+          listingType={equipmentListingType}
+        />
+      ) : (
+        <>
+          <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
+          <SectionRulesMaybe publicData={publicData} />
+        </>
+      );
+      
     return (
       <Page
         title={schemaTitle}

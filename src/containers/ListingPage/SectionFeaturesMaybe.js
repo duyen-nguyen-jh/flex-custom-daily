@@ -14,14 +14,14 @@ const SectionFeaturesMaybe = props => {
   const getSelectedOptionsByListingType = () => {
     if (listingType === LISTING_TYPE_EQUIPMENT)
       return publicData?.equipmentType ? publicData.equipmentType : [];
-    else return publicData?.amenities ? publicData.amenities : [];
+    return publicData?.amenities ? publicData.amenities : [];
   };
 
   const selectedOptions = getSelectedOptionsByListingType();
   const getTitleByListingType = () => {
     if (listingType === LISTING_TYPE_EQUIPMENT)
       return "EquipmentListingPage.options";
-    else return "ListingPage.amenities";
+    return "ListingPage.amenities";
   };
 
   return (

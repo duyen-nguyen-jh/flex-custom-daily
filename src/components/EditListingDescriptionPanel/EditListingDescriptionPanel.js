@@ -32,11 +32,12 @@ const EditListingDescriptionPanel = props => {
   const { manufactureYear, maxUsingTime, equipmentType } = publicData;
 
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
-  const renderMessageByListingType = () => {
-    if (listingType === LISTING_TYPE_EQUIPMENT)
-      return <FormattedMessage id="EditEquipmentListingDescriptionPanel.createListingTitle" />;
-    else return <FormattedMessage id="EditListingDescriptionPanel.createListingTitle" />;
-  };
+  const renderMessageByListingType = () =>
+    listingType === LISTING_TYPE_EQUIPMENT ? (
+      <FormattedMessage id="EditEquipmentListingDescriptionPanel.createListingTitle" />
+    ) : (
+      <FormattedMessage id="EditListingDescriptionPanel.createListingTitle" />
+    );
 
   const panelTitle = isPublished ? (
     <FormattedMessage
@@ -47,77 +48,69 @@ const EditListingDescriptionPanel = props => {
     renderMessageByListingType()
   );
 
-  const getCategoryOptions = () => {
-    if (listingType === LISTING_TYPE_EQUIPMENT) {
-      return findOptionsForSelectFilter('equipmentType', config.custom.filters);
-    } else {
-      return findOptionsForSelectFilter('category', config.custom.filters);
-    }
-  };
+  const getCategoryOptions = () =>
+    listingType === LISTING_TYPE_EQUIPMENT
+      ? findOptionsForSelectFilter('equipmentType', config.custom.filters)
+      : findOptionsForSelectFilter('category', config.custom.filters);
 
-  const renderFormByListingType = () => {
-    if (listingType === LISTING_TYPE_EQUIPMENT) {
-      return (
-        <EditEquipmentListingGeneralForm
-          className={css.form}
-          initialValues={{
-            title,
+  const renderFormByListingType = () =>
+    listingType === LISTING_TYPE_EQUIPMENT ? (
+      <EditEquipmentListingGeneralForm
+        className={css.form}
+        initialValues={{
+          title,
+          description,
+          equipmentType,
+          manufactureYear,
+          maxUsingTime,
+        }}
+        saveActionMsg={submitButtonText}
+        onSubmit={values => {
+          const { title, description, equipmentType, manufactureYear, maxUsingTime } = values;
+          const updateValues = {
+            title: title.trim(),
             description,
-            equipmentType,
-            manufactureYear,
-            maxUsingTime,
-          }}
-          saveActionMsg={submitButtonText}
-          onSubmit={values => {
-            const { title, description, equipmentType, manufactureYear, maxUsingTime } = values;
-            const updateValues = {
-              title: title.trim(),
-              description,
-              publicData: {
-                equipmentType,
-                manufactureYear,
-                maxUsingTime,
-                listingType: 'equipment',
-              },
-            };
-            onSubmit(updateValues);
-          }}
-          onChange={onChange}
-          disabled={disabled}
-          ready={ready}
-          updated={panelUpdated}
-          updateInProgress={updateInProgress}
-          fetchErrors={errors}
-          categories={getCategoryOptions()}
-        />
-      );
-    } else {
-      return (
-        <EditListingDescriptionForm
-          className={css.form}
-          initialValues={{ title, description, category: publicData.category }}
-          saveActionMsg={submitButtonText}
-          onSubmit={values => {
-            const { title, description, category } = values;
-            const updateValues = {
-              title: title.trim(),
-              description,
-              publicData: { category },
-            };
+            publicData: {
+              equipmentType,
+              manufactureYear,
+              maxUsingTime,
+              listingType: LISTING_TYPE_EQUIPMENT,
+            },
+          };
+          onSubmit(updateValues);
+        }}
+        onChange={onChange}
+        disabled={disabled}
+        ready={ready}
+        updated={panelUpdated}
+        updateInProgress={updateInProgress}
+        fetchErrors={errors}
+        categories={getCategoryOptions()}
+      />
+    ) : (
+      <EditListingDescriptionForm
+        className={css.form}
+        initialValues={{ title, description, category: publicData.category }}
+        saveActionMsg={submitButtonText}
+        onSubmit={values => {
+          const { title, description, category } = values;
+          const updateValues = {
+            title: title.trim(),
+            description,
+            publicData: { category },
+          };
 
-            onSubmit(updateValues);
-          }}
-          onChange={onChange}
-          disabled={disabled}
-          ready={ready}
-          updated={panelUpdated}
-          updateInProgress={updateInProgress}
-          fetchErrors={errors}
-          categories={getCategoryOptions()}
-        />
-      );
-    }
-  };
+          onSubmit(updateValues);
+        }}
+        onChange={onChange}
+        disabled={disabled}
+        ready={ready}
+        updated={panelUpdated}
+        updateInProgress={updateInProgress}
+        fetchErrors={errors}
+        categories={getCategoryOptions()}
+      />
+    );
   return (
     <div className={classes}>
       <h1 className={css.title}>{panelTitle}</h1>
