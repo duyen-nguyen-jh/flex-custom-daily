@@ -36,6 +36,7 @@ module.exports = (req, res) => {
     })
     .then(apiResponse => {
       const { status, statusText, data } = apiResponse;
+      console.log("debug server",apiResponse);
       res
         .status(status)
         .set('Content-Type', 'application/transit+json')
@@ -50,5 +51,6 @@ module.exports = (req, res) => {
     })
     .catch(e => {
       handleError(res, e);
+      console.log("debug server",{res, e});
     });
 };

@@ -31,9 +31,10 @@ import { types as sdkTypes } from '../../util/sdkLoader';
 import { TRANSITION_REQUEST_PAYMENT, TX_TRANSITION_ACTOR_CUSTOMER } from '../../util/transaction';
 import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../util/currency';
 import config from '../../config';
-import { BookingBreakdownCustom } from '../../components';
+import { BookingBreakdown, BookingBreakdownCustom } from '../../components';
 
 import css from './BookingDatesTimesForm.module.css';
+import { DATE_TYPE_DATE, DATE_TYPE_DATETIME } from '../../util/types';
 
 const { Money, UUID } = sdkTypes;
 
@@ -114,13 +115,22 @@ const EstimatedBreakdownMaybe = props => {
       : null;
 
   return tx ? (
-    <BookingBreakdownCustom
+    // <BookingBreakdownCustom
+    //   className={css.receipt}
+    //   userRole={userRole}
+    //   unitType={unitType}
+    //   transaction={tx}
+    //   booking={tx.booking}
+    //   timeZone={Intl.DateTimeFormat().resolvedOptions().timeZone}
+    //   dateType={DATE_TYPE_DATE}
+    // />
+    <BookingBreakdown
       className={css.receipt}
       userRole={userRole}
       unitType={unitType}
       transaction={tx}
       booking={tx.booking}
-      timeZone={Intl.DateTimeFormat().resolvedOptions().timeZone}
+      dateType={DATE_TYPE_DATE}
     />
   ) : null;
 };

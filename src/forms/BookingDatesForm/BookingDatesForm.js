@@ -36,8 +36,6 @@ export class BookingDatesFormComponent extends Component {
   // focus on that input, otherwise continue with the
   // default handleSubmit function.
   handleFormSubmit(e) {
-    console.log('debug origin', e);
-
     const { startDate, endDate } = e.bookingDates || {};
     if (!startDate) {
       e.preventDefault();
