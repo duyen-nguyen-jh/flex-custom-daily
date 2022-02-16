@@ -54,9 +54,12 @@ export class ManageEquipmentListingsPageComponent extends Component {
     const listingsAreLoaded = !queryInProgress && hasPaginationInfo;
     const getTotalListingByListingType = () => {
       if (listingsAreLoaded) {
-        const { listingType } = listings[0].attributes.publicData;
-        if (listingType === LISTING_TYPE_EQUIPMENT) return listings.length;
-        else return pagination.totalItems;
+        const listingType  = listings[0]?.attributes?.publicData?.listingType;
+        return !listingType
+          ? 0
+          : listingType === LISTING_TYPE_EQUIPMENT
+          ? listings.length
+          : pagination.totalItems;
       }
     };
 
