@@ -1,40 +1,113 @@
-import React, { Component } from 'react';
-import { bool, func, object, oneOf, string, arrayOf } from 'prop-types';
-import { Field } from 'react-final-form';
 import classNames from 'classnames';
-import { START_DATE, END_DATE } from '../../util/dates';
-import { propTypes } from '../../util/types';
+import { func, string } from 'prop-types';
+import React from 'react';
 import { FieldDateInput, FieldSelect } from '..';
-
-import css from './FieldDateTimeRangeInput.module.css';
 import { bookingDateRequired } from '../../util/validators';
+import css from './FieldDateTimeRangeInput.module.css';
+
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 const TIME_RANGE = [
-  '0:00 AM',
-  '1:00 AM',
-  '2:00 AM',
-  '3:00 AM',
-  '4:00 AM',
-  '5:00 AM',
-  '6:00 AM',
-  '7:00 AM',
-  '8:00 AM',
-  '9:00 AM',
-  '10:00 AM',
-  '11:00 AM',
-  '1:00 PM',
-  '2:00 PM',
-  '3:00 PM',
-  '4:00 PM',
-  '5:00 PM',
-  '6:00 PM',
-  '7:00 PM',
-  '8:00 PM',
-  '9:00 PM',
-  '10:00 PM',
-  '11:00 PM',
-  '12:00 PM',
+  {
+    displayTime: '12:00 AM',
+    value: 0,    
+  },
+  {
+    displayTime: '01:00 AM',
+    value: 1,    
+  },
+  {
+    displayTime: '02:00 AM',
+    value: 2,    
+  },
+  {
+    displayTime: '03:00 AM',
+    value: 3,    
+  },
+  {
+    displayTime: '04:00 AM',
+    value: 4,    
+  },
+  {
+    displayTime: '05:00 AM',
+    value: 5,    
+  },
+  {
+    displayTime: '06:00 AM',
+    value: 6,    
+  },
+  {
+    displayTime: '07:00 AM',
+    value: 7,    
+  },
+  {
+    displayTime: '08:00 AM',
+    value: 8,    
+  },
+  {
+    displayTime: '09:00 AM',
+    value: 9,    
+  },
+  {
+    displayTime: '10:00 AM',
+    value: 10,    
+  },
+  {
+    displayTime: '11:00 AM',
+    value: 11,    
+  },
+  {
+    displayTime: '12:00 PM',
+    value: 12,    
+  },
+  {
+    displayTime: '01:00 PM',
+    value: 13,    
+  },
+  {
+    displayTime: '02:00 PM',
+    value: 14,    
+  },
+  {
+    displayTime: '03:00 PM',
+    value: 15,    
+  },
+  {
+    displayTime: '04:00 PM',
+    value: 16,    
+  },
+  {
+    displayTime: '05:00 PM',
+    value: 17,    
+  },
+  {
+    displayTime: '06:00 PM',
+    value: 18,    
+  },
+  {
+    displayTime: '07:00 PM',
+    value: 19,    
+  },
+  {
+    displayTime: '08:00 PM',
+    value: 20,    
+  },
+  {
+    displayTime: '09:00 PM',
+    value: 21,    
+  },
+  {
+    displayTime: '10:00 PM',
+    value: 22,    
+  },
+  {
+    displayTime: '11:00 PM',
+    value: 23,    
+  },
+  {
+    displayTime: '12:00 PM',
+    value: 24,    
+  },
 ];
 
 const FieldDateTimeRangeInput = props => {
@@ -97,8 +170,8 @@ const FieldDateTimeRangeInput = props => {
             <option value={timePlaceholderText}>{timePlaceholderText}</option>
           ) : (
             TIME_RANGE.map(time => (
-              <option key={time} value={time}>
-                {time}
+              <option key={time.value} value={time.value}>
+                {time.displayTime}
               </option>
             ))
           )}

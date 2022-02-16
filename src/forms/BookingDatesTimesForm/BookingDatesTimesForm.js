@@ -25,12 +25,26 @@ export class BookingDatesTimesFormComponent extends Component {
   // default handleSubmit function.
   handleFormSubmit(e) {
     const { pickupDate, pickupTime, dropoffDate, dropoffTime } = e ? e : {};
+    const pickupDateWithTime = moment(pickupDate?.date)
+      .set({ hour: pickupTime, minute: 0 })
+      .toDate();
+    const dropoffDateWithTime = moment(dropoffDate?.date)
+      .set({ hour: dropoffTime, minute: 0 })
+      .toDate();
+    const submittedBooking = {
+      bookingDates: {
+        startDate: pickupDate.date,
+        endDate: dropoffDate.date,
+      },
+    };
+    console.log('debug', submittedBooking);
+
     if (!pickupDate) {
       e.preventDefault();
     } else if (!dropoffDate) {
       e.preventDefault();
     } else {
-      this.props.onSubmit(e);
+      this.props.onSubmit(submittedBooking);
     }
   }
 
@@ -42,8 +56,12 @@ export class BookingDatesTimesFormComponent extends Component {
     const { pickupDate, pickupTime, dropoffDate, dropoffTime } = formValues.values
       ? formValues.values
       : {};
-    const pickupDateWithTime = moment(pickupDate?.date).set({ hour: 10, minute: 0 }).toDate();
-    const dropoffDateWithTime = moment(dropoffDate?.date).set({ hour: 4, minute: 0 }).toDate();
+    const pickupDateWithTime = moment(pickupDate?.date)
+      .set({ hour: pickupTime, minute: 0 })
+      .toDate();
+    const dropoffDateWithTime = moment(dropoffDate?.date)
+      .set({ hour: dropoffTime, minute: 0 })
+      .toDate();
 
     const listingId = this.props.listingId;
     const isOwnListing = this.props.isOwnListing;
@@ -53,8 +71,6 @@ export class BookingDatesTimesFormComponent extends Component {
         bookingData: {
           startDate: pickupDateWithTime,
           endDate: dropoffDateWithTime,
-          pickupTime,
-          dropoffTime,
         },
         listingId,
         isOwnListing,
@@ -108,8 +124,12 @@ export class BookingDatesTimesFormComponent extends Component {
             fetchLineItemsError,
           } = fieldRenderProps;
           const { pickupDate, pickupTime, dropoffDate, dropoffTime } = values ? values : {};
-          const pickupDateWithTime = moment(pickupDate?.date).set({ hour: 10, minute: 0 }).toDate();
-          const dropoffDateWithTime = moment(dropoffDate?.date).set({ hour: 4, minute: 0 }).toDate();
+          const pickupDateWithTime = moment(pickupDate?.date)
+            .set({ hour: pickupTime, minute: 0 })
+            .toDate();
+          const dropoffDateWithTime = moment(dropoffDate?.date)
+            .set({ hour: dropoffTime, minute: 0 })
+            .toDate();
 
           const pickupDateTitle = intl.formatMessage({
             id: 'BookingDatesTimesForm.pickupDateTitle',
@@ -139,9 +159,7 @@ export class BookingDatesTimesFormComponent extends Component {
               ? {
                   unitType,
                   startDate: pickupDateWithTime,
-                  pickupTime,
                   endDate: dropoffDateWithTime,
-                  dropoffTime,
                 }
               : null;
 
