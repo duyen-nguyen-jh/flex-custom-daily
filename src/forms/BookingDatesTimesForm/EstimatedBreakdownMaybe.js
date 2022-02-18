@@ -115,22 +115,14 @@ const EstimatedBreakdownMaybe = props => {
       : null;
 
   return tx ? (
-    // <BookingBreakdownCustom
-    //   className={css.receipt}
-    //   userRole={userRole}
-    //   unitType={unitType}
-    //   transaction={tx}
-    //   booking={tx.booking}
-    //   timeZone={Intl.DateTimeFormat().resolvedOptions().timeZone}
-    //   dateType={DATE_TYPE_DATE}
-    // />
-    <BookingBreakdown
+    <BookingBreakdownCustom
       className={css.receipt}
       userRole={userRole}
       unitType={unitType}
       transaction={tx}
       booking={tx.booking}
-      dateType={DATE_TYPE_DATE}
+      timeZone={Intl.DateTimeFormat().resolvedOptions().timeZone}
+      dateType={DATE_TYPE_DATETIME}
     />
   ) : null;
 };

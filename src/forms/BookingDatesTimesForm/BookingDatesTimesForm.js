@@ -33,11 +33,10 @@ export class BookingDatesTimesFormComponent extends Component {
       .toDate();
     const submittedBooking = {
       bookingDates: {
-        startDate: pickupDate.date,
-        endDate: dropoffDate.date,
+        startDate: pickupDateWithTime,
+        endDate: dropoffDateWithTime,
       },
     };
-    console.log('debug', submittedBooking);
 
     if (!pickupDate) {
       e.preventDefault();

@@ -8,7 +8,13 @@ import classNames from 'classnames';
 import config from '../../config';
 import routeConfiguration from '../../routeConfiguration';
 import { pathByRouteName, findRouteByRouteName } from '../../util/routes';
-import { propTypes, LINE_ITEM_NIGHT, LINE_ITEM_DAY, DATE_TYPE_DATE } from '../../util/types';
+import {
+  propTypes,
+  LINE_ITEM_NIGHT,
+  LINE_ITEM_DAY,
+  DATE_TYPE_DATE,
+  DATE_TYPE_DATETIME,
+} from '../../util/types';
 import {
   ensureListing,
   ensureCurrentUser,
@@ -34,6 +40,7 @@ import { TRANSITION_ENQUIRE, txIsPaymentPending, txIsPaymentExpired } from '../.
 import {
   AvatarMedium,
   BookingBreakdown,
+  BookingBreakdownCustom,
   Logo,
   NamedLink,
   NamedRedirect,
@@ -54,6 +61,7 @@ import {
   sendMessage,
 } from './CheckoutPage.duck';
 import { storeData, storedData, clearData } from './CheckoutPageSessionHelpers';
+import { LISTING_TYPE_EQUIPMENT } from '../../util/types';
 import css from './CheckoutPage.module.css';
 
 const STORAGE_KEY = 'CheckoutPage';
@@ -142,7 +150,6 @@ export class CheckoutPageComponent extends Component {
       fetchStripeCustomer,
       history,
     } = this.props;
-
     // Fetch currentUser with stripeCustomer entity
     // Note: since there's need for data loading in "componentWillMount" function,
     //       this is added here instead of loadData static function.
@@ -505,7 +512,6 @@ export class CheckoutPageComponent extends Component {
       retrievePaymentIntentError,
       stripeCustomerFetched,
     } = this.props;
-
     // Since the listing data is already given from the ListingPage
     // and stored to handle refreshes, it might not have the possible
     // deleted or closed information in it. If the transaction
@@ -582,16 +588,33 @@ export class CheckoutPageComponent extends Component {
     // (i.e. have an id)
     const tx = existingTransaction.booking ? existingTransaction : speculatedTransaction;
     const txBooking = ensureBooking(tx.booking);
+    const { bookingStart, bookingEnd } = bookingDates;
+    txBooking.attributes.start = bookingStart;
+    txBooking.attributes.end = bookingEnd;
+    txBooking.attributes.displayStart = bookingStart;
+    txBooking.attributes.displayEnd = bookingEnd;
     const breakdown =
       tx.id && txBooking.id ? (
-        <BookingBreakdown
-          className={css.bookingBreakdown}
-          userRole="customer"
-          unitType={config.bookingUnitType}
-          transaction={tx}
-          booking={txBooking}
-          dateType={DATE_TYPE_DATE}
-        />
+        listing.attributes?.publicData?.listingType === LISTING_TYPE_EQUIPMENT ? (
+          <BookingBreakdownCustom
+            className={css.bookingBreakdown}
+            userRole="customer"
+            unitType={config.bookingUnitType}
+            transaction={tx}
+            booking={txBooking}
+            timeZone={Intl.DateTimeFormat().resolvedOptions().timeZone}
+            dateType={DATE_TYPE_DATETIME}
+          />
+        ) : (
+          <BookingBreakdown
+            className={css.bookingBreakdown}
+            userRole="customer"
+            unitType={config.bookingUnitType}
+            transaction={tx}
+            booking={txBooking}
+            dateType={DATE_TYPE_DATE}
+          />
+        )
       ) : null;
 
     const isPaymentExpired = checkIsPaymentExpired(existingTransaction);
