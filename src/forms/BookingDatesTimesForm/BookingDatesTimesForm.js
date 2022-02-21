@@ -61,7 +61,6 @@ export class BookingDatesTimesFormComponent extends Component {
     const dropoffDateWithTime = moment(dropoffDate?.date)
       .set({ hour: dropoffTime, minute: 0 })
       .toDate();
-
     const listingId = this.props.listingId;
     const isOwnListing = this.props.isOwnListing;
 

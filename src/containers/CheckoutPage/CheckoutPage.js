@@ -190,7 +190,7 @@ export class CheckoutPageComponent extends Component {
       const listingId = pageData.listing.id;
       const transactionId = tx ? tx.id : null;
       const { bookingStart, bookingEnd } = pageData.bookingDates;
-
+      console.log("debuggggg", { bookingStart, bookingEnd });
       // Convert picked date to date that will be converted on the API as
       // a noon of correct year-month-date combo in UTC
       const bookingStartForAPI = dateFromLocalToAPI(bookingStart);
@@ -204,8 +204,8 @@ export class CheckoutPageComponent extends Component {
           listingId,
           bookingStart: bookingStartForAPI,
           bookingEnd: bookingEndForAPI,
-          displayStart: bookingStartForAPI,
-          displayEnd: bookingEndForAPI,
+          bookingDisplayStart: bookingStartForAPI,
+          bookingDisplayEnd: bookingEndForAPI,
         },
         transactionId
       );

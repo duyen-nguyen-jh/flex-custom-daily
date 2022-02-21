@@ -4,7 +4,7 @@ const { constructValidLineItems } = require('../api-util/lineItemHelpers');
 
 module.exports = (req, res) => {
   const { isOwnListing, listingId, bookingData } = req.body;
-
+  console.log("dbugggg", {bookingData});
   const sdk = getSdk(req, res);
 
   const listingPromise = isOwnListing
