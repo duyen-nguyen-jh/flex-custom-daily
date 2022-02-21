@@ -32,7 +32,7 @@ import { TRANSITION_REQUEST_PAYMENT, TX_TRANSITION_ACTOR_CUSTOMER } from '../../
 import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../util/currency';
 import config from '../../config';
 import { BookingBreakdown, BookingBreakdownCustom } from '../../components';
-
+import moment from "moment";
 import css from './BookingDatesTimesForm.module.css';
 import { DATE_TYPE_DATE, DATE_TYPE_DATETIME } from '../../util/types';
 
@@ -55,6 +55,11 @@ const estimatedTotalPrice = lineItems => {
   );
 };
 
+const convertToCorrectDate = date => {
+  const timezoneDiffInMinutes = moment(date).utcOffset();
+  const momentInLocalTimezone = moment(date).add(timezoneDiffInMinutes, 'minutes');
+  return momentInLocalTimezone.subtract(12, 'hours').toDate();
+}
 // When we cannot speculatively initiate a transaction (i.e. logged
 // out), we must estimate the transaction for booking breakdown. This function creates
 // an estimated transaction object for that use case.
@@ -71,6 +76,8 @@ const estimatedTransaction = (bookingStart, bookingEnd, lineItems, userRole) => 
 
   const payinTotal = estimatedTotalPrice(customerLineItems);
   const payoutTotal = estimatedTotalPrice(providerLineItems);
+
+  console.log("debug 2", {bookingStart, bookingEnd})
 
   return {
     id: new UUID('estimated-transaction'),
@@ -94,8 +101,8 @@ const estimatedTransaction = (bookingStart, bookingEnd, lineItems, userRole) => 
       id: new UUID('estimated-booking'),
       type: 'booking',
       attributes: {
-        start: bookingStart,
-        end: bookingEnd,
+        start: convertToCorrectDate(bookingStart),
+        end: convertToCorrectDate(bookingEnd),
       },
     },
   };
@@ -104,7 +111,7 @@ const estimatedTransaction = (bookingStart, bookingEnd, lineItems, userRole) => 
 const EstimatedBreakdownMaybe = props => {
   const { unitType, startDate, endDate } = props.bookingData;
   const lineItems = props.lineItems;
-
+  console.log("debug", {startDate, endDate})
   // Currently the estimated breakdown is used only on ListingPage where we want to
   // show the breakdown for customer so we can use hard-coded value here
   const userRole = 'customer';
@@ -115,13 +122,12 @@ const EstimatedBreakdownMaybe = props => {
       : null;
 
   return tx ? (
-    <BookingBreakdownCustom
+    <BookingBreakdown
       className={css.receipt}
       userRole={userRole}
       unitType={unitType}
       transaction={tx}
       booking={tx.booking}
-      timeZone={Intl.DateTimeFormat().resolvedOptions().timeZone}
       dateType={DATE_TYPE_DATETIME}
     />
   ) : null;

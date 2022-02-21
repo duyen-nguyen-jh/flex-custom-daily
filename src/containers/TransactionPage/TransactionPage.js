@@ -115,7 +115,7 @@ export const TransactionPageComponent = props => {
     currentTransaction.attributes.lineItems
   ) {
     const currentBooking = ensureListing(currentTransaction.booking);
-
+    console.log("debug trans", currentBooking.attributes);
     const initialValues = {
       listing: currentListing,
       // Transaction with payment pending should be passed to CheckoutPage

@@ -204,6 +204,8 @@ export class CheckoutPageComponent extends Component {
           listingId,
           bookingStart: bookingStartForAPI,
           bookingEnd: bookingEndForAPI,
+          displayStart: bookingStartForAPI,
+          displayEnd: bookingEndForAPI,
         },
         transactionId
       );
@@ -588,33 +590,21 @@ export class CheckoutPageComponent extends Component {
     // (i.e. have an id)
     const tx = existingTransaction.booking ? existingTransaction : speculatedTransaction;
     const txBooking = ensureBooking(tx.booking);
-    const { bookingStart, bookingEnd } = bookingDates;
-    txBooking.attributes.start = bookingStart;
-    txBooking.attributes.end = bookingEnd;
-    txBooking.attributes.displayStart = bookingStart;
-    txBooking.attributes.displayEnd = bookingEnd;
+
     const breakdown =
       tx.id && txBooking.id ? (
-        listing.attributes?.publicData?.listingType === LISTING_TYPE_EQUIPMENT ? (
-          <BookingBreakdownCustom
-            className={css.bookingBreakdown}
-            userRole="customer"
-            unitType={config.bookingUnitType}
-            transaction={tx}
-            booking={txBooking}
-            timeZone={Intl.DateTimeFormat().resolvedOptions().timeZone}
-            dateType={DATE_TYPE_DATETIME}
-          />
-        ) : (
-          <BookingBreakdown
-            className={css.bookingBreakdown}
-            userRole="customer"
-            unitType={config.bookingUnitType}
-            transaction={tx}
-            booking={txBooking}
-            dateType={DATE_TYPE_DATE}
-          />
-        )
+        <BookingBreakdown
+          className={css.bookingBreakdown}
+          userRole="customer"
+          unitType={config.bookingUnitType}
+          transaction={tx}
+          booking={txBooking}
+          dateType={
+            listing.attributes?.publicData?.listingType === LISTING_TYPE_EQUIPMENT
+              ? DATE_TYPE_DATETIME
+              : DATE_TYPE_DATE
+          }
+        />
       ) : null;
 
     const isPaymentExpired = checkIsPaymentExpired(existingTransaction);

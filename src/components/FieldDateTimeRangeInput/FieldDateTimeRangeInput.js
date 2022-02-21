@@ -9,7 +9,7 @@ import css from './FieldDateTimeRangeInput.module.css';
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 const TIME_RANGE = [
   {
-    displayTime: '12:00 AM',
+    displayTime: '12:00 PM',
     value: 0,    
   },
   {
@@ -105,7 +105,7 @@ const TIME_RANGE = [
     value: 23,    
   },
   {
-    displayTime: '12:00 PM',
+    displayTime: '12:00 AM',
     value: 24,    
   },
 ];
