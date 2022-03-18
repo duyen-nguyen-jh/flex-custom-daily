@@ -118,6 +118,7 @@ export class BookingDatesTimesFormComponent extends Component {
             form,
             fetchTimeSlotsError,
             lineItems,
+            timeSlots,
             fetchLineItemsInProgress,
             fetchLineItemsError,
           } = fieldRenderProps;
@@ -226,6 +227,7 @@ export class BookingDatesTimesFormComponent extends Component {
                 values={values}
                 form={form}
                 dropoffForm={false}
+                timeSlots={timeSlots}
               />
               <FieldDateTimeRangeInput
                 className={css.bookingDates}
@@ -240,6 +242,7 @@ export class BookingDatesTimesFormComponent extends Component {
                 values={values}
                 form={form}
                 dropoffForm={true}
+                timeSlots={timeSlots}
               />
 
               {bookingInfoMaybe}

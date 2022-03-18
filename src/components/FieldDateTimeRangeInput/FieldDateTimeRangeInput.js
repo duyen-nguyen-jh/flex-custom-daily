@@ -126,6 +126,7 @@ const FieldDateTimeRangeInput = props => {
     values,
     form,
     dropoffForm,
+    timeSlots,
     ...rest
   } = props;
   /* eslint-disable no-unused-vars */
@@ -160,6 +161,7 @@ const FieldDateTimeRangeInput = props => {
           className={css.fieldDateInput}
           validate={bookingDateRequired('Required')}
           useMobileMargins
+          timeSlots={timeSlots}
         />
         <FieldSelect
           {...inputPropsTime}
