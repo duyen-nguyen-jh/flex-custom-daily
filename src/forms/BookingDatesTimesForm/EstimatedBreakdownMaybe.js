@@ -77,8 +77,6 @@ const estimatedTransaction = (bookingStart, bookingEnd, lineItems, userRole) => 
   const payinTotal = estimatedTotalPrice(customerLineItems);
   const payoutTotal = estimatedTotalPrice(providerLineItems);
 
-  console.log("debug 2", {bookingStart, bookingEnd})
-
   return {
     id: new UUID('estimated-transaction'),
     type: 'transaction',
@@ -111,7 +109,6 @@ const estimatedTransaction = (bookingStart, bookingEnd, lineItems, userRole) => 
 const EstimatedBreakdownMaybe = props => {
   const { unitType, startDate, endDate } = props.bookingData;
   const lineItems = props.lineItems;
-  console.log("debug", {startDate, endDate})
   // Currently the estimated breakdown is used only on ListingPage where we want to
   // show the breakdown for customer so we can use hard-coded value here
   const userRole = 'customer';

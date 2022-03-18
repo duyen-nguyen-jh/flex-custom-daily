@@ -63,7 +63,7 @@ import {
 import { storeData, storedData, clearData } from './CheckoutPageSessionHelpers';
 import { LISTING_TYPE_EQUIPMENT } from '../../util/types';
 import css from './CheckoutPage.module.css';
-
+import moment from "moment";
 const STORAGE_KEY = 'CheckoutPage';
 
 // Stripe PaymentIntent statuses, where user actions are already completed
@@ -190,7 +190,7 @@ export class CheckoutPageComponent extends Component {
       const listingId = pageData.listing.id;
       const transactionId = tx ? tx.id : null;
       const { bookingStart, bookingEnd } = pageData.bookingDates;
-      console.log("debuggggg", { bookingStart, bookingEnd });
+
       // Convert picked date to date that will be converted on the API as
       // a noon of correct year-month-date combo in UTC
       const bookingStartForAPI = dateFromLocalToAPI(bookingStart);
@@ -199,14 +199,26 @@ export class CheckoutPageComponent extends Component {
       // Fetch speculated transaction for showing price in booking breakdown
       // NOTE: if unit type is line-item/units, quantity needs to be added.
       // The way to pass it to checkout page is through pageData.bookingData
+      const { listingType } = pageData.listing.attributes.publicData;
+
       fetchSpeculatedTransaction(
-        {
-          listingId,
-          bookingStart: bookingStartForAPI,
-          bookingEnd: bookingEndForAPI,
-          bookingDisplayStart: bookingStartForAPI,
-          bookingDisplayEnd: bookingEndForAPI,
-        },
+        listingType === LISTING_TYPE_EQUIPMENT
+          ? {
+              listingId,
+              bookingStart: bookingStartForAPI,
+              bookingEnd: bookingEndForAPI,
+              bookingDisplayStart: moment(bookingStartForAPI)
+                .subtract(12, 'hours')
+                .toDate(),
+              bookingDisplayEnd: moment(bookingEndForAPI)
+                .subtract(12, 'hours')
+                .toDate(),
+            }
+          : {
+              listingId,
+              bookingStart: bookingStartForAPI,
+              bookingEnd: bookingEndForAPI,
+            },
         transactionId
       );
     }
@@ -382,13 +394,29 @@ export class CheckoutPageComponent extends Component {
         : selectedPaymentFlow === PAY_AND_SAVE_FOR_LATER_USE
         ? { setupPaymentMethodForSaving: true }
         : {};
-
-    const orderParams = {
-      listingId: pageData.listing.id,
-      bookingStart: tx.booking.attributes.start,
-      bookingEnd: tx.booking.attributes.end,
-      ...optionalPaymentParams,
-    };
+    const { listingType } = pageData.listing.attributes.publicData;
+    const { bookingStart, bookingEnd } = pageData.bookingDates;
+    const convertToCorrectDate = date => {
+      const timezoneDiffInMinutes = moment(date).utcOffset();
+      const momentInLocalTimezone = moment(date).add(timezoneDiffInMinutes, 'minutes');
+      return momentInLocalTimezone.subtract(12, 'hours').toDate();
+    }
+    const orderParams =
+      listingType === LISTING_TYPE_EQUIPMENT
+        ? {
+            listingId: pageData.listing.id,
+            bookingStart: bookingStart,
+            bookingEnd: bookingEnd,
+            bookingDisplayStart: convertToCorrectDate(bookingStart),
+            bookingDisplayEnd: convertToCorrectDate(bookingEnd),
+            ...optionalPaymentParams,
+          }
+        : {
+            listingId: pageData.listing.id,
+            bookingStart: tx.booking.attributes.start,
+            bookingEnd: tx.booking.attributes.end,
+            ...optionalPaymentParams,
+          };
 
     return handlePaymentIntentCreation(orderParams);
   }
@@ -459,7 +487,6 @@ export class CheckoutPageComponent extends Component {
           initialMessageFailedToTransaction,
           savePaymentMethodFailed: !paymentMethodSaved,
         };
-
         initializeOrderPage(initialValues, routes, dispatch);
         clearData(STORAGE_KEY);
         history.push(orderDetailsPath);
