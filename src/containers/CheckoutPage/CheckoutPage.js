@@ -24,7 +24,7 @@ import {
   ensureStripeCustomer,
   ensurePaymentMethodCard,
 } from '../../util/data';
-import { dateFromLocalToAPI, minutesBetween } from '../../util/dates';
+import { dateFromAPIToLocalNoon, dateFromLocalToAPI, minutesBetween } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 import {
   isTransactionInitiateAmountTooLowError,
@@ -63,7 +63,7 @@ import {
 import { storeData, storedData, clearData } from './CheckoutPageSessionHelpers';
 import { LISTING_TYPE_EQUIPMENT } from '../../util/types';
 import css from './CheckoutPage.module.css';
-import moment from "moment";
+import moment from 'moment';
 const STORAGE_KEY = 'CheckoutPage';
 
 // Stripe PaymentIntent statuses, where user actions are already completed
@@ -396,19 +396,25 @@ export class CheckoutPageComponent extends Component {
         : {};
     const { listingType } = pageData.listing.attributes.publicData;
     const { bookingStart, bookingEnd } = pageData.bookingDates;
-    const convertToCorrectDate = date => {
-      const timezoneDiffInMinutes = moment(date).utcOffset();
-      const momentInLocalTimezone = moment(date).add(timezoneDiffInMinutes, 'minutes');
-      return momentInLocalTimezone.subtract(12, 'hours').toDate();
-    }
+    // const convertToCorrectDate = date => {
+    //   const timezoneDiffInMinutes = moment(date).utcOffset();
+    //   const momentInLocalTimezone = moment(date).add(timezoneDiffInMinutes, 'minutes');
+    //   return momentInLocalTimezone.toDate();
+    // };
+    const convertToCorrectDisplayDate = date => {
+      return moment(date)
+        .subtract(12, 'hours')
+        .toDate();
+    };
+
     const orderParams =
       listingType === LISTING_TYPE_EQUIPMENT
         ? {
             listingId: pageData.listing.id,
-            bookingStart: bookingStart,
-            bookingEnd: bookingEnd,
-            bookingDisplayStart: convertToCorrectDate(bookingStart),
-            bookingDisplayEnd: convertToCorrectDate(bookingEnd),
+            bookingStart: dateFromLocalToAPI(bookingStart),
+            bookingEnd: dateFromLocalToAPI(bookingEnd),
+            bookingDisplayStart: convertToCorrectDisplayDate(dateFromLocalToAPI(bookingStart)),
+            bookingDisplayEnd: convertToCorrectDisplayDate(dateFromLocalToAPI(bookingEnd)),
             ...optionalPaymentParams,
           }
         : {
