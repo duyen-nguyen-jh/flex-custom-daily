@@ -17,6 +17,7 @@
   "ActivityFeed.transitionExpire": "Booking request expired. { displayName } did not reply on time.",
   "ActivityFeed.transitionRequest": "{ displayName } requested to book { listingTitle }.",
   "ActivityFeed.transitionReview": "{ displayName } left a review for you. { reviewLink }",
+  "ActivityFeed.operatorDecline": "The booking was cancelled.",
   "AuthenticationPage.confirmSignupInfoText": "Please check that your information is correct.",
   "AuthenticationPage.confirmSignupWithIdpTitle": "Sign up with {idp}",
   "AuthenticationPage.emailAlreadyInUse": "An account with this email address already exists. Try logging in instead.",
