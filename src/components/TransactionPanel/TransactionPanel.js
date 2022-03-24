@@ -51,6 +51,7 @@ import PanelHeading, {
 } from './PanelHeading';
 
 import css from './TransactionPanel.module.css';
+import DeclineButton from './DeclineButton';
 
 // Helper function to get display names for different roles
 const displayNames = (currentUser, currentProvider, currentCustomer, intl) => {
@@ -242,6 +243,7 @@ export class TransactionPanelComponent extends Component {
           headingState: HEADING_REQUESTED,
           showDetailCardHeadings: isCustomer,
           showSaleButtons: isProvider && !isCustomerBanned,
+          showDeclineButton: isCustomer && !isProviderBanned,
         };
       } else if (txIsAccepted(tx)) {
         return {
@@ -315,7 +317,15 @@ export class TransactionPanelComponent extends Component {
         declineSaleError={declineSaleError}
         onAcceptSale={() => onAcceptSale(currentTransaction.id)}
         onDeclineSale={() => onDeclineSale(currentTransaction.id)}
-        onDeclineRequestByCustomer={() => onDeclineRequestByCustomer(currentTransaction.id)}
+      />
+    );
+
+    const declineButton = (
+      <DeclineButton
+        showButtons={stateData.showDeclineButton}
+        declineInProgress={declineInProgress}
+        declineSaleError={declineSaleError}
+        onDeclineBooking={() => onDeclineRequestByCustomer(currentTransaction.id)}
       />
     );
 
@@ -417,6 +427,9 @@ export class TransactionPanelComponent extends Component {
             {stateData.showSaleButtons ? (
               <div className={css.mobileActionButtons}>{saleButtons}</div>
             ) : null}
+            {stateData.showDeclineButton && (
+              <div className={css.mobileActionButtons}>{declineButton}</div>
+            )}
           </div>
 
           <div className={css.asideDesktop}>
@@ -462,7 +475,12 @@ export class TransactionPanelComponent extends Component {
                 transactionRole={transactionRole}
               />
 
-              <div className={css.desktopActionButtons}>{saleButtons}</div>
+              {stateData.showSaleButtons ? (
+                <div className={css.desktopActionButtons}>{saleButtons}</div>
+              ) : null}
+              {stateData.showDeclineButton && (
+                <div className={css.desktopActionButtons}>{declineButton}</div>
+              )}
             </div>
           </div>
         </div>
