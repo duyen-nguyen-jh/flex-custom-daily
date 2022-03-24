@@ -35,6 +35,7 @@ import {
   fetchMoreMessages,
   fetchTransactionLineItems,
   declineRequestedBooking,
+  cancelAcceptedBooking,
 } from './TransactionPage.duck';
 import css from './TransactionPage.module.css';
 
@@ -71,9 +72,12 @@ export const TransactionPageComponent = props => {
     acceptSaleError,
     declineInProgress,
     declineSaleError,
+    cancelError,
+    cancelInProgress,
     onAcceptSale,
     onDeclineSale,
     onDeclineRequestByCustomer,
+    onCancelBooking,
     timeSlots,
     fetchTimeSlotsError,
     processTransitions,
@@ -240,8 +244,11 @@ export const TransactionPageComponent = props => {
       onAcceptSale={onAcceptSale}
       onDeclineSale={onDeclineSale}
       onDeclineRequestByCustomer={onDeclineRequestByCustomer}
+      onCancelBooking={onCancelBooking}
       acceptInProgress={acceptInProgress}
       declineInProgress={declineInProgress}
+      cancelInProgress={cancelInProgress}
+      cancelError={cancelError}
       acceptSaleError={acceptSaleError}
       declineSaleError={declineSaleError}
       nextTransitions={processTransitions}
@@ -307,6 +314,7 @@ TransactionPageComponent.propTypes = {
   onAcceptSale: func.isRequired,
   onDeclineSale: func.isRequired,
   onDeclineRequestByCustomer: func.isRequired,
+  onCancelBooking: func.isRequired,
   scrollingDisabled: bool.isRequired,
   transaction: propTypes.transaction,
   fetchMessagesError: propTypes.error,
@@ -349,6 +357,8 @@ const mapStateToProps = state => {
     declineSaleError,
     acceptInProgress,
     declineInProgress,
+    cancelInProgress,
+    cancelError,
     transactionRef,
     fetchMessagesInProgress,
     fetchMessagesError,
@@ -380,6 +390,8 @@ const mapStateToProps = state => {
     declineSaleError,
     acceptInProgress,
     declineInProgress,
+    cancelInProgress,
+    cancelError,
     scrollingDisabled: isScrollingDisabled(state),
     transaction,
     fetchMessagesInProgress,
@@ -407,6 +419,7 @@ const mapDispatchToProps = dispatch => {
     onAcceptSale: transactionId => dispatch(acceptSale(transactionId)),
     onDeclineSale: transactionId => dispatch(declineSale(transactionId)),
     onDeclineRequestByCustomer: transactionId => dispatch(declineRequestedBooking(transactionId)),
+    onCancelBooking: (txId, isProvider) => dispatch(cancelAcceptedBooking(txId, isProvider)),
     onShowMoreMessages: txId => dispatch(fetchMoreMessages(txId)),
     onSendMessage: (txId, message) => dispatch(sendMessage(txId, message)),
     onManageDisableScrolling: (componentId, disableScrolling) =>

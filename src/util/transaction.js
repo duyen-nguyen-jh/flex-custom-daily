@@ -44,6 +44,7 @@ export const TRANSITION_CANCEL_TIME_OVER = 'transition/cancel-time-over';
 // Admin can also cancel the transition.
 export const TRANSITION_CANCEL = 'transition/cancel';
 export const TRANSITION_CANCEL_BY_CUSTOMER = 'transition/cancel-by-customer';
+export const TRANSITION_CANCEL_BY_PROVIDER = 'transition/cancel-by-provider';
 
 // The backend will mark the transaction completed.
 export const TRANSITION_COMPLETE = 'transition/complete';
@@ -165,6 +166,7 @@ const stateDescription = {
         [TRANSITION_CANCEL]: STATE_CANCELED,
         [TRANSITION_COMPLETE]: STATE_DELIVERED,
         [TRANSITION_CANCEL_BY_CUSTOMER]: STATE_CANCELED_BY_CUSTOMER,
+        [TRANSITION_CANCEL_BY_PROVIDER]: STATE_CANCELED,
       },
     },
 

@@ -492,3 +492,10 @@
   margin-top: 0;
   margin-bottom: 1px;
 }
+
+.dangerBtn {
+  background-color: var(--marketplaceColor);
+  &:hover {
+    background-color: var(--marketplaceColorDark);
+  }
+}
