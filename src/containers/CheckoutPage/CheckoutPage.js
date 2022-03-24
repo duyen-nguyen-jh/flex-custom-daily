@@ -396,11 +396,7 @@ export class CheckoutPageComponent extends Component {
         : {};
     const { listingType } = pageData.listing.attributes.publicData;
     const { bookingStart, bookingEnd } = pageData.bookingDates;
-    // const convertToCorrectDate = date => {
-    //   const timezoneDiffInMinutes = moment(date).utcOffset();
-    //   const momentInLocalTimezone = moment(date).add(timezoneDiffInMinutes, 'minutes');
-    //   return momentInLocalTimezone.toDate();
-    // };
+    
     const convertToCorrectDisplayDate = date => {
       return moment(date)
         .subtract(12, 'hours')

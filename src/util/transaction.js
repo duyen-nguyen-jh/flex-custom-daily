@@ -33,14 +33,17 @@ export const TRANSITION_EXPIRE_PAYMENT = 'transition/expire-payment';
 // SalePage, it is transitioned with the accept or decline transition.
 export const TRANSITION_ACCEPT = 'transition/accept';
 export const TRANSITION_DECLINE = 'transition/decline';
-export const TRANSITION_DECLINE_BY_OPERATOR =
-  'transition/decline-preauthorized-by-operator';
+export const TRANSITION_DECLINE_BY_OPERATOR = 'transition/decline-preauthorized-by-operator';
+export const TRANSITION_DECLINE_BY_CUSTOMER = 'transition/decline-preauthorized-by-customer';
 
 // The backend automatically expire the transaction.
 export const TRANSITION_EXPIRE = 'transition/expire';
+export const TRANSITION_CANCEL_IN_VALID_TIME = 'transition/cancel-in-valid-time';
+export const TRANSITION_CANCEL_TIME_OVER = 'transition/cancel-time-over';
 
 // Admin can also cancel the transition.
 export const TRANSITION_CANCEL = 'transition/cancel';
+export const TRANSITION_CANCEL_BY_CUSTOMER = 'transition/cancel-by-customer';
 
 // The backend will mark the transaction completed.
 export const TRANSITION_COMPLETE = 'transition/complete';
@@ -93,6 +96,7 @@ const STATE_DECLINED = 'declined';
 const STATE_DECLINED_BY_OPERATOR = 'declined-by-operator';
 const STATE_ACCEPTED = 'accepted';
 const STATE_CANCELED = 'canceled';
+const STATE_CANCELED_BY_CUSTOMER = 'canceled-by-customer';
 const STATE_DELIVERED = 'delivered';
 const STATE_REVIEWED = 'reviewed';
 const STATE_REVIEWED_BY_CUSTOMER = 'reviewed-by-customer';
@@ -144,15 +148,23 @@ const stateDescription = {
         [TRANSITION_EXPIRE]: STATE_DECLINED,
         [TRANSITION_ACCEPT]: STATE_ACCEPTED,
         [TRANSITION_DECLINE_BY_OPERATOR]: STATE_DECLINED_BY_OPERATOR,
+        [TRANSITION_DECLINE_BY_CUSTOMER]: STATE_CANCELED_BY_CUSTOMER,
       },
     },
 
     [STATE_DECLINED_BY_OPERATOR]: {},
+    [STATE_CANCELED_BY_CUSTOMER]: {
+      on: {
+        [TRANSITION_CANCEL_IN_VALID_TIME]: STATE_CANCELED,
+        [TRANSITION_CANCEL_TIME_OVER]: STATE_CANCELED,
+      },
+    },
     [STATE_DECLINED]: {},
     [STATE_ACCEPTED]: {
       on: {
         [TRANSITION_CANCEL]: STATE_CANCELED,
         [TRANSITION_COMPLETE]: STATE_DELIVERED,
+        [TRANSITION_CANCEL_BY_CUSTOMER]: STATE_CANCELED_BY_CUSTOMER,
       },
     },
 
@@ -245,12 +257,15 @@ export const txIsAccepted = tx =>
 const transitionsToDeclined = [
   ...getTransitionsToState(STATE_DECLINED),
   ...getTransitionsToState(STATE_DECLINED_BY_OPERATOR),
+  ...getTransitionsToState(STATE_CANCELED_BY_CUSTOMER),
 ];
-export const txIsDeclined = tx =>
-  transitionsToDeclined.includes(txLastTransition(tx));
+export const txIsDeclined = tx => transitionsToDeclined.includes(txLastTransition(tx));
 
-export const txIsCanceled = tx =>
-  getTransitionsToState(STATE_CANCELED).includes(txLastTransition(tx));
+const transitionsToCancelled = [
+  ...getTransitionsToState(STATE_CANCELED),
+  ...getTransitionsToState(STATE_CANCELED_BY_CUSTOMER),
+];
+export const txIsCanceled = tx => transitionsToCancelled.includes(txLastTransition(tx));
 
 export const txIsDelivered = tx =>
   getTransitionsToState(STATE_DELIVERED).includes(txLastTransition(tx));

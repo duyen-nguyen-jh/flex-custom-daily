@@ -34,6 +34,7 @@ import {
   sendReview,
   fetchMoreMessages,
   fetchTransactionLineItems,
+  declineRequestedBooking,
 } from './TransactionPage.duck';
 import css from './TransactionPage.module.css';
 
@@ -72,6 +73,7 @@ export const TransactionPageComponent = props => {
     declineSaleError,
     onAcceptSale,
     onDeclineSale,
+    onDeclineRequestByCustomer,
     timeSlots,
     fetchTimeSlotsError,
     processTransitions,
@@ -237,6 +239,7 @@ export const TransactionPageComponent = props => {
       transactionRole={transactionRole}
       onAcceptSale={onAcceptSale}
       onDeclineSale={onDeclineSale}
+      onDeclineRequestByCustomer={onDeclineRequestByCustomer}
       acceptInProgress={acceptInProgress}
       declineInProgress={declineInProgress}
       acceptSaleError={acceptSaleError}
@@ -303,6 +306,7 @@ TransactionPageComponent.propTypes = {
   declineInProgress: bool.isRequired,
   onAcceptSale: func.isRequired,
   onDeclineSale: func.isRequired,
+  onDeclineRequestByCustomer: func.isRequired,
   scrollingDisabled: bool.isRequired,
   transaction: propTypes.transaction,
   fetchMessagesError: propTypes.error,
@@ -402,6 +406,7 @@ const mapDispatchToProps = dispatch => {
   return {
     onAcceptSale: transactionId => dispatch(acceptSale(transactionId)),
     onDeclineSale: transactionId => dispatch(declineSale(transactionId)),
+    onDeclineRequestByCustomer: transactionId => dispatch(declineRequestedBooking(transactionId)),
     onShowMoreMessages: txId => dispatch(fetchMoreMessages(txId)),
     onSendMessage: (txId, message) => dispatch(sendMessage(txId, message)),
     onManageDisableScrolling: (componentId, disableScrolling) =>

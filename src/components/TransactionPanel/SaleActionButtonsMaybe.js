@@ -18,6 +18,7 @@ const SaleActionButtonsMaybe = props => {
     declineSaleError,
     onAcceptSale,
     onDeclineSale,
+    onDeclineRequestByCustomer,
   } = props;
 
   const buttonsDisabled = acceptInProgress || declineInProgress;
@@ -35,7 +36,8 @@ const SaleActionButtonsMaybe = props => {
 
   const classes = classNames(rootClassName || css.actionButtons, className);
 
-  return showButtons ? (
+  const onDeclineByRule = showButtons ? onDeclineSale : onDeclineRequestByCustomer;
+  return (
     <div className={classes}>
       <div className={css.actionErrors}>
         {acceptErrorMessage}
@@ -45,20 +47,22 @@ const SaleActionButtonsMaybe = props => {
         <SecondaryButton
           inProgress={declineInProgress}
           disabled={buttonsDisabled}
-          onClick={onDeclineSale}
+          onClick={onDeclineByRule}
         >
           <FormattedMessage id="TransactionPanel.declineButton" />
         </SecondaryButton>
-        <PrimaryButton
-          inProgress={acceptInProgress}
-          disabled={buttonsDisabled}
-          onClick={onAcceptSale}
-        >
-          <FormattedMessage id="TransactionPanel.acceptButton" />
-        </PrimaryButton>
+        {showButtons && (
+          <PrimaryButton
+            inProgress={acceptInProgress}
+            disabled={buttonsDisabled}
+            onClick={onAcceptSale}
+          >
+            <FormattedMessage id="TransactionPanel.acceptButton" />
+          </PrimaryButton>
+        )}
       </div>
     </div>
-  ) : null;
+  );
 };
 
 export default SaleActionButtonsMaybe;

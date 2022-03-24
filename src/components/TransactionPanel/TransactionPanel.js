@@ -183,6 +183,7 @@ export class TransactionPanelComponent extends Component {
       intl,
       onAcceptSale,
       onDeclineSale,
+      onDeclineRequestByCustomer,
       acceptInProgress,
       declineInProgress,
       acceptSaleError,
@@ -314,6 +315,7 @@ export class TransactionPanelComponent extends Component {
         declineSaleError={declineSaleError}
         onAcceptSale={() => onAcceptSale(currentTransaction.id)}
         onDeclineSale={() => onDeclineSale(currentTransaction.id)}
+        onDeclineRequestByCustomer={() => onDeclineRequestByCustomer(currentTransaction.id)}
       />
     );
 
@@ -460,9 +462,7 @@ export class TransactionPanelComponent extends Component {
                 transactionRole={transactionRole}
               />
 
-              {stateData.showSaleButtons ? (
-                <div className={css.desktopActionButtons}>{saleButtons}</div>
-              ) : null}
+              <div className={css.desktopActionButtons}>{saleButtons}</div>
             </div>
           </div>
         </div>
