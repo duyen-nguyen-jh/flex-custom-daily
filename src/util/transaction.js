@@ -48,6 +48,7 @@ export const TRANSITION_CANCEL_BY_PROVIDER = 'transition/cancel-by-provider';
 
 // The backend will mark the transaction completed.
 export const TRANSITION_COMPLETE = 'transition/complete';
+export const TRANSITION_PAYOUT_FOR_PROVIDER = 'transition/pay-out-for-provider';
 
 // Reviews are given through transaction transitions. Review 1 can be
 // by provider or customer, and review 2 will be the other party of
@@ -102,6 +103,7 @@ const STATE_DELIVERED = 'delivered';
 const STATE_REVIEWED = 'reviewed';
 const STATE_REVIEWED_BY_CUSTOMER = 'reviewed-by-customer';
 const STATE_REVIEWED_BY_PROVIDER = 'reviewed-by-provider';
+const STATE_PAID_PROVIDER = 'paid-provider';
 
 /**
  * Description of transaction process
@@ -176,6 +178,7 @@ const stateDescription = {
         [TRANSITION_EXPIRE_REVIEW_PERIOD]: STATE_REVIEWED,
         [TRANSITION_REVIEW_1_BY_CUSTOMER]: STATE_REVIEWED_BY_CUSTOMER,
         [TRANSITION_REVIEW_1_BY_PROVIDER]: STATE_REVIEWED_BY_PROVIDER,
+        [TRANSITION_PAYOUT_FOR_PROVIDER]: STATE_PAID_PROVIDER,
       },
     },
 

@@ -35,6 +35,13 @@ export const FETCH_CURRENT_USER_HAS_ORDERS_SUCCESS =
   'app/user/FETCH_CURRENT_USER_HAS_ORDERS_SUCCESS';
 export const FETCH_CURRENT_USER_HAS_ORDERS_ERROR = 'app/user/FETCH_CURRENT_USER_HAS_ORDERS_ERROR';
 
+export const FETCH_CURRENT_USER_HAS_COMPLETED_ORDERS_REQUEST =
+  'app/user/FETCH_CURRENT_USER_HAS_COMPLETED_ORDERS_REQUEST';
+export const FETCH_CURRENT_USER_HAS_COMPLETED_ORDERS_SUCCESS =
+  'app/user/FETCH_CURRENT_USER_HAS_COMPLETED_ORDERS_SUCCESS';
+export const FETCH_CURRENT_USER_HAS_COMPLETED_ORDERS_ERROR =
+  'app/user/FETCH_CURRENT_USER_HAS_COMPLETED_ORDERS_ERROR';
+
 export const SEND_VERIFICATION_EMAIL_REQUEST = 'app/user/SEND_VERIFICATION_EMAIL_REQUEST';
 export const SEND_VERIFICATION_EMAIL_SUCCESS = 'app/user/SEND_VERIFICATION_EMAIL_SUCCESS';
 export const SEND_VERIFICATION_EMAIL_ERROR = 'app/user/SEND_VERIFICATION_EMAIL_ERROR';
@@ -66,6 +73,8 @@ const initialState = {
   currentUserHasOrdersError: null,
   sendVerificationEmailInProgress: false,
   sendVerificationEmailError: null,
+  currentUserHasCompletedOrders: null,
+  currentUserHasCompletedOrdersError: null,
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -132,6 +141,13 @@ export default function reducer(state = initialState, action = {}) {
         sendVerificationEmailInProgress: false,
         sendVerificationEmailError: payload,
       };
+
+    case FETCH_CURRENT_USER_HAS_COMPLETED_ORDERS_REQUEST:
+      return { ...state, currentUserHasCompletedOrdersError: null };
+    case FETCH_CURRENT_USER_HAS_COMPLETED_ORDERS_SUCCESS:
+      return { ...state, currentUserHasCompletedOrders: payload };
+    case FETCH_CURRENT_USER_HAS_COMPLETED_ORDERS_ERROR:
+      return { ...state, currentUserHasCompletedOrdersError: payload };
 
     default:
       return state;
@@ -216,6 +232,21 @@ const fetchCurrentUserHasOrdersError = e => ({
   payload: e,
 });
 
+const fetchCurrentUserHasCompletedOrdersRequest = () => ({
+  type: FETCH_CURRENT_USER_HAS_COMPLETED_ORDERS_REQUEST,
+});
+
+export const fetchCurrentUserHasCompletedOrdersSuccess = hasOrders => ({
+  type: FETCH_CURRENT_USER_HAS_COMPLETED_ORDERS_SUCCESS,
+  payload: hasOrders ,
+});
+
+const fetchCurrentUserHasCompletedOrdersError = e => ({
+  type: FETCH_CURRENT_USER_HAS_COMPLETED_ORDERS_ERROR,
+  error: true,
+  payload: e,
+});
+
 export const sendVerificationEmailRequest = () => ({
   type: SEND_VERIFICATION_EMAIL_REQUEST,
 });
@@ -282,6 +313,30 @@ export const fetchCurrentUserHasOrders = () => (dispatch, getState, sdk) => {
       dispatch(fetchCurrentUserHasOrdersSuccess(!!hasOrders));
     })
     .catch(e => dispatch(fetchCurrentUserHasOrdersError(storableError(e))));
+};
+
+export const fetchCurrentUserHasCompletedOrders = () => (dispatch, getState, sdk) => {
+  dispatch(fetchCurrentUserHasCompletedOrdersRequest());
+
+  if (!getState().user.currentUser) {
+    dispatch(fetchCurrentUserHasCompletedOrdersSuccess(false));
+    return Promise.resolve(null);
+  }
+
+  const params = {
+    only: 'order',
+    page: 1,
+    per_page: 1,
+    lastTransitions: ["transition/complete"]
+  };
+
+  return sdk.transactions
+    .query(params)
+    .then(response => {
+      const hasOrder = response.data.data && response.data.data.length > 0;
+      dispatch(fetchCurrentUserHasCompletedOrdersSuccess(hasOrder));
+    })
+    .catch(e => dispatch(fetchCurrentUserHasCompletedOrdersError(storableError(e))));
 };
 
 // Notificaiton page size is max (100 items on page)
