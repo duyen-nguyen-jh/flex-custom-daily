@@ -25,16 +25,16 @@
  * currently the API doesn't support that for logged out users, and we
  * are forced to estimate the information here.
  */
-import React from 'react';
 import Decimal from 'decimal.js';
+import moment from "moment";
+import React from 'react';
+import { BookingBreakdown } from '../../components';
+import config from '../../config';
+import { convertMoneyToNumber, convertUnitToSubUnit, unitDivisor } from '../../util/currency';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { TRANSITION_REQUEST_PAYMENT, TX_TRANSITION_ACTOR_CUSTOMER } from '../../util/transaction';
-import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../util/currency';
-import config from '../../config';
-import { BookingBreakdown, BookingBreakdownCustom } from '../../components';
-import moment from "moment";
+import { DATE_TYPE_DATETIME } from '../../util/types';
 import css from './BookingDatesTimesForm.module.css';
-import { DATE_TYPE_DATE, DATE_TYPE_DATETIME } from '../../util/types';
 
 const { Money, UUID } = sdkTypes;
 
@@ -99,8 +99,10 @@ const estimatedTransaction = (bookingStart, bookingEnd, lineItems, userRole) => 
       id: new UUID('estimated-booking'),
       type: 'booking',
       attributes: {
-        start: convertToCorrectDate(bookingStart),
-        end: convertToCorrectDate(bookingEnd),
+        start: bookingStart,
+        end: bookingEnd,
+        displayStart: convertToCorrectDate(bookingStart),
+        displayEnd: convertToCorrectDate(bookingEnd)
       },
     },
   };

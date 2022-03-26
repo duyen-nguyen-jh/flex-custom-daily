@@ -1,69 +1,50 @@
-import React, { Component } from 'react';
-import { bool, func, instanceOf, object, oneOfType, shape, string } from 'prop-types';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
-import config from '../../config';
-import routeConfiguration from '../../routeConfiguration';
-import { pathByRouteName, findRouteByRouteName } from '../../util/routes';
-import {
-  propTypes,
-  LINE_ITEM_NIGHT,
-  LINE_ITEM_DAY,
-  DATE_TYPE_DATE,
-  DATE_TYPE_DATETIME,
-} from '../../util/types';
-import {
-  ensureListing,
-  ensureCurrentUser,
-  ensureUser,
-  ensureTransaction,
-  ensureBooking,
-  ensureStripeCustomer,
-  ensurePaymentMethodCard,
-} from '../../util/data';
-import { dateFromAPIToLocalNoon, dateFromLocalToAPI, minutesBetween } from '../../util/dates';
-import { createSlug } from '../../util/urlHelpers';
-import {
-  isTransactionInitiateAmountTooLowError,
-  isTransactionInitiateListingNotFoundError,
-  isTransactionInitiateMissingStripeAccountError,
-  isTransactionInitiateBookingTimeNotAvailableError,
-  isTransactionChargeDisabledError,
-  isTransactionZeroPaymentError,
-  transactionInitiateOrderStripeErrors,
-} from '../../util/errors';
-import { formatMoney } from '../../util/currency';
-import { TRANSITION_ENQUIRE, txIsPaymentPending, txIsPaymentExpired } from '../../util/transaction';
+import moment from 'moment';
+import { bool, func, instanceOf, object, oneOfType, shape, string } from 'prop-types';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { compose } from 'redux';
 import {
   AvatarMedium,
-  BookingBreakdown,
-  BookingBreakdownCustom,
-  Logo,
+  BookingBreakdown, Logo,
   NamedLink,
   NamedRedirect,
   Page,
-  ResponsiveImage,
+  ResponsiveImage
 } from '../../components';
-import { StripePaymentForm } from '../../forms';
-import { isScrollingDisabled } from '../../ducks/UI.duck';
-import { confirmCardPayment, retrievePaymentIntent } from '../../ducks/stripe.duck';
+import config from '../../config';
 import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
-
+import { confirmCardPayment, retrievePaymentIntent } from '../../ducks/stripe.duck';
+import { isScrollingDisabled } from '../../ducks/UI.duck';
+import { StripePaymentForm } from '../../forms';
+import routeConfiguration from '../../routeConfiguration';
+import { formatMoney } from '../../util/currency';
 import {
-  initiateOrder,
-  setInitialValues,
+  ensureBooking, ensureCurrentUser, ensureListing, ensurePaymentMethodCard, ensureStripeCustomer, ensureTransaction, ensureUser
+} from '../../util/data';
+import { dateFromLocalToAPI, minutesBetween } from '../../util/dates';
+import {
+  isTransactionChargeDisabledError, isTransactionInitiateAmountTooLowError, isTransactionInitiateBookingTimeNotAvailableError, isTransactionInitiateListingNotFoundError,
+  isTransactionInitiateMissingStripeAccountError, isTransactionZeroPaymentError,
+  transactionInitiateOrderStripeErrors
+} from '../../util/errors';
+import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
+import { findRouteByRouteName, pathByRouteName } from '../../util/routes';
+import { TRANSITION_ENQUIRE, txIsPaymentExpired, txIsPaymentPending } from '../../util/transaction';
+import {
+  DATE_TYPE_DATE,
+  DATE_TYPE_DATETIME, LINE_ITEM_DAY, LINE_ITEM_NIGHT, LISTING_TYPE_EQUIPMENT, propTypes
+} from '../../util/types';
+import { createSlug } from '../../util/urlHelpers';
+import {
+  confirmPayment, initiateOrder, sendMessage, setInitialValues,
   speculateTransaction,
-  stripeCustomer,
-  confirmPayment,
-  sendMessage,
+  stripeCustomer
 } from './CheckoutPage.duck';
-import { storeData, storedData, clearData } from './CheckoutPageSessionHelpers';
-import { LISTING_TYPE_EQUIPMENT } from '../../util/types';
 import css from './CheckoutPage.module.css';
-import moment from 'moment';
+import { clearData, storeData, storedData } from './CheckoutPageSessionHelpers';
+
 const STORAGE_KEY = 'CheckoutPage';
 
 // Stripe PaymentIntent statuses, where user actions are already completed
