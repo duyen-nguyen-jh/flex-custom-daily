@@ -31,6 +31,7 @@ import React from 'react';
 import { BookingBreakdown } from '../../components';
 import config from '../../config';
 import { convertMoneyToNumber, convertUnitToSubUnit, unitDivisor } from '../../util/currency';
+import { dateFromLocalToAPI } from '../../util/dates';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { TRANSITION_REQUEST_PAYMENT, TX_TRANSITION_ACTOR_CUSTOMER } from '../../util/transaction';
 import { DATE_TYPE_DATETIME } from '../../util/types';
@@ -55,17 +56,13 @@ const estimatedTotalPrice = lineItems => {
   );
 };
 
-const convertToCorrectDate = date => {
-  const timezoneDiffInMinutes = moment(date).utcOffset();
-  const momentInLocalTimezone = moment(date).add(timezoneDiffInMinutes, 'minutes');
-  return momentInLocalTimezone.subtract(12, 'hours').toDate();
-}
 // When we cannot speculatively initiate a transaction (i.e. logged
 // out), we must estimate the transaction for booking breakdown. This function creates
 // an estimated transaction object for that use case.
 //
 // We need to use FTW backend to calculate the correct line items through thransactionLineItems
 // endpoint so that they can be passed to this estimated transaction.
+
 const estimatedTransaction = (bookingStart, bookingEnd, lineItems, userRole) => {
   const now = new Date();
 
@@ -76,7 +73,16 @@ const estimatedTransaction = (bookingStart, bookingEnd, lineItems, userRole) => 
 
   const payinTotal = estimatedTotalPrice(customerLineItems);
   const payoutTotal = estimatedTotalPrice(providerLineItems);
-
+  const serverDayStart = dateFromLocalToAPI(
+    moment(bookingStart)
+      .startOf('day')
+      .toDate()
+  );
+  const serverDayEnd = dateFromLocalToAPI(
+    moment(bookingEnd)
+      .startOf('day')
+      .toDate()
+  );
   return {
     id: new UUID('estimated-transaction'),
     type: 'transaction',
@@ -99,10 +105,10 @@ const estimatedTransaction = (bookingStart, bookingEnd, lineItems, userRole) => 
       id: new UUID('estimated-booking'),
       type: 'booking',
       attributes: {
-        start: bookingStart,
-        end: bookingEnd,
-        displayStart: bookingStart,
-        displayEnd: bookingEnd
+        start: serverDayStart,
+        end: serverDayEnd,
+        displayStart: dateFromLocalToAPI(bookingStart),
+        displayEnd: dateFromLocalToAPI(bookingEnd)
       },
     },
   };
