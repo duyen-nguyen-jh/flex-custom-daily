@@ -188,12 +188,8 @@ export class CheckoutPageComponent extends Component {
               listingId,
               bookingStart: bookingStartForAPI,
               bookingEnd: bookingEndForAPI,
-              bookingDisplayStart: moment(bookingStartForAPI)
-                .subtract(12, 'hours')
-                .toDate(),
-              bookingDisplayEnd: moment(bookingEndForAPI)
-                .subtract(12, 'hours')
-                .toDate(),
+              bookingDisplayStart: bookingStartForAPI,
+              bookingDisplayEnd: bookingEndForAPI,
             }
           : {
               listingId,
@@ -382,20 +378,15 @@ export class CheckoutPageComponent extends Component {
     //   const momentInLocalTimezone = moment(date).add(timezoneDiffInMinutes, 'minutes');
     //   return momentInLocalTimezone.toDate();
     // };
-    const convertToCorrectDisplayDate = date => {
-      return moment(date)
-        .subtract(12, 'hours')
-        .toDate();
-    };
 
     const orderParams =
       listingType === LISTING_TYPE_EQUIPMENT
         ? {
             listingId: pageData.listing.id,
-            bookingStart: dateFromLocalToAPI(bookingStart),
-            bookingEnd: dateFromLocalToAPI(bookingEnd),
-            bookingDisplayStart: convertToCorrectDisplayDate(dateFromLocalToAPI(bookingStart)),
-            bookingDisplayEnd: convertToCorrectDisplayDate(dateFromLocalToAPI(bookingEnd)),
+            bookingStart: tx.booking.attributes.start,
+            bookingEnd: tx.booking.attributes.end,
+            bookingDisplayStart: bookingStart,
+            bookingDisplayEnd: bookingEnd,
             ...optionalPaymentParams,
           }
         : {

@@ -101,8 +101,8 @@ const estimatedTransaction = (bookingStart, bookingEnd, lineItems, userRole) => 
       attributes: {
         start: bookingStart,
         end: bookingEnd,
-        displayStart: convertToCorrectDate(bookingStart),
-        displayEnd: convertToCorrectDate(bookingEnd)
+        displayStart: bookingStart,
+        displayEnd: bookingEnd
       },
     },
   };
