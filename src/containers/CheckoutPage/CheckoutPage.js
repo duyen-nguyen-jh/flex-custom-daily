@@ -1,69 +1,68 @@
-import React, { Component } from 'react';
-import { bool, func, instanceOf, object, oneOfType, shape, string } from 'prop-types';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
-import config from '../../config';
-import routeConfiguration from '../../routeConfiguration';
-import { pathByRouteName, findRouteByRouteName } from '../../util/routes';
-import {
-  propTypes,
-  LINE_ITEM_NIGHT,
-  LINE_ITEM_DAY,
-  DATE_TYPE_DATE,
-  DATE_TYPE_DATETIME,
-} from '../../util/types';
-import {
-  ensureListing,
-  ensureCurrentUser,
-  ensureUser,
-  ensureTransaction,
-  ensureBooking,
-  ensureStripeCustomer,
-  ensurePaymentMethodCard,
-} from '../../util/data';
-import { dateFromAPIToLocalNoon, dateFromLocalToAPI, minutesBetween } from '../../util/dates';
-import { createSlug } from '../../util/urlHelpers';
-import {
-  isTransactionInitiateAmountTooLowError,
-  isTransactionInitiateListingNotFoundError,
-  isTransactionInitiateMissingStripeAccountError,
-  isTransactionInitiateBookingTimeNotAvailableError,
-  isTransactionChargeDisabledError,
-  isTransactionZeroPaymentError,
-  transactionInitiateOrderStripeErrors,
-} from '../../util/errors';
-import { formatMoney } from '../../util/currency';
-import { TRANSITION_ENQUIRE, txIsPaymentPending, txIsPaymentExpired } from '../../util/transaction';
+import moment from 'moment';
+import { bool, func, instanceOf, object, oneOfType, shape, string } from 'prop-types';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { compose } from 'redux';
 import {
   AvatarMedium,
   BookingBreakdown,
-  BookingBreakdownCustom,
   Logo,
   NamedLink,
   NamedRedirect,
   Page,
   ResponsiveImage,
 } from '../../components';
-import { StripePaymentForm } from '../../forms';
-import { isScrollingDisabled } from '../../ducks/UI.duck';
-import { confirmCardPayment, retrievePaymentIntent } from '../../ducks/stripe.duck';
+import config from '../../config';
 import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
-
+import { confirmCardPayment, retrievePaymentIntent } from '../../ducks/stripe.duck';
+import { isScrollingDisabled } from '../../ducks/UI.duck';
+import { StripePaymentForm } from '../../forms';
+import routeConfiguration from '../../routeConfiguration';
+import { formatMoney } from '../../util/currency';
 import {
+  ensureBooking,
+  ensureCurrentUser,
+  ensureListing,
+  ensurePaymentMethodCard,
+  ensureStripeCustomer,
+  ensureTransaction,
+  ensureUser,
+} from '../../util/data';
+import { dateFromLocalToAPI, minutesBetween } from '../../util/dates';
+import {
+  isTransactionChargeDisabledError,
+  isTransactionInitiateAmountTooLowError,
+  isTransactionInitiateBookingTimeNotAvailableError,
+  isTransactionInitiateListingNotFoundError,
+  isTransactionInitiateMissingStripeAccountError,
+  isTransactionZeroPaymentError,
+  transactionInitiateOrderStripeErrors,
+} from '../../util/errors';
+import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
+import { findRouteByRouteName, pathByRouteName } from '../../util/routes';
+import { TRANSITION_ENQUIRE, txIsPaymentExpired, txIsPaymentPending } from '../../util/transaction';
+import {
+  DATE_TYPE_DATE,
+  DATE_TYPE_DATETIME,
+  LINE_ITEM_DAY,
+  LINE_ITEM_NIGHT,
+  LISTING_TYPE_EQUIPMENT,
+  propTypes,
+} from '../../util/types';
+import { createSlug } from '../../util/urlHelpers';
+import {
+  confirmPayment,
   initiateOrder,
+  sendMessage,
   setInitialValues,
   speculateTransaction,
   stripeCustomer,
-  confirmPayment,
-  sendMessage,
 } from './CheckoutPage.duck';
-import { storeData, storedData, clearData } from './CheckoutPageSessionHelpers';
-import { LISTING_TYPE_EQUIPMENT } from '../../util/types';
 import css from './CheckoutPage.module.css';
-import moment from 'moment';
+import { clearData, storeData, storedData } from './CheckoutPageSessionHelpers';
+
 const STORAGE_KEY = 'CheckoutPage';
 
 // Stripe PaymentIntent statuses, where user actions are already completed
@@ -195,7 +194,6 @@ export class CheckoutPageComponent extends Component {
       // a noon of correct year-month-date combo in UTC
       const bookingStartForAPI = dateFromLocalToAPI(bookingStart);
       const bookingEndForAPI = dateFromLocalToAPI(bookingEnd);
-
       // Fetch speculated transaction for showing price in booking breakdown
       // NOTE: if unit type is line-item/units, quantity needs to be added.
       // The way to pass it to checkout page is through pageData.bookingData
@@ -207,12 +205,8 @@ export class CheckoutPageComponent extends Component {
               listingId,
               bookingStart: bookingStartForAPI,
               bookingEnd: bookingEndForAPI,
-              bookingDisplayStart: moment(bookingStartForAPI)
-                .subtract(12, 'hours')
-                .toDate(),
-              bookingDisplayEnd: moment(bookingEndForAPI)
-                .subtract(12, 'hours')
-                .toDate(),
+              bookingDisplayStart: bookingStart,
+              bookingDisplayEnd: bookingEnd,
             }
           : {
               listingId,
@@ -396,21 +390,15 @@ export class CheckoutPageComponent extends Component {
         : {};
     const { listingType } = pageData.listing.attributes.publicData;
     const { bookingStart, bookingEnd } = pageData.bookingDates;
-    
-    const convertToCorrectDisplayDate = date => {
-      return moment(date)
-        .subtract(12, 'hours')
-        .toDate();
-    };
 
     const orderParams =
       listingType === LISTING_TYPE_EQUIPMENT
         ? {
             listingId: pageData.listing.id,
-            bookingStart: dateFromLocalToAPI(bookingStart),
-            bookingEnd: dateFromLocalToAPI(bookingEnd),
-            bookingDisplayStart: convertToCorrectDisplayDate(dateFromLocalToAPI(bookingStart)),
-            bookingDisplayEnd: convertToCorrectDisplayDate(dateFromLocalToAPI(bookingEnd)),
+            bookingStart: tx.booking.attributes.start,
+            bookingEnd: tx.booking.attributes.end,
+            bookingDisplayStart: bookingStart,
+            bookingDisplayEnd: bookingEnd,
             ...optionalPaymentParams,
           }
         : {
