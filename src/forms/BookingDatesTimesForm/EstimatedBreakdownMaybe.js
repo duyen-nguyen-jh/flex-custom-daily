@@ -107,10 +107,10 @@ const estimatedTransaction = (bookingStart, bookingEnd, lineItems, userRole) => 
       attributes: {
         start: serverDayStart,
         end: serverDayEnd,
-        displayStart: dateFromLocalToAPI(bookingStart),
-        displayEnd: dateFromLocalToAPI(bookingEnd)
+        displayStart: bookingStart,
+        displayEnd: bookingEnd
       },
-    },
+    }
   };
 };
 

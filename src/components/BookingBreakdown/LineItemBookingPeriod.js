@@ -64,10 +64,9 @@ const LineItemBookingPeriod = props => {
   // where there are preparation time needed between bookings.
   // Read more: https://www.sharetribe.com/api-reference/marketplace.html#bookings
   const { start, end, displayStart, displayEnd } = booking.attributes;
-  console.log({start, end, displayStart, displayEnd})
 
-  const localStartDate = displayStart ? dateFromAPIToLocal(displayStart) : dateFromAPIToLocalNoon(start);
-  const localEndDateRaw = displayEnd ? dateFromAPIToLocal(displayEnd) : dateFromAPIToLocalNoon(end);
+  const localStartDate = displayStart ? displayStart : dateFromAPIToLocalNoon(start);
+  const localEndDateRaw = displayEnd ? displayEnd : dateFromAPIToLocalNoon(end);
 
   const isNightly = unitType === LINE_ITEM_NIGHT;
   const endDay = isNightly ? localEndDateRaw : moment(localEndDateRaw).subtract(1, 'days');

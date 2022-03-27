@@ -7,11 +7,12 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 import {
   AvatarMedium,
-  BookingBreakdown, Logo,
+  BookingBreakdown,
+  Logo,
   NamedLink,
   NamedRedirect,
   Page,
-  ResponsiveImage
+  ResponsiveImage,
 } from '../../components';
 import config from '../../config';
 import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
@@ -21,26 +22,43 @@ import { StripePaymentForm } from '../../forms';
 import routeConfiguration from '../../routeConfiguration';
 import { formatMoney } from '../../util/currency';
 import {
-  ensureBooking, ensureCurrentUser, ensureListing, ensurePaymentMethodCard, ensureStripeCustomer, ensureTransaction, ensureUser
+  ensureBooking,
+  ensureCurrentUser,
+  ensureListing,
+  ensurePaymentMethodCard,
+  ensureStripeCustomer,
+  ensureTransaction,
+  ensureUser,
 } from '../../util/data';
 import { dateFromLocalToAPI, minutesBetween } from '../../util/dates';
 import {
-  isTransactionChargeDisabledError, isTransactionInitiateAmountTooLowError, isTransactionInitiateBookingTimeNotAvailableError, isTransactionInitiateListingNotFoundError,
-  isTransactionInitiateMissingStripeAccountError, isTransactionZeroPaymentError,
-  transactionInitiateOrderStripeErrors
+  isTransactionChargeDisabledError,
+  isTransactionInitiateAmountTooLowError,
+  isTransactionInitiateBookingTimeNotAvailableError,
+  isTransactionInitiateListingNotFoundError,
+  isTransactionInitiateMissingStripeAccountError,
+  isTransactionZeroPaymentError,
+  transactionInitiateOrderStripeErrors,
 } from '../../util/errors';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { findRouteByRouteName, pathByRouteName } from '../../util/routes';
 import { TRANSITION_ENQUIRE, txIsPaymentExpired, txIsPaymentPending } from '../../util/transaction';
 import {
   DATE_TYPE_DATE,
-  DATE_TYPE_DATETIME, LINE_ITEM_DAY, LINE_ITEM_NIGHT, LISTING_TYPE_EQUIPMENT, propTypes
+  DATE_TYPE_DATETIME,
+  LINE_ITEM_DAY,
+  LINE_ITEM_NIGHT,
+  LISTING_TYPE_EQUIPMENT,
+  propTypes,
 } from '../../util/types';
 import { createSlug } from '../../util/urlHelpers';
 import {
-  confirmPayment, initiateOrder, sendMessage, setInitialValues,
+  confirmPayment,
+  initiateOrder,
+  sendMessage,
+  setInitialValues,
   speculateTransaction,
-  stripeCustomer
+  stripeCustomer,
 } from './CheckoutPage.duck';
 import css from './CheckoutPage.module.css';
 import { clearData, storeData, storedData } from './CheckoutPageSessionHelpers';
@@ -176,7 +194,6 @@ export class CheckoutPageComponent extends Component {
       // a noon of correct year-month-date combo in UTC
       const bookingStartForAPI = dateFromLocalToAPI(bookingStart);
       const bookingEndForAPI = dateFromLocalToAPI(bookingEnd);
-
       // Fetch speculated transaction for showing price in booking breakdown
       // NOTE: if unit type is line-item/units, quantity needs to be added.
       // The way to pass it to checkout page is through pageData.bookingData
@@ -188,8 +205,8 @@ export class CheckoutPageComponent extends Component {
               listingId,
               bookingStart: bookingStartForAPI,
               bookingEnd: bookingEndForAPI,
-              bookingDisplayStart: bookingStartForAPI,
-              bookingDisplayEnd: bookingEndForAPI,
+              bookingDisplayStart: bookingStart,
+              bookingDisplayEnd: bookingEnd,
             }
           : {
               listingId,
