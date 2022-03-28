@@ -13,6 +13,13 @@ const UserNav = props => {
 
   const tabs = [
     {
+      text: <FormattedMessage id="ManageEquipmentListingsPage.yourListings" />,
+      selected: selectedPageName === 'ManageEquipmentListingsPage',
+      linkProps: {
+        name: 'ManageEquipmentListingsPage',
+      },
+    },
+    {
       text: <FormattedMessage id="ManageListingsPage.yourListings" />,
       selected: selectedPageName === 'ManageListingsPage',
       linkProps: {

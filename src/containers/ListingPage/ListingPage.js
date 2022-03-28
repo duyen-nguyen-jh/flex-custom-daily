@@ -7,7 +7,12 @@ import { withRouter } from 'react-router-dom';
 import config from '../../config';
 import routeConfiguration from '../../routeConfiguration';
 import { findOptionsForSelectFilter } from '../../util/search';
-import { LISTING_STATE_PENDING_APPROVAL, LISTING_STATE_CLOSED, propTypes } from '../../util/types';
+import {
+  LISTING_STATE_PENDING_APPROVAL,
+  LISTING_STATE_CLOSED,
+  propTypes,
+  LISTING_TYPE_EQUIPMENT,
+} from '../../util/types';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
@@ -112,7 +117,6 @@ export class ListingPageComponent extends Component {
       },
       confirmPaymentError: null,
     };
-
     const saveToSessionStorage = !this.props.currentUser;
 
     const routes = routeConfiguration();
@@ -241,7 +245,7 @@ export class ListingPageComponent extends Component {
       title = '',
       publicData,
     } = currentListing.attributes;
-
+    const equipmentListingType = publicData?.listingType;
     const richTitle = (
       <span>
         {richText(title, {
@@ -378,14 +382,28 @@ export class ListingPageComponent extends Component {
 
     const amenityOptions = findOptionsForSelectFilter('amenities', filterConfig);
     const categoryOptions = findOptionsForSelectFilter('category', filterConfig);
-    const category =
-      publicData && publicData.category ? (
-        <span>
-          {categoryLabel(categoryOptions, publicData.category)}
-          <span className={css.separator}>•</span>
-        </span>
-      ) : null;
+    const equipmentOptions = findOptionsForSelectFilter('equipmentType', filterConfig);
+    const category = publicData?.category ? (
+      <span>
+        {categoryLabel(categoryOptions, publicData.category)}
+        <span className={css.separator}>•</span>
+      </span>
+    ) : null;
 
+    const renderSectionByListingType = () =>
+      equipmentListingType === LISTING_TYPE_EQUIPMENT ? (
+        <SectionFeaturesMaybe
+          options={equipmentOptions}
+          publicData={publicData}
+          listingType={equipmentListingType}
+        />
+      ) : (
+        <>
+          <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
+          <SectionRulesMaybe publicData={publicData} />
+        </>
+      );
+      
     return (
       <Page
         title={schemaTitle}
@@ -434,9 +452,11 @@ export class ListingPageComponent extends Component {
                     showContactUser={showContactUser}
                     onContactUser={this.onContactUser}
                   />
-                  <SectionDescriptionMaybe description={description} />
-                  <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
-                  <SectionRulesMaybe publicData={publicData} />
+                  <SectionDescriptionMaybe
+                    description={description}
+                    listingType={equipmentListingType}
+                  />
+                  {renderSectionByListingType()}
                   <SectionMapMaybe
                     geolocation={geolocation}
                     publicData={publicData}
@@ -460,6 +480,7 @@ export class ListingPageComponent extends Component {
                 <BookingPanel
                   className={css.bookingPanel}
                   listing={currentListing}
+                  equipmentListingType={equipmentListingType}
                   isOwnListing={isOwnListing}
                   unitType={unitType}
                   onSubmit={handleBookingSubmit}

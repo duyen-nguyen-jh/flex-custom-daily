@@ -55,6 +55,13 @@ export const dateFromAPIToLocalNoon = date => {
   return momentInLocalTimezone.add(12, 'hours').toDate();
 };
 
+export const dateFromAPIToLocal = date => {
+  const timezoneDiffInMinutes = moment(date).utcOffset(); 
+  const momentInLocalTimezone = moment(date).subtract(timezoneDiffInMinutes, 'minutes');
+
+  return momentInLocalTimezone.toDate();
+};
+
 /**
  * Convert local date for API.
  * Date given by browser

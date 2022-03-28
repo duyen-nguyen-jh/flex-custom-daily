@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { array, bool, func, object, string } from 'prop-types';
 import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { LISTING_STATE_DRAFT } from '../../util/types';
-import { EditListingPhotosForm } from '../../forms';
+import { LISTING_STATE_DRAFT, LISTING_TYPE_EQUIPMENT } from '../../util/types';
+import { EditEquipmentListingPhotosForm, EditListingPhotosForm } from '../../forms';
 import { ensureOwnListing } from '../../util/data';
 import { ListingLink } from '../../components';
 
@@ -27,6 +27,7 @@ class EditListingPhotosPanel extends Component {
       onChange,
       onSubmit,
       onRemoveImage,
+      listingType,
     } = this.props;
 
     const rootClass = rootClassName || css.root;
@@ -44,28 +45,56 @@ class EditListingPhotosPanel extends Component {
       <FormattedMessage id="EditListingPhotosPanel.createListingTitle" />
     );
 
+    const renderFormByListingType = () => {
+      if (listingType === LISTING_TYPE_EQUIPMENT)
+        return (
+          <EditEquipmentListingPhotosForm
+            className={css.form}
+            disabled={disabled}
+            ready={ready}
+            fetchErrors={errors}
+            initialValues={{ images }}
+            images={images}
+            onImageUpload={onImageUpload}
+            onSubmit={values => {
+              const { addImage, ...updateValues } = values;
+              onSubmit(updateValues);
+            }}
+            onChange={onChange}
+            onUpdateImageOrder={onUpdateImageOrder}
+            onRemoveImage={onRemoveImage}
+            saveActionMsg={submitButtonText}
+            updated={panelUpdated}
+            updateInProgress={updateInProgress}
+          />
+        );
+      else
+        return (
+          <EditListingPhotosForm
+            className={css.form}
+            disabled={disabled}
+            ready={ready}
+            fetchErrors={errors}
+            initialValues={{ images }}
+            images={images}
+            onImageUpload={onImageUpload}
+            onSubmit={values => {
+              const { addImage, ...updateValues } = values;
+              onSubmit(updateValues);
+            }}
+            onChange={onChange}
+            onUpdateImageOrder={onUpdateImageOrder}
+            onRemoveImage={onRemoveImage}
+            saveActionMsg={submitButtonText}
+            updated={panelUpdated}
+            updateInProgress={updateInProgress}
+          />
+        );
+    };
     return (
       <div className={classes}>
         <h1 className={css.title}>{panelTitle}</h1>
-        <EditListingPhotosForm
-          className={css.form}
-          disabled={disabled}
-          ready={ready}
-          fetchErrors={errors}
-          initialValues={{ images }}
-          images={images}
-          onImageUpload={onImageUpload}
-          onSubmit={values => {
-            const { addImage, ...updateValues } = values;
-            onSubmit(updateValues);
-          }}
-          onChange={onChange}
-          onUpdateImageOrder={onUpdateImageOrder}
-          onRemoveImage={onRemoveImage}
-          saveActionMsg={submitButtonText}
-          updated={panelUpdated}
-          updateInProgress={updateInProgress}
-        />
+        {renderFormByListingType()}
       </div>
     );
   }

@@ -11,6 +11,7 @@ import {
   TRANSITION_CANCEL,
   TRANSITION_COMPLETE,
   TRANSITION_DECLINE,
+  TRANSITION_DECLINE_BY_OPERATOR,
   TRANSITION_EXPIRE,
   TRANSITION_CONFIRM_PAYMENT,
   TRANSITION_REVIEW_1_BY_CUSTOMER,
@@ -137,6 +138,8 @@ const resolveTransitionMessage = (
       ) : (
         <FormattedMessage id="ActivityFeed.transitionDecline" values={{ displayName }} />
       );
+    case TRANSITION_DECLINE_BY_OPERATOR:
+      return <FormattedMessage id="ActivityFeed.operatorDecline" />;
     case TRANSITION_EXPIRE:
       return txRoleIsProvider(ownRole) ? (
         <FormattedMessage id="ActivityFeed.ownTransitionExpire" />
