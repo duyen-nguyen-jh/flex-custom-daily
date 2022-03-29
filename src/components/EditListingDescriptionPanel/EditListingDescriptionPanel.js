@@ -1,14 +1,13 @@
-import React from 'react';
-import { bool, func, object, string } from 'prop-types';
 import classNames from 'classnames';
-import { FormattedMessage } from '../../util/reactIntl';
-import { ensureOwnListing } from '../../util/data';
-import { findOptionsForSelectFilter } from '../../util/search';
-import { LISTING_STATE_DRAFT } from '../../util/types';
+import { bool, func, object, string } from 'prop-types';
+import React from 'react';
 import { ListingLink } from '../../components';
-import { EditListingDescriptionForm } from '../../forms';
 import config from '../../config';
-
+import { EditEquipmentListingGeneralForm, EditListingDescriptionForm } from '../../forms';
+import { ensureOwnListing } from '../../util/data';
+import { FormattedMessage } from '../../util/reactIntl';
+import { findOptionsForSelectFilter } from '../../util/search';
+import { LISTING_STATE_DRAFT, LISTING_TYPE_EQUIPMENT } from '../../util/types';
 import css from './EditListingDescriptionPanel.module.css';
 
 const EditListingDescriptionPanel = props => {
@@ -24,26 +23,71 @@ const EditListingDescriptionPanel = props => {
     panelUpdated,
     updateInProgress,
     errors,
+    listingType,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
   const { description, title, publicData } = currentListing.attributes;
+  const { manufactureYear, maxUsingTime, equipmentType } = publicData;
 
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
+  const renderMessageByListingType = () =>
+    listingType === LISTING_TYPE_EQUIPMENT ? (
+      <FormattedMessage id="EditEquipmentListingDescriptionPanel.createListingTitle" />
+    ) : (
+      <FormattedMessage id="EditListingDescriptionPanel.createListingTitle" />
+    );
+
   const panelTitle = isPublished ? (
     <FormattedMessage
       id="EditListingDescriptionPanel.title"
       values={{ listingTitle: <ListingLink listing={listing} /> }}
     />
   ) : (
-    <FormattedMessage id="EditListingDescriptionPanel.createListingTitle" />
+    renderMessageByListingType()
   );
 
-  const categoryOptions = findOptionsForSelectFilter('category', config.custom.filters);
-  return (
-    <div className={classes}>
-      <h1 className={css.title}>{panelTitle}</h1>
+  const getCategoryOptions = () =>
+    listingType === LISTING_TYPE_EQUIPMENT
+      ? findOptionsForSelectFilter('equipmentType', config.custom.filters)
+      : findOptionsForSelectFilter('category', config.custom.filters);
+
+  const renderFormByListingType = () =>
+    listingType === LISTING_TYPE_EQUIPMENT ? (
+      <EditEquipmentListingGeneralForm
+        className={css.form}
+        initialValues={{
+          title,
+          description,
+          equipmentType,
+          manufactureYear,
+          maxUsingTime,
+        }}
+        saveActionMsg={submitButtonText}
+        onSubmit={values => {
+          const { title, description, equipmentType, manufactureYear, maxUsingTime } = values;
+          const updateValues = {
+            title: title.trim(),
+            description,
+            publicData: {
+              equipmentType,
+              manufactureYear,
+              maxUsingTime,
+              listingType: LISTING_TYPE_EQUIPMENT,
+            },
+          };
+          onSubmit(updateValues);
+        }}
+        onChange={onChange}
+        disabled={disabled}
+        ready={ready}
+        updated={panelUpdated}
+        updateInProgress={updateInProgress}
+        fetchErrors={errors}
+        categories={getCategoryOptions()}
+      />
+    ) : (
       <EditListingDescriptionForm
         className={css.form}
         initialValues={{ title, description, category: publicData.category }}
@@ -64,8 +108,13 @@ const EditListingDescriptionPanel = props => {
         updated={panelUpdated}
         updateInProgress={updateInProgress}
         fetchErrors={errors}
-        categories={categoryOptions}
+        categories={getCategoryOptions()}
       />
+    );
+  return (
+    <div className={classes}>
+      <h1 className={css.title}>{panelTitle}</h1>
+      {renderFormByListingType()}
     </div>
   );
 };

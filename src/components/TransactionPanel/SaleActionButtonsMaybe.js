@@ -35,30 +35,32 @@ const SaleActionButtonsMaybe = props => {
 
   const classes = classNames(rootClassName || css.actionButtons, className);
 
-  return showButtons ? (
-    <div className={classes}>
-      <div className={css.actionErrors}>
-        {acceptErrorMessage}
-        {declineErrorMessage}
+  return (
+    showButtons ? (
+      <div className={classes}>
+        <div className={css.actionErrors}>
+          {acceptErrorMessage}
+          {declineErrorMessage}
+        </div>
+        <div className={css.actionButtonWrapper}>
+          <SecondaryButton
+            inProgress={declineInProgress}
+            disabled={buttonsDisabled}
+            onClick={onDeclineSale}
+          >
+            <FormattedMessage id="TransactionPanel.declineButton" />
+          </SecondaryButton>
+          <PrimaryButton
+            inProgress={acceptInProgress}
+            disabled={buttonsDisabled}
+            onClick={onAcceptSale}
+          >
+            <FormattedMessage id="TransactionPanel.acceptButton" />
+          </PrimaryButton>
+        </div>
       </div>
-      <div className={css.actionButtonWrapper}>
-        <SecondaryButton
-          inProgress={declineInProgress}
-          disabled={buttonsDisabled}
-          onClick={onDeclineSale}
-        >
-          <FormattedMessage id="TransactionPanel.declineButton" />
-        </SecondaryButton>
-        <PrimaryButton
-          inProgress={acceptInProgress}
-          disabled={buttonsDisabled}
-          onClick={onAcceptSale}
-        >
-          <FormattedMessage id="TransactionPanel.acceptButton" />
-        </PrimaryButton>
-      </div>
-    </div>
-  ) : null;
+    ) : null
+  );
 };
 
 export default SaleActionButtonsMaybe;

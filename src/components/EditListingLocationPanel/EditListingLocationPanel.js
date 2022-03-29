@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { FormattedMessage } from '../../util/reactIntl';
-import { LISTING_STATE_DRAFT } from '../../util/types';
+import { LISTING_STATE_DRAFT, LISTING_TYPE_EQUIPMENT } from '../../util/types';
 import { ensureOwnListing } from '../../util/data';
 import { ListingLink } from '../../components';
 import { EditListingLocationForm } from '../../forms';
@@ -56,6 +56,7 @@ class EditListingLocationPanel extends Component {
       panelUpdated,
       updateInProgress,
       errors,
+      listingType,
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className);
@@ -65,11 +66,21 @@ class EditListingLocationPanel extends Component {
       currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
     const panelTitle = isPublished ? (
       <FormattedMessage
-        id="EditListingLocationPanel.title"
+        id={`${
+          listingType === LISTING_TYPE_EQUIPMENT
+            ? 'EditEquipmentListingLocationPanel.title'
+            : 'EditListingLocationPanel.title'
+        }`}
         values={{ listingTitle: <ListingLink listing={listing} /> }}
       />
     ) : (
-      <FormattedMessage id="EditListingLocationPanel.createListingTitle" />
+      <FormattedMessage
+        id={`${
+          listingType === LISTING_TYPE_EQUIPMENT
+            ? 'EditEquipmentListingLocationPanel.createEquipmentTitle'
+            : 'EditListingLocationPanel.createListingTitle'
+        }`}
+      />
     );
 
     return (

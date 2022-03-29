@@ -3,7 +3,7 @@ import { bool, func, object, shape, string } from 'prop-types';
 import classNames from 'classnames';
 import { FormattedMessage } from '../../util/reactIntl';
 import { ensureOwnListing } from '../../util/data';
-import { LISTING_STATE_DRAFT } from '../../util/types';
+import { LISTING_STATE_DRAFT, LISTING_TYPE_EQUIPMENT } from '../../util/types';
 import { ListingLink } from '../../components';
 import { EditListingAvailabilityForm } from '../../forms';
 
@@ -23,23 +23,38 @@ const EditListingAvailabilityPanel = props => {
     panelUpdated,
     updateInProgress,
     errors,
+    listingType,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
-  const defaultAvailabilityPlan = {
-    type: 'availability-plan/day',
-    entries: [
-      { dayOfWeek: 'mon', seats: 1 },
-      { dayOfWeek: 'tue', seats: 1 },
-      { dayOfWeek: 'wed', seats: 1 },
-      { dayOfWeek: 'thu', seats: 1 },
-      { dayOfWeek: 'fri', seats: 1 },
-      { dayOfWeek: 'sat', seats: 1 },
-      { dayOfWeek: 'sun', seats: 1 },
-    ],
-  };
+  const defaultAvailabilityPlan =
+    listingType === LISTING_TYPE_EQUIPMENT
+      ? {
+          type: 'availability-plan/day',
+          entries: [
+            { dayOfWeek: 'mon', seats: 0 },
+            { dayOfWeek: 'tue', seats: 0 },
+            { dayOfWeek: 'wed', seats: 0 },
+            { dayOfWeek: 'thu', seats: 0 },
+            { dayOfWeek: 'fri', seats: 0 },
+            { dayOfWeek: 'sat', seats: 0 },
+            { dayOfWeek: 'sun', seats: 0 },
+          ],
+        }
+      : {
+          type: 'availability-plan/day',
+          entries: [
+            { dayOfWeek: 'mon', seats: 1 },
+            { dayOfWeek: 'tue', seats: 1 },
+            { dayOfWeek: 'wed', seats: 1 },
+            { dayOfWeek: 'thu', seats: 1 },
+            { dayOfWeek: 'fri', seats: 1 },
+            { dayOfWeek: 'sat', seats: 1 },
+            { dayOfWeek: 'sun', seats: 1 },
+          ],
+        };
   const availabilityPlan = currentListing.attributes.availabilityPlan || defaultAvailabilityPlan;
 
   return (

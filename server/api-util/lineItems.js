@@ -5,8 +5,11 @@ const { Money } = types;
 // This bookingUnitType needs to be one of the following:
 // line-item/night, line-item/day or line-item/units
 const bookingUnitType = 'line-item/night';
-const PROVIDER_COMMISSION_PERCENTAGE = -10;
+const PROVIDER_COMMISSION_PERCENTAGE = -25;
+const CUSTOMER_COMMISSION_PERCENTAGE_FIRST_BOOKING = 15;
+const CUSTOMER_COMMISSION_PERCENTAGE_2NDPLUS_BOOKING = 55;
 
+exports.TRANSITION_COMPLETE = 'transition/complete';
 /** Returns collection of lineItems (max 50)
  *
  * Each line items has following fields:
@@ -27,10 +30,9 @@ const PROVIDER_COMMISSION_PERCENTAGE = -10;
  * @param {Object} bookingData
  * @returns {Array} lineItems
  */
-exports.transactionLineItems = (listing, bookingData) => {
+exports.transactionLineItems = (listing, bookingData, isFirstBooking) => {
   const unitPrice = listing.attributes.price;
   const { startDate, endDate } = bookingData;
-
   /**
    * If you want to use pre-defined component and translations for printing the lineItems base price for booking,
    * you should use one of the codes:
@@ -55,7 +57,17 @@ exports.transactionLineItems = (listing, bookingData) => {
     includeFor: ['provider'],
   };
 
-  const lineItems = [booking, providerCommission];
+  const customerComission = isFirstBooking
+    ? CUSTOMER_COMMISSION_PERCENTAGE_FIRST_BOOKING
+    : CUSTOMER_COMMISSION_PERCENTAGE_2NDPLUS_BOOKING;
+  const customerCommission = {
+    code: 'line-item/customer-commission',
+    unitPrice: calculateTotalFromLineItems([booking]),
+    percentage: customerComission,
+    includeFor: ['customer'],
+  };
+
+  const lineItems = [booking, providerCommission, customerCommission];
 
   return lineItems;
 };

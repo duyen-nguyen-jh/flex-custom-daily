@@ -4,10 +4,12 @@
 import { setInitialValues as CheckoutPageInitialValues } from './CheckoutPage/CheckoutPage.duck';
 import { loadData as ContactDetailsPageLoader } from './ContactDetailsPage/ContactDetailsPage.duck';
 import { loadData as EditListingPageLoader } from './EditListingPage/EditListingPage.duck';
+import { loadData as EditEquipmentListingPageLoader } from './EditEquipmentListingPage/EditEquipmentListingPage.duck';
 import { loadData as EmailVerificationPageLoader } from './EmailVerificationPage/EmailVerificationPage.duck';
 import { loadData as InboxPageLoader } from './InboxPage/InboxPage.duck';
 import { loadData as ListingPageLoader } from './ListingPage/ListingPage.duck';
 import { loadData as ManageListingsPageLoader } from './ManageListingsPage/ManageListingsPage.duck';
+import { loadData as ManageEquipmentListingsPageLoader } from './ManageEquipmentListingsPage/ManageEquipmentListingsPage.duck';
 import { loadData as PaymentMethodsPageLoader } from './PaymentMethodsPage/PaymentMethodsPage.duck';
 import { loadData as ProfilePageLoader } from './ProfilePage/ProfilePage.duck';
 import { loadData as SearchPageLoader } from './SearchPage/SearchPage.duck';
@@ -28,6 +30,9 @@ const getPageDataLoadingAPI = () => {
     EditListingPage: {
       loadData: EditListingPageLoader,
     },
+    EditEquipmentListingPageLoader: {
+      loadData: EditEquipmentListingPageLoader,
+    },
     EmailVerificationPage: {
       loadData: EmailVerificationPageLoader,
     },
@@ -39,6 +44,9 @@ const getPageDataLoadingAPI = () => {
     },
     ManageListingsPage: {
       loadData: ManageListingsPageLoader,
+    },
+    ManageEquipmentListingsPage: {
+      loadData: ManageEquipmentListingsPageLoader,
     },
     PaymentMethodsPage: {
       loadData: PaymentMethodsPageLoader,

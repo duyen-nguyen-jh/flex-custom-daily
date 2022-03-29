@@ -126,7 +126,6 @@ export class EditListingPhotosFormComponent extends Component {
             invalid || disabled || submitInProgress || imageUploadRequested || ready;
 
           const classes = classNames(css.root, className);
-
           return (
             <Form
               className={classes}
@@ -182,7 +181,6 @@ export class EditListingPhotosFormComponent extends Component {
                     );
                   }}
                 </Field>
-
                 <Field
                   component={props => {
                     const { input, meta } = props;
@@ -199,9 +197,8 @@ export class EditListingPhotosFormComponent extends Component {
                 />
               </AddImages>
               {uploadImageFailed}
-
               <p className={css.tip}>
-                <FormattedMessage id="EditListingPhotosForm.addImagesTip" />
+                <FormattedMessage id='EditListingPhotosForm.addImagesTip' />
               </p>
               {publishListingFailed}
               {showListingFailed}

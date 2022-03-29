@@ -12,6 +12,9 @@ import {
   txIsInFirstReviewBy,
   TRANSITION_ACCEPT,
   TRANSITION_DECLINE,
+  TRANSITION_DECLINE_BY_CUSTOMER,
+  TRANSITION_CANCEL_BY_PROVIDER,
+  TRANSITION_CANCEL_BY_CUSTOMER,
 } from '../../util/transaction';
 import { transactionLineItems } from '../../util/api';
 import * as log from '../../util/log';
@@ -48,6 +51,10 @@ export const DECLINE_SALE_REQUEST = 'app/TransactionPage/DECLINE_SALE_REQUEST';
 export const DECLINE_SALE_SUCCESS = 'app/TransactionPage/DECLINE_SALE_SUCCESS';
 export const DECLINE_SALE_ERROR = 'app/TransactionPage/DECLINE_SALE_ERROR';
 
+export const CANCEL_REQUEST = 'app/TransactionPage/CANCEL_REQUEST';
+export const CANCEL_SUCCESS = 'app/TransactionPage/CANCEL_SUCCESS';
+export const CANCEL_ERROR = 'app/TransactionPage/CANCEL_ERROR';
+
 export const FETCH_MESSAGES_REQUEST = 'app/TransactionPage/FETCH_MESSAGES_REQUEST';
 export const FETCH_MESSAGES_SUCCESS = 'app/TransactionPage/FETCH_MESSAGES_SUCCESS';
 export const FETCH_MESSAGES_ERROR = 'app/TransactionPage/FETCH_MESSAGES_ERROR';
@@ -78,6 +85,8 @@ const initialState = {
   acceptSaleError: null,
   declineInProgress: false,
   declineSaleError: null,
+  cancelInProgress: false,
+  cancelError: null,
   fetchMessagesInProgress: false,
   fetchMessagesError: null,
   totalMessages: 0,
@@ -146,6 +155,13 @@ export default function checkoutPageReducer(state = initialState, action = {}) {
       return { ...state, declineInProgress: false };
     case DECLINE_SALE_ERROR:
       return { ...state, declineInProgress: false, declineSaleError: payload };
+
+    case CANCEL_REQUEST:
+      return { ...state, cancelInProgress: true, cancelError: null };
+    case CANCEL_SUCCESS:
+      return { ...state, cancelInProgress: false };
+    case CANCEL_ERROR:
+      return { ...state, cancelInProgress: false, cancelError: payload };
 
     case FETCH_MESSAGES_REQUEST:
       return { ...state, fetchMessagesInProgress: true, fetchMessagesError: null };
@@ -237,6 +253,10 @@ const acceptSaleError = e => ({ type: ACCEPT_SALE_ERROR, error: true, payload: e
 const declineSaleRequest = () => ({ type: DECLINE_SALE_REQUEST });
 const declineSaleSuccess = () => ({ type: DECLINE_SALE_SUCCESS });
 const declineSaleError = e => ({ type: DECLINE_SALE_ERROR, error: true, payload: e });
+
+const cancelRequest = () => ({ type: CANCEL_REQUEST });
+const cancelSuccess = () => ({ type: CANCEL_SUCCESS });
+const cancelError = e => ({ type: CANCEL_ERROR, error: true, payload: e });
 
 const fetchMessagesRequest = () => ({ type: FETCH_MESSAGES_REQUEST });
 const fetchMessagesSuccess = (messages, pagination) => ({
@@ -391,6 +411,56 @@ export const declineSale = id => (dispatch, getState, sdk) => {
       log.error(e, 'reject-sale-failed', {
         txId: id,
         transition: TRANSITION_DECLINE,
+      });
+      throw e;
+    });
+};
+
+export const declineRequestedBooking = id => (dispatch, getState, sdk) => {
+  if (acceptOrDeclineInProgress(getState())) {
+    return Promise.reject(new Error('Accept or decline already in progress'));
+  }
+  dispatch(declineSaleRequest());
+
+  return sdk.transactions
+    .transition({ id, transition: TRANSITION_DECLINE_BY_CUSTOMER, params: {} }, { expand: true })
+    .then(response => {
+      dispatch(addMarketplaceEntities(response));
+      dispatch(declineSaleSuccess());
+      dispatch(fetchCurrentUserNotifications());
+      return response;
+    })
+    .catch(e => {
+      dispatch(declineSaleError(storableError(e)));
+      log.error(e, 'reject-sale-failed', {
+        txId: id,
+        transition: TRANSITION_DECLINE_BY_CUSTOMER,
+      });
+      throw e;
+    });
+};
+
+export const cancelAcceptedBooking = (id, isProvider) => (dispatch, getState, sdk) => {
+  if (acceptOrDeclineInProgress(getState())) {
+    return Promise.reject(new Error('Accept or decline already in progress'));
+  }
+  dispatch(cancelRequest());
+  const transitionAsRole = isProvider
+    ? TRANSITION_CANCEL_BY_PROVIDER
+    : TRANSITION_CANCEL_BY_CUSTOMER;
+  return sdk.transactions
+    .transition({ id, transition: transitionAsRole, params: {} }, { expand: true })
+    .then(response => {
+      dispatch(addMarketplaceEntities(response));
+      dispatch(cancelSuccess());
+      dispatch(fetchCurrentUserNotifications());
+      return response;
+    })
+    .catch(e => {
+      dispatch(cancelError(storableError(e)));
+      log.error(e, 'reject-sale-failed', {
+        txId: id,
+        transition: transitionAsRole,
       });
       throw e;
     });

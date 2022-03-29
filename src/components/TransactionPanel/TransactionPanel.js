@@ -51,6 +51,8 @@ import PanelHeading, {
 } from './PanelHeading';
 
 import css from './TransactionPanel.module.css';
+import DeclineButton from './DeclineButton';
+import CancelButton from './CancelButton';
 
 // Helper function to get display names for different roles
 const displayNames = (currentUser, currentProvider, currentCustomer, intl) => {
@@ -183,8 +185,12 @@ export class TransactionPanelComponent extends Component {
       intl,
       onAcceptSale,
       onDeclineSale,
+      onDeclineRequestByCustomer,
+      onCancelBooking,
       acceptInProgress,
       declineInProgress,
+      cancelError,
+      cancelInProgress,
       acceptSaleError,
       declineSaleError,
       onSubmitBookingRequest,
@@ -241,12 +247,14 @@ export class TransactionPanelComponent extends Component {
           headingState: HEADING_REQUESTED,
           showDetailCardHeadings: isCustomer,
           showSaleButtons: isProvider && !isCustomerBanned,
+          showDeclineButton: isCustomer && !isProviderBanned,
         };
       } else if (txIsAccepted(tx)) {
         return {
           headingState: HEADING_ACCEPTED,
           showDetailCardHeadings: isCustomer,
           showAddress: isCustomer,
+          showCancelButton: true,
         };
       } else if (txIsDeclined(tx)) {
         return {
@@ -314,6 +322,24 @@ export class TransactionPanelComponent extends Component {
         declineSaleError={declineSaleError}
         onAcceptSale={() => onAcceptSale(currentTransaction.id)}
         onDeclineSale={() => onDeclineSale(currentTransaction.id)}
+      />
+    );
+
+    const declineButton = (
+      <DeclineButton
+        showButtons={stateData.showDeclineButton}
+        declineInProgress={declineInProgress}
+        declineSaleError={declineSaleError}
+        onDeclineBooking={() => onDeclineRequestByCustomer(currentTransaction.id)}
+      />
+    );
+
+    const cancelButton = (
+      <CancelButton
+        showButtons={stateData.showCancelButton}
+        cancelInProgress={cancelInProgress}
+        cancelError={cancelError}
+        onCancelAcceptedBooking={() => onCancelBooking(currentTransaction.id, isProvider)}
       />
     );
 
@@ -415,6 +441,12 @@ export class TransactionPanelComponent extends Component {
             {stateData.showSaleButtons ? (
               <div className={css.mobileActionButtons}>{saleButtons}</div>
             ) : null}
+            {stateData.showDeclineButton && (
+              <div className={css.mobileActionButtons}>{declineButton}</div>
+            )}
+            {stateData.showCancelButton && (
+              <div className={css.mobileActionButtons}>{cancelButton}</div>
+            )}
           </div>
 
           <div className={css.asideDesktop}>
@@ -463,6 +495,12 @@ export class TransactionPanelComponent extends Component {
               {stateData.showSaleButtons ? (
                 <div className={css.desktopActionButtons}>{saleButtons}</div>
               ) : null}
+              {stateData.showDeclineButton && (
+                <div className={css.desktopActionButtons}>{declineButton}</div>
+              )}
+              {stateData.showCancelButton && (
+                <div className={css.desktopActionButtons}>{cancelButton}</div>
+              )}
             </div>
           </div>
         </div>

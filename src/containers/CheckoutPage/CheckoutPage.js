@@ -1,36 +1,10 @@
-import React, { Component } from 'react';
-import { bool, func, instanceOf, object, oneOfType, shape, string } from 'prop-types';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
-import config from '../../config';
-import routeConfiguration from '../../routeConfiguration';
-import { pathByRouteName, findRouteByRouteName } from '../../util/routes';
-import { propTypes, LINE_ITEM_NIGHT, LINE_ITEM_DAY, DATE_TYPE_DATE } from '../../util/types';
-import {
-  ensureListing,
-  ensureCurrentUser,
-  ensureUser,
-  ensureTransaction,
-  ensureBooking,
-  ensureStripeCustomer,
-  ensurePaymentMethodCard,
-} from '../../util/data';
-import { dateFromLocalToAPI, minutesBetween } from '../../util/dates';
-import { createSlug } from '../../util/urlHelpers';
-import {
-  isTransactionInitiateAmountTooLowError,
-  isTransactionInitiateListingNotFoundError,
-  isTransactionInitiateMissingStripeAccountError,
-  isTransactionInitiateBookingTimeNotAvailableError,
-  isTransactionChargeDisabledError,
-  isTransactionZeroPaymentError,
-  transactionInitiateOrderStripeErrors,
-} from '../../util/errors';
-import { formatMoney } from '../../util/currency';
-import { TRANSITION_ENQUIRE, txIsPaymentPending, txIsPaymentExpired } from '../../util/transaction';
+import moment from 'moment';
+import { bool, func, instanceOf, object, oneOfType, shape, string } from 'prop-types';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { compose } from 'redux';
 import {
   AvatarMedium,
   BookingBreakdown,
@@ -40,21 +14,54 @@ import {
   Page,
   ResponsiveImage,
 } from '../../components';
-import { StripePaymentForm } from '../../forms';
-import { isScrollingDisabled } from '../../ducks/UI.duck';
-import { confirmCardPayment, retrievePaymentIntent } from '../../ducks/stripe.duck';
+import config from '../../config';
 import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
-
+import { confirmCardPayment, retrievePaymentIntent } from '../../ducks/stripe.duck';
+import { isScrollingDisabled } from '../../ducks/UI.duck';
+import { StripePaymentForm } from '../../forms';
+import routeConfiguration from '../../routeConfiguration';
+import { formatMoney } from '../../util/currency';
 import {
+  ensureBooking,
+  ensureCurrentUser,
+  ensureListing,
+  ensurePaymentMethodCard,
+  ensureStripeCustomer,
+  ensureTransaction,
+  ensureUser,
+} from '../../util/data';
+import { dateFromLocalToAPI, minutesBetween } from '../../util/dates';
+import {
+  isTransactionChargeDisabledError,
+  isTransactionInitiateAmountTooLowError,
+  isTransactionInitiateBookingTimeNotAvailableError,
+  isTransactionInitiateListingNotFoundError,
+  isTransactionInitiateMissingStripeAccountError,
+  isTransactionZeroPaymentError,
+  transactionInitiateOrderStripeErrors,
+} from '../../util/errors';
+import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
+import { findRouteByRouteName, pathByRouteName } from '../../util/routes';
+import { TRANSITION_ENQUIRE, txIsPaymentExpired, txIsPaymentPending } from '../../util/transaction';
+import {
+  DATE_TYPE_DATE,
+  DATE_TYPE_DATETIME,
+  LINE_ITEM_DAY,
+  LINE_ITEM_NIGHT,
+  LISTING_TYPE_EQUIPMENT,
+  propTypes,
+} from '../../util/types';
+import { createSlug } from '../../util/urlHelpers';
+import {
+  confirmPayment,
   initiateOrder,
+  sendMessage,
   setInitialValues,
   speculateTransaction,
   stripeCustomer,
-  confirmPayment,
-  sendMessage,
 } from './CheckoutPage.duck';
-import { storeData, storedData, clearData } from './CheckoutPageSessionHelpers';
 import css from './CheckoutPage.module.css';
+import { clearData, storeData, storedData } from './CheckoutPageSessionHelpers';
 
 const STORAGE_KEY = 'CheckoutPage';
 
@@ -142,7 +149,6 @@ export class CheckoutPageComponent extends Component {
       fetchStripeCustomer,
       history,
     } = this.props;
-
     // Fetch currentUser with stripeCustomer entity
     // Note: since there's need for data loading in "componentWillMount" function,
     //       this is added here instead of loadData static function.
@@ -188,16 +194,25 @@ export class CheckoutPageComponent extends Component {
       // a noon of correct year-month-date combo in UTC
       const bookingStartForAPI = dateFromLocalToAPI(bookingStart);
       const bookingEndForAPI = dateFromLocalToAPI(bookingEnd);
-
       // Fetch speculated transaction for showing price in booking breakdown
       // NOTE: if unit type is line-item/units, quantity needs to be added.
       // The way to pass it to checkout page is through pageData.bookingData
+      const { listingType } = pageData.listing.attributes.publicData;
+
       fetchSpeculatedTransaction(
-        {
-          listingId,
-          bookingStart: bookingStartForAPI,
-          bookingEnd: bookingEndForAPI,
-        },
+        listingType === LISTING_TYPE_EQUIPMENT
+          ? {
+              listingId,
+              bookingStart: bookingStartForAPI,
+              bookingEnd: bookingEndForAPI,
+              bookingDisplayStart: bookingStart,
+              bookingDisplayEnd: bookingEnd,
+            }
+          : {
+              listingId,
+              bookingStart: bookingStartForAPI,
+              bookingEnd: bookingEndForAPI,
+            },
         transactionId
       );
     }
@@ -373,13 +388,25 @@ export class CheckoutPageComponent extends Component {
         : selectedPaymentFlow === PAY_AND_SAVE_FOR_LATER_USE
         ? { setupPaymentMethodForSaving: true }
         : {};
+    const { listingType } = pageData.listing.attributes.publicData;
+    const { bookingStart, bookingEnd } = pageData.bookingDates;
 
-    const orderParams = {
-      listingId: pageData.listing.id,
-      bookingStart: tx.booking.attributes.start,
-      bookingEnd: tx.booking.attributes.end,
-      ...optionalPaymentParams,
-    };
+    const orderParams =
+      listingType === LISTING_TYPE_EQUIPMENT
+        ? {
+            listingId: pageData.listing.id,
+            bookingStart: tx.booking.attributes.start,
+            bookingEnd: tx.booking.attributes.end,
+            bookingDisplayStart: bookingStart,
+            bookingDisplayEnd: bookingEnd,
+            ...optionalPaymentParams,
+          }
+        : {
+            listingId: pageData.listing.id,
+            bookingStart: tx.booking.attributes.start,
+            bookingEnd: tx.booking.attributes.end,
+            ...optionalPaymentParams,
+          };
 
     return handlePaymentIntentCreation(orderParams);
   }
@@ -450,7 +477,6 @@ export class CheckoutPageComponent extends Component {
           initialMessageFailedToTransaction,
           savePaymentMethodFailed: !paymentMethodSaved,
         };
-
         initializeOrderPage(initialValues, routes, dispatch);
         clearData(STORAGE_KEY);
         history.push(orderDetailsPath);
@@ -505,7 +531,6 @@ export class CheckoutPageComponent extends Component {
       retrievePaymentIntentError,
       stripeCustomerFetched,
     } = this.props;
-
     // Since the listing data is already given from the ListingPage
     // and stored to handle refreshes, it might not have the possible
     // deleted or closed information in it. If the transaction
@@ -582,6 +607,7 @@ export class CheckoutPageComponent extends Component {
     // (i.e. have an id)
     const tx = existingTransaction.booking ? existingTransaction : speculatedTransaction;
     const txBooking = ensureBooking(tx.booking);
+
     const breakdown =
       tx.id && txBooking.id ? (
         <BookingBreakdown
@@ -590,7 +616,11 @@ export class CheckoutPageComponent extends Component {
           unitType={config.bookingUnitType}
           transaction={tx}
           booking={txBooking}
-          dateType={DATE_TYPE_DATE}
+          dateType={
+            listing.attributes?.publicData?.listingType === LISTING_TYPE_EQUIPMENT
+              ? DATE_TYPE_DATETIME
+              : DATE_TYPE_DATE
+          }
         />
       ) : null;
 

@@ -439,6 +439,18 @@
     margin: 0;
   }
 }
+.actionSuccess {
+  @apply --marketplaceH5FontStyles;
+  color: var(--successColorDark);
+  margin: 0 0 11px 0;
+
+  @media (--viewportMedium) {
+    margin: 0 0 10px 0;
+  }
+  @media (--viewportLarge) {
+    margin: 0;
+  }
+}
 
 .actionErrors {
   width: 100%;
@@ -479,4 +491,11 @@
 
   margin-top: 0;
   margin-bottom: 1px;
+}
+
+.dangerBtn {
+  background-color: var(--marketplaceColor);
+  &:hover {
+    background-color: var(--marketplaceColorDark);
+  }
 }
