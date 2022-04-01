@@ -103,7 +103,6 @@ const STATE_DELIVERED = 'delivered';
 const STATE_REVIEWED = 'reviewed';
 const STATE_REVIEWED_BY_CUSTOMER = 'reviewed-by-customer';
 const STATE_REVIEWED_BY_PROVIDER = 'reviewed-by-provider';
-const STATE_PAID_PROVIDER = 'paid-provider';
 
 /**
  * Description of transaction process
@@ -178,7 +177,7 @@ const stateDescription = {
         [TRANSITION_EXPIRE_REVIEW_PERIOD]: STATE_REVIEWED,
         [TRANSITION_REVIEW_1_BY_CUSTOMER]: STATE_REVIEWED_BY_CUSTOMER,
         [TRANSITION_REVIEW_1_BY_PROVIDER]: STATE_REVIEWED_BY_PROVIDER,
-        [TRANSITION_PAYOUT_FOR_PROVIDER]: STATE_PAID_PROVIDER,
+        [TRANSITION_PAYOUT_FOR_PROVIDER]: STATE_DELIVERED,
       },
     },
 
@@ -186,15 +185,22 @@ const stateDescription = {
       on: {
         [TRANSITION_REVIEW_2_BY_PROVIDER]: STATE_REVIEWED,
         [TRANSITION_EXPIRE_PROVIDER_REVIEW_PERIOD]: STATE_REVIEWED,
+        [TRANSITION_PAYOUT_FOR_PROVIDER]: STATE_REVIEWED_BY_CUSTOMER,
       },
     },
     [STATE_REVIEWED_BY_PROVIDER]: {
       on: {
         [TRANSITION_REVIEW_2_BY_CUSTOMER]: STATE_REVIEWED,
         [TRANSITION_EXPIRE_CUSTOMER_REVIEW_PERIOD]: STATE_REVIEWED,
+        [TRANSITION_PAYOUT_FOR_PROVIDER]: STATE_REVIEWED_BY_PROVIDER,
       },
     },
-    [STATE_REVIEWED]: { type: 'final' },
+    [STATE_REVIEWED]: {
+      type: 'final',
+      on: {
+        [TRANSITION_PAYOUT_FOR_PROVIDER]: STATE_REVIEWED,
+      },
+    },
   },
 };
 

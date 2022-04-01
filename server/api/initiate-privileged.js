@@ -1,8 +1,8 @@
 const get = require('lodash/get');
-const { transactionLineItems, TRANSITION_COMPLETE } = require('../api-util/lineItems');
+const { doUserHaveSuccesfullOrder } = require('../api-util/lineItemHelpers');
+const { transactionLineItems } = require('../api-util/lineItems');
 const {
   getSdk,
-  getIntegrationSdk,
   getTrustedSdk,
   handleError,
   serialize,
@@ -14,16 +14,7 @@ module.exports = async (req, res) => {
   const listingId = bodyParams && bodyParams.params ? bodyParams.params.listingId : null;
 
   const sdk = getSdk(req, res);
-  const intergrationSdk = getIntegrationSdk(req, res);
-
-  const currentUserRes = await sdk.currentUser.show();
-  const currentUserId = get(currentUserRes, 'data.data.id.uuid', null);
-  const currentUserBooking = await intergrationSdk.transactions.query({
-    customerId: currentUserId
-  });
-  const isFirstBooking = !currentUserBooking.data.data.some(
-    trans => trans.attributes.lastTransition === TRANSITION_COMPLETE
-  );
+  const isFirstBooking = await doUserHaveSuccesfullOrder(sdk);
 
   let lineItems = null;
 

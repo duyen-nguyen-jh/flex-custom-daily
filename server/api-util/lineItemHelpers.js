@@ -8,6 +8,14 @@ const { nightsBetween, daysBetween } = require('./dates');
 const LINE_ITEM_NIGHT = 'line-item/night';
 const LINE_ITEM_DAY = 'line-item/day';
 
+const TRANSITION_COMPLETE = 'transition/complete';
+const TRANSITION_REVIEW_1_BY_PROVIDER = 'transition/review-1-by-provider';
+const TRANSITION_REVIEW_2_BY_PROVIDER = 'transition/review-2-by-provider';
+const TRANSITION_REVIEW_1_BY_CUSTOMER = 'transition/review-1-by-customer';
+const TRANSITION_REVIEW_2_BY_CUSTOMER = 'transition/review-2-by-customer';
+const TRANSITION_EXPIRE_CUSTOMER_REVIEW_PERIOD = 'transition/expire-customer-review-period';
+const TRANSITION_EXPIRE_PROVIDER_REVIEW_PERIOD = 'transition/expire-provider-review-period';
+const TRANSITION_EXPIRE_REVIEW_PERIOD = 'transition/expire-review-period';
 /** Helper functions for constructing line items*/
 
 /**
@@ -202,4 +210,24 @@ exports.constructValidLineItems = lineItems => {
     };
   });
   return lineItemsWithTotals;
+};
+
+exports.doUserHaveSuccesfullOrder = async sdk => {
+  const currentUserBooking = await sdk.transactions.query({
+    only: 'order',
+    lastTransitions: [
+      TRANSITION_COMPLETE,
+      TRANSITION_REVIEW_1_BY_PROVIDER,
+      TRANSITION_REVIEW_2_BY_PROVIDER,
+      TRANSITION_REVIEW_1_BY_CUSTOMER,
+      TRANSITION_REVIEW_2_BY_CUSTOMER,
+      TRANSITION_EXPIRE_CUSTOMER_REVIEW_PERIOD,
+      TRANSITION_EXPIRE_PROVIDER_REVIEW_PERIOD,
+      TRANSITION_EXPIRE_REVIEW_PERIOD,
+    ],
+  });
+  const isFirstBooking =
+    !currentUserBooking.data ||
+    (currentUserBooking.data.data && currentUserBooking.data.data.length === 0);
+  return isFirstBooking;
 };

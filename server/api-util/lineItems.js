@@ -9,7 +9,6 @@ const PROVIDER_COMMISSION_PERCENTAGE = -25;
 const CUSTOMER_COMMISSION_PERCENTAGE_FIRST_BOOKING = 15;
 const CUSTOMER_COMMISSION_PERCENTAGE_2NDPLUS_BOOKING = 55;
 
-exports.TRANSITION_COMPLETE = 'transition/complete';
 /** Returns collection of lineItems (max 50)
  *
  * Each line items has following fields:
